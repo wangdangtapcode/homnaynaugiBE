@@ -1,5 +1,5 @@
 
-import { Ingredient } from '../../ingredient/entities/ingredient.entities'; 
+import { IngredientCategoryMapping } from 'src/modules/ingredient_category_mapping/entities/ingredient_category_mapping.entities';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity('ingredient_categories') // Ánh xạ tới bảng 'ingredient_categories'
@@ -24,10 +24,6 @@ export class IngredientCategory {
   })
   imageUrl: string | null; // URL hình ảnh, có thể null
 
-  /**
-   * Mối quan hệ One-to-Many với thực thể Ingredient.
-   * Một danh mục nguyên liệu (IngredientCategory) có thể chứa nhiều nguyên liệu (Ingredient).
-   */
-  @OneToMany(() => Ingredient, (ingredient) => ingredient.category)
-  ingredients: Ingredient[]; // Mảng các nguyên liệu thuộc danh mục này
+  @OneToMany(() => IngredientCategoryMapping, mapping => mapping.ingredientCategory)
+  ingredientMappings: IngredientCategoryMapping[];
 }

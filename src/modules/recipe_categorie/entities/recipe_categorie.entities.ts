@@ -1,4 +1,5 @@
 
+import { RecipeCategoryMapping } from 'src/modules/recipe_category_mapping/entities/recipe_category_mapping.entities';
 import { Recipe } from '../../recipe/entities/recipe.entities'; 
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
@@ -24,12 +25,6 @@ export class RecipeCategory {
   })
   imageUrl: string | null; // Thuộc tính để lưu URL hình ảnh, có thể là null
 
-  /**
-   * Mối quan hệ One-to-Many với thực thể Recipe.
-   * Một danh mục công thức (RecipeCategory) có thể chứa nhiều công thức (Recipe).
-   */
-  @OneToMany(() => Recipe, (recipe) => recipe.category)
-  recipes: Recipe[]; // Mảng các công thức thuộc về danh mục này.
-                     // Thuộc tính này không tạo cột trong bảng 'recipe_categories',
-                     // nó chỉ dùng để TypeORM quản lý mối quan hệ.
+  @OneToMany(() => RecipeCategoryMapping, (mapping) => mapping.recipeCategory)
+  recipeMappings: RecipeCategoryMapping[];
 }

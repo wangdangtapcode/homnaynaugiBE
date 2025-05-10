@@ -16,6 +16,8 @@ import { RecipeLike } from '../../modules/recipe_like/entities/recipe_like.entit
 import { FavoriteRecipe } from '../../modules/favorite_recipe/entities/favorite_recipe.entities';
 import { ViewHistory } from '../../modules/view_history/entities/view_history.entities';
 import { AccountPantryItem } from '../../modules/account_pantry_item/entities/account_pantry_item.entities';
+import { RecipeCategoryMapping } from 'src/modules/recipe_category_mapping/entities/recipe_category_mapping.entities';
+import { IngredientCategoryMapping } from 'src/modules/ingredient_category_mapping/entities/ingredient_category_mapping.entities';
 
 @Module({
   imports: [
@@ -43,7 +45,9 @@ import { AccountPantryItem } from '../../modules/account_pantry_item/entities/ac
             RecipeLike,
             FavoriteRecipe,
             ViewHistory,
-            AccountPantryItem
+            AccountPantryItem,
+            RecipeCategoryMapping,
+            IngredientCategoryMapping
           ],
           synchronize: false,
           dropSchema: false,

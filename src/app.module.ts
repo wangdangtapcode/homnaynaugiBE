@@ -25,6 +25,9 @@ import { FavoriteRecipe } from './modules/favorite_recipe/entities/favorite_reci
 import { ViewHistory } from './modules/view_history/entities/view_history.entities';
 import { AccountPantryItem } from './modules/account_pantry_item/entities/account_pantry_item.entities';
 import { IngredientCategoryModule } from './modules/ingredient_category/ingredient_category.module';
+import { RecipeCategoryModule } from './modules/recipe_categorie/recipe_categorie.module';
+import { RecipeCategoryMapping } from './modules/recipe_category_mapping/entities/recipe_category_mapping.entities';
+import { IngredientCategoryMapping } from './modules/ingredient_category_mapping/entities/ingredient_category_mapping.entities';
 
 @Module({
   imports: [
@@ -63,6 +66,8 @@ import { IngredientCategoryModule } from './modules/ingredient_category/ingredie
       FavoriteRecipe,
       ViewHistory,
       AccountPantryItem,
+      RecipeCategoryMapping,
+      IngredientCategoryMapping
     ]),
     DatabaseModule,
     AccountModule,
@@ -70,7 +75,9 @@ import { IngredientCategoryModule } from './modules/ingredient_category/ingredie
     AuthModule,
     UserProfileModule,
     RoleModule,
-    IngredientCategoryModule
+    IngredientCategoryModule,
+    RecipeCategoryModule,
+
   ],
   controllers: [AppController],
   providers: [

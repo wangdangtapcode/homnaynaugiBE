@@ -1,4 +1,4 @@
-import { IngredientCategory } from '../../ingredient_category/entities/ingredient_category.entities'; 
+
 import { RecipeIngredient } from '../../recipe_ingredient/entities/recipe_ingredient.entities'; 
 import { AccountPantryItem } from '../../account_pantry_item/entities/account_pantry_item.entities';
 import {
@@ -9,6 +9,7 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
+import { IngredientCategoryMapping } from 'src/modules/ingredient_category_mapping/entities/ingredient_category_mapping.entities';
 
 @Entity('ingredients') // Ánh xạ tới bảng 'ingredients'
 export class Ingredient {
@@ -35,27 +36,8 @@ export class Ingredient {
   })
   imageUrl: string | null; // URL hình ảnh, có thể null
 
-  @Column({
-    type: 'int',
-    nullable: true,
-    name: 'category_id', // Cột khóa ngoại
-  })
-  categoryId: number | null;
-
-  /**
-   * Mối quan hệ Many-to-One với thực thể IngredientCategory.
-   * Một nguyên liệu (Ingredient) thuộc về một danh mục (IngredientCategory).
-   */
-  @ManyToOne(
-    () => IngredientCategory,
-    (category) => category.ingredients, // Thuộc tính 'ingredients' trong IngredientCategory
-    {
-      nullable: true, // Cho phép nguyên liệu không thuộc danh mục nào
-      onDelete: 'SET NULL', // Nếu danh mục bị xóa, category_id của nguyên liệu sẽ là NULL
-    },
-  )
-  @JoinColumn({ name: 'category_id', referencedColumnName: 'id' }) // Liên kết cột category_id với id của IngredientCategory
-  category: IngredientCategory | null; // Đối tượng danh mục, có thể null
+  @OneToMany(() => IngredientCategoryMapping, mapping => mapping.ingredient)
+  categoryMappings: IngredientCategoryMapping[]; 
 
   /**
    * Mối quan hệ One-to-Many với thực thể RecipeIngredient (bảng trung gian).

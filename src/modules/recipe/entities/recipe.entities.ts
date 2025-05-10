@@ -16,6 +16,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
+import { RecipeCategoryMapping } from 'src/modules/recipe_category_mapping/entities/recipe_category_mapping.entities';
 
 export enum RecipeStatus {
   PUBLISHED = 'published',
@@ -113,16 +114,9 @@ export class Recipe {
   @JoinColumn({ name: 'account_id', referencedColumnName: 'id' })
   account: Account | null; // Đối tượng người tạo, có thể null
 
-  @Column({ type: 'int', nullable: true, name: 'category_id' })
-  categoryId: number | null; // ID của danh mục công thức
 
-  @ManyToOne(() => RecipeCategory, (category) => category.recipes, {
-    nullable: true,
-    onDelete: 'SET NULL', // Nếu danh mục bị xóa, category_id của công thức sẽ là NULL
-  })
-  @JoinColumn({ name: 'category_id', referencedColumnName: 'id' })
-  category: RecipeCategory | null; // Đối tượng danh mục công thức, có thể null
-
+  @OneToMany(() => RecipeCategoryMapping, (mapping) => mapping.recipe)
+  categoryMappings: RecipeCategoryMapping[];
   /**
    * Mối quan hệ One-to-Many với RecipeIngredient (bảng trung gian).
    * Một công thức có nhiều nguyên liệu.
