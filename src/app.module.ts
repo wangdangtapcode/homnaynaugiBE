@@ -1,0 +1,85 @@
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DatabaseModule } from './config/database/database.module';
+import { BullModule } from '@nestjs/bull';
+import { APP_GUARD, Reflector } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthGuard } from './modules/auth/guard/auth.guard';
+import { Account } from './modules/account/entities/account.entities';
+import { AccountModule } from './modules/account/account.module';
+import { AccountRoleModule } from './modules/account_role/account_role.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserProfileModule } from './modules/user_profile/user_profile.module';
+import { RoleModule } from './modules/role/role.module';
+import { Recipe } from './modules/recipe/entities/recipe.entities';
+import { RecipeIngredient } from './modules/recipe_ingredient/entities/recipe_ingredient.entities';
+import { Ingredient } from './modules/ingredient/entities/ingredient.entities';
+import { UnitOfMeasure } from './modules/unit_of_measure/entities/unit_of_measure.entities';
+import { RecipeCategory } from './modules/recipe_categorie/entities/recipe_categorie.entities';
+import { IngredientCategory } from './modules/ingredient_category/entities/ingredient_category.entities';
+import { CookingStep } from './modules/cooking_step/entities/cooking_step.entities';
+import { RecipeLike } from './modules/recipe_like/entities/recipe_like.entities';
+import { FavoriteRecipe } from './modules/favorite_recipe/entities/favorite_recipe.entities';
+import { ViewHistory } from './modules/view_history/entities/view_history.entities';
+import { AccountPantryItem } from './modules/account_pantry_item/entities/account_pantry_item.entities';
+import { IngredientCategoryModule } from './modules/ingredient_category/ingredient_category.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: Number(configService.get<number>('REDIS_PORT')),
+          password: configService.get<string>('REDIS_PASSWORD'),
+        },
+        defaultJobOptions: {
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 1000,
+          },
+          removeOnComplete: true,
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    TypeOrmModule.forFeature([
+      Account,
+      Recipe,
+      RecipeIngredient,
+      Ingredient,
+      UnitOfMeasure,
+      RecipeCategory,
+      IngredientCategory,
+      CookingStep,
+      RecipeLike,
+      FavoriteRecipe,
+      ViewHistory,
+      AccountPantryItem,
+    ]),
+    DatabaseModule,
+    AccountModule,
+    AccountRoleModule,
+    AuthModule,
+    UserProfileModule,
+    RoleModule,
+    IngredientCategoryModule
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    Reflector,
+  ],
+})
+export class AppModule {}
