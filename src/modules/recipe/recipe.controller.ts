@@ -17,7 +17,7 @@ export class RecipeController {
   async searchRecipes(@Query() queryDto: SearchRecipeQueryDto) {
     return this.recipeService.searchRecipes(queryDto);
   }
-  @Post()
+  @Post("create")
   async createRecipe(@Body() dto: CreateRecipeDto) {
     return this.recipeService.createRecipe(dto);
   }
