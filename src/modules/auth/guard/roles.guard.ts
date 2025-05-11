@@ -37,6 +37,10 @@ import {
         throw new ForbiddenException('Bạn không đủ quyền!');
       }
   
+      console.log('User from request:', request.user);
+      console.log('Required roles:', requiredRoles);
+      console.log('User role:', user.role);
+  
       return true;
     }
   }

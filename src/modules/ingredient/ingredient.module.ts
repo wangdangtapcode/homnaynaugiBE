@@ -4,12 +4,16 @@ import { Ingredient } from './entities/ingredient.entities';
 import { IngredientController } from './ingredient.controller';
 import { IngredientService } from './ingredient.service';
 import { IngredientCategoryMapping } from '../ingredient_category_mapping/entities/ingredient_category_mapping.entities';
+import { AuthModule } from '../auth/auth.module';
+import { Account } from '../account/entities/account.entities';
+import { AdminIngredientController } from './admin_ingredient.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Ingredient, IngredientCategoryMapping]),
+    TypeOrmModule.forFeature([Ingredient, IngredientCategoryMapping, Account]),
+    AuthModule
   ],
-  controllers: [IngredientController],
+  controllers: [IngredientController, AdminIngredientController],
   providers: [IngredientService],
   exports: [IngredientService],
 })

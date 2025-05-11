@@ -67,7 +67,7 @@ import {
         request.user = {
           id: decoded.sub,
           username: decoded.username,
-          role: decoded.roles,
+          role: decoded.role,
         };
         console.log('User set in request:', request.user);
   

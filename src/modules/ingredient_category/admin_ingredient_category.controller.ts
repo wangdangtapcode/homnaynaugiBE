@@ -1,31 +1,23 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  UseInterceptors,
-  UploadedFile,
-  ParseIntPipe,
-  Query,
-  Delete,
-  Put,
-} from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, ParseIntPipe, UploadedFile, UseInterceptors, Query } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiConsumes, ApiQuery } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/guard/auth.guard';
+import { RolesGuard } from '../auth/guard/roles.guard';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { IngredientCategoryService } from '../ingredient_category/ingredient_category.service';
+import { CreateIngredientCategoryDto } from '../ingredient_category/ingredient_category.dto';
+import { RoleName } from '../role/enum/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiQuery } from '@nestjs/swagger';
-import { IngredientCategoryService } from './ingredient_category.service';
-import { CreateIngredientCategoryDto } from './ingredient_category.dto';
-import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
+import { CloudinaryService } from 'src/config/cloudinary/cloudinary.service';
 
-@ApiTags('Ingredient Categories')
-@Controller('ingredient-categories')
-export class IngredientCategoryController {
-  constructor(
-    private readonly ingredientCategoryService: IngredientCategoryService,
-    private readonly cloudinaryService: CloudinaryService,
-  ) {}
-
-  @Post('admin/create')
+@ApiTags('Admin/IngredientCategories')
+@Controller('admin/ingredient-categories')
+@UseGuards(AuthGuard, RolesGuard)
+@ApiBearerAuth()
+export class AdminIngredientCategoryController {
+  constructor(private readonly ingredientCategoryService: IngredientCategoryService,
+    private readonly cloudinaryService: CloudinaryService,) {}
+  @Post('create')
+  @Roles(RoleName.ADMIN)
   @ApiOperation({ summary: 'Tạo danh mục nguyên liệu mới' })
   @ApiResponse({ status: 201, description: 'Tạo danh mục thành công' })
   @ApiResponse({ status: 400, description: 'Dữ liệu không hợp lệ' })
@@ -49,7 +41,8 @@ export class IngredientCategoryController {
     };
   }
 
-  @Get("admin/search")
+  @Get("search")
+  @Roles(RoleName.ADMIN)
   @ApiOperation({ summary: 'Lấy danh sách danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
   @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
@@ -68,7 +61,8 @@ export class IngredientCategoryController {
     };
   }
 
-  @Get('admin/search/:id')
+  @Get('search/:id')
+  @Roles(RoleName.ADMIN)
   @ApiOperation({ summary: 'Lấy thông tin danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Lấy thông tin thành công' })
   @ApiResponse({ status: 404, description: 'Không tìm thấy danh mục' })
@@ -80,7 +74,8 @@ export class IngredientCategoryController {
     };
   }
 
-  @Put('admin/edit/:id')
+  @Put('edit/:id')
+  @Roles(RoleName.ADMIN)
   @ApiOperation({ summary: 'Cập nhật danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Cập nhật thành công' })
   @ApiResponse({ status: 404, description: 'Không tìm thấy danh mục' })
@@ -103,7 +98,8 @@ export class IngredientCategoryController {
     };
   }
 
-  @Delete('admin/delete/:id')
+  @Delete('delete/:id')
+  @Roles(RoleName.ADMIN)
   @ApiOperation({ summary: 'Xóa danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Xóa thành công' })
   @ApiResponse({ status: 404, description: 'Không tìm thấy danh mục' })

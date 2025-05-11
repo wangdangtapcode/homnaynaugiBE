@@ -4,13 +4,17 @@ import { IngredientCategory } from './entities/ingredient_category.entities';
 import { IngredientCategoryService } from './ingredient_category.service';
 import { IngredientCategoryController } from './ingredient_category.controller';
 import { CloudinaryModule } from '../../config/cloudinary/cloudinary.module';
+import { Account } from '../account/entities/account.entities';
+import { AuthModule } from '../auth/auth.module';
+import { AdminIngredientCategoryController } from './admin_ingredient_category.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([IngredientCategory]),
+    TypeOrmModule.forFeature([IngredientCategory, Account]),
     CloudinaryModule,
+    AuthModule
   ],
-  controllers: [IngredientCategoryController],
+  controllers: [IngredientCategoryController, AdminIngredientCategoryController],
   providers: [IngredientCategoryService],
   exports: [IngredientCategoryService],
 })
