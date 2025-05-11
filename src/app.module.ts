@@ -28,6 +28,8 @@ import { IngredientCategoryModule } from './modules/ingredient_category/ingredie
 import { RecipeCategoryModule } from './modules/recipe_categorie/recipe_categorie.module';
 import { RecipeCategoryMapping } from './modules/recipe_category_mapping/entities/recipe_category_mapping.entities';
 import { IngredientCategoryMapping } from './modules/ingredient_category_mapping/entities/ingredient_category_mapping.entities';
+import { IngredientModule } from './modules/ingredient/ingredient.module';
+import { RecipeModule } from './modules/recipe/recipe.module';
 
 @Module({
   imports: [
@@ -77,6 +79,8 @@ import { IngredientCategoryMapping } from './modules/ingredient_category_mapping
     RoleModule,
     IngredientCategoryModule,
     RecipeCategoryModule,
+    IngredientModule,
+    RecipeModule
 
   ],
   controllers: [AppController],

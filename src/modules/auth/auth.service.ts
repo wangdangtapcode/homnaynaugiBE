@@ -119,6 +119,10 @@ import {
         throw new UnauthorizedException('Sai thông tin đăng nhập');
       }
 
+      // Check if account is active
+      if (account.status !== 'active') {
+        throw new UnauthorizedException('Tài khoản đã bị vô hiệu hóa hoặc chưa được kích hoạt');
+      }
       // Verify password
       const isPasswordValid = await argon2.verify(account.password, password);
       if (!isPasswordValid) {
@@ -130,7 +134,11 @@ import {
       if (!activeRole) {
         throw new UnauthorizedException('No active role found');
       }
-  
+      
+      // Update last login timestamp
+      account.lastLoginAt = new Date();
+      await this.accountRepository.save(account);
+
       // Generate tokens
       const tokens = await this.generateTokens(account.id, account.username, activeRole.name);
   

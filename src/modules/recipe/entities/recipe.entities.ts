@@ -19,7 +19,8 @@ import {
 import { RecipeCategoryMapping } from 'src/modules/recipe_category_mapping/entities/recipe_category_mapping.entities';
 
 export enum RecipeStatus {
-  PUBLISHED = 'published',
+  PUBLIC = 'public',
+  PRIVATE = 'private',
   PENDING_APPROVAL = 'pending_approval',
   REJECTED = 'rejected',
   DRAFT = 'draft',
@@ -104,15 +105,15 @@ export class Recipe {
 
   // --- Mối quan hệ ---
 
-  @Column({ type: 'char', length: 36, nullable: true, name: 'account_id' })
-  accountId: string | null; // UUID của người tạo
+  @Column({ type: 'char', length: 36, nullable: false, name: 'account_id' })
+  accountId: string; // UUID của người tạo
 
   @ManyToOne(() => Account, (account) => account.recipes, { // Giả sử Account có thuộc tính 'recipes'
-    nullable: true,
-    onDelete: 'SET NULL', // Nếu tài khoản bị xóa, account_id của công thức sẽ là NULL
+    nullable: false,
+    onDelete: 'CASCADE', // Nếu tài khoản bị xóa, account_id của công thức sẽ là NULL
   })
   @JoinColumn({ name: 'account_id', referencedColumnName: 'id' })
-  account: Account | null; // Đối tượng người tạo, có thể null
+  account: Account; // Đối tượng người tạo, có thể null
 
 
   @OneToMany(() => RecipeCategoryMapping, (mapping) => mapping.recipe)

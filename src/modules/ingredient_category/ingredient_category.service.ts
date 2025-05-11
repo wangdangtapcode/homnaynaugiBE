@@ -33,7 +33,11 @@ export class IngredientCategoryService {
       where,
       skip: offset || 0,
       take: limit || 10,
-      relations: ['ingredients'],
+      relations: {
+        ingredientMappings:{
+          ingredient:true
+        }
+      },
     });
 
     return { data, total };
@@ -42,7 +46,11 @@ export class IngredientCategoryService {
   async findOne(id: number): Promise<IngredientCategory> {
     const category = await this.ingredientCategoryRepository.findOne({
       where: { id },
-      relations: ['ingredients'],
+      relations: {
+        ingredientMappings:{
+          ingredient:true
+        }
+      },
     });
 
     if (!category) {
