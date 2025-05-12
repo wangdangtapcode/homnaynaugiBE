@@ -1,12 +1,12 @@
-import { Controller, Post, Body, UseGuards, Get, Query, Request, UseInterceptors, UploadedFiles } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiQuery, ApiConsumes } from '@nestjs/swagger';
+import { Controller, Post, Body, UseGuards, Get, Query, Request, UseInterceptors, UploadedFiles, Param, Delete } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiQuery, ApiConsumes, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { RecipeService } from './recipe.service';
 import { CreateRecipeDto, SearchRecipeQueryDto } from './recipe.dto';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { RoleName } from '../role/enum/role.enum';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/config/cloudinary/cloudinary.service';
 
 @ApiTags('Admin/Recipes')
@@ -30,7 +30,10 @@ export class AdminRecipeController {
     @UploadedFiles() files?: Express.Multer.File[],
   ) {
 
-    console.log("DANG TAO CONG THUC MOI")
+    console.log('--- NESTJS CONTROLLER ---');
+    console.log('Received CreateRecipeDto:', JSON.stringify(dto, null, 2));
+    console.log('Received Files:', files?.map(f => ({ fieldname: f.fieldname, originalname: f.originalname, size: f.size })));
+    console.log('-------------------------');
     let currentFileIndex = 0;
     
     // Upload recipe image if hasNewRecipeImageFile is true
@@ -66,5 +69,31 @@ export class AdminRecipeController {
   @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả' })
   async searchRecipes(@Query() queryDto: SearchRecipeQueryDto) {
     return this.recipeService.searchRecipes(queryDto);
+  }
+  @Get('get-recipe/:id')
+  @Roles(RoleName.ADMIN)
+  @ApiOperation({ summary: 'Lấy thông tin chi tiết công thức' })
+  @ApiParam({ name: 'id', description: 'ID của công thức' })
+  async getRecipeById(@Param('id') id: string) {
+    return this.recipeService.getRecipeById(id);
+  }
+
+  @Get('detail/:id')
+  @Roles(RoleName.ADMIN)
+  @ApiOperation({ summary: 'Chi tiết công thức' })
+  async getDetail(@Param('id') id: string) {
+    const recipe = await this.recipeService.findByIdWithStats(id);
+  
+  
+    return {
+      message: 'Lấy chi tiết công thức thành công',
+      data: recipe,
+    };
+  }
+  @Delete('delete/:id')
+  @Roles(RoleName.ADMIN)
+  @ApiOperation({ summary: 'Xóa công thức' })
+  async deleteRecipe(@Param('id') id: string) {
+    return this.recipeService.deleteRecipe(id);
   }
 }

@@ -30,6 +30,7 @@ import { RecipeCategoryMapping } from './modules/recipe_category_mapping/entitie
 import { IngredientCategoryMapping } from './modules/ingredient_category_mapping/entities/ingredient_category_mapping.entities';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { RecipeModule } from './modules/recipe/recipe.module';
+import { UnitOfMeasureModule } from './modules/unit_of_measure/unit_of_measure.module';
 
 @Module({
   imports: [
@@ -80,8 +81,9 @@ import { RecipeModule } from './modules/recipe/recipe.module';
     IngredientCategoryModule,
     RecipeCategoryModule,
     IngredientModule,
-    RecipeModule
-
+    RecipeModule,
+    RecipeCategoryModule,
+    UnitOfMeasureModule
   ],
   controllers: [AppController],
   providers: [

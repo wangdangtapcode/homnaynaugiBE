@@ -10,6 +10,9 @@ import { CookingStep } from '../cooking_step/entities/cooking_step.entities';
 import { Account } from '../account/entities/account.entities';
 import { AuthModule } from '../auth/auth.module';
 import { CloudinaryModule } from '../../config/cloudinary/cloudinary.module';
+import { RecipeLike } from '../recipe_like/entities/recipe_like.entities';
+import { ViewHistory } from '../view_history/entities/view_history.entities';
+import { FavoriteRecipe } from '../favorite_recipe/entities/favorite_recipe.entities';
 
 @Module({
   imports: [
@@ -18,7 +21,10 @@ import { CloudinaryModule } from '../../config/cloudinary/cloudinary.module';
       RecipeCategoryMapping,
       RecipeIngredient,
       CookingStep,
-      Account
+      Account,
+      RecipeLike,
+      ViewHistory,
+      FavoriteRecipe
     ]),
     AuthModule,
     CloudinaryModule

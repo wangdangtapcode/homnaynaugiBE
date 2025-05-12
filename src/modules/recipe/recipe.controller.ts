@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Param } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { SearchRecipeQueryDto } from './recipe.dto';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags, ApiParam } from '@nestjs/swagger';
 
 @ApiTags('Recipes')
 @Controller('recipes')
@@ -18,5 +18,4 @@ export class RecipeController {
     return this.recipeService.searchRecipes(queryDto);
   }
 
- 
 }

@@ -73,7 +73,7 @@ import {
           role: decoded.roles?.[0],
           roles: decoded.roles,
         };
-        console.log('User set in request in Auth:', request.user);
+        console.log('/////////////////////////////////////////\nUser set in request in Auth:', request.user);
   
         return true;
       } catch (error) {

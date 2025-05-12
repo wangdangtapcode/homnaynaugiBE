@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Recipe } from './entities/recipe.entities';
@@ -8,6 +8,10 @@ import { RecipeIngredient } from '../recipe_ingredient/entities/recipe_ingredien
 import { CookingStep } from '../cooking_step/entities/cooking_step.entities';
 import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
 import { Express } from 'express';
+import { RecipeLike } from '../recipe_like/entities/recipe_like.entities';
+import { ViewHistory } from '../view_history/entities/view_history.entities';
+import { FavoriteRecipe } from '../favorite_recipe/entities/favorite_recipe.entities';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class RecipeService {
@@ -20,8 +24,15 @@ export class RecipeService {
     private ingredientRepo: Repository<RecipeIngredient>,
     @InjectRepository(CookingStep)
     private stepRepo: Repository<CookingStep>,
+    @InjectRepository(RecipeLike)
+    private recipeLikeRepo:Repository<RecipeLike>,
+    @InjectRepository(ViewHistory)
+    private viewHistoryRepo:Repository<ViewHistory>,
+    @InjectRepository(FavoriteRecipe)
+    private favoriteRecipeRepo:Repository<FavoriteRecipe>,
     private dataSource: DataSource,
     private cloudinaryService: CloudinaryService,
+
   ) {}
 
   async searchRecipes(queryDto: SearchRecipeQueryDto) {
@@ -93,6 +104,9 @@ export class RecipeService {
   }
 
   async createRecipe(dto: CreateRecipeDto, accountId: string) {
+    console.log('Creating recipe with DTO:', JSON.stringify(dto, null, 2));
+    console.log('Account ID:', accountId);
+
     // Validate input
     if (!dto.name || !dto.categoryIds || dto.categoryIds.length === 0) {
       throw new BadRequestException('Tên công thức và danh mục là bắt buộc');
@@ -106,19 +120,47 @@ export class RecipeService {
       throw new BadRequestException('Công thức phải có ít nhất một bước nấu');
     }
 
+    // Validate ingredients
+    for (const ing of dto.ingredients) {
+      if (!ing.ingredientId) {
+        throw new BadRequestException('Mỗi nguyên liệu phải có ID');
+      }
+      if (ing.quantity === null || ing.quantity === undefined) {
+        throw new BadRequestException('Mỗi nguyên liệu phải có số lượng');
+      }
+      if (!ing.unitId) {
+        throw new BadRequestException('Mỗi nguyên liệu phải có đơn vị đo lường');
+      }
+    }
+
+    // Validate steps
+    for (const step of dto.steps) {
+      if (!step.stepOrder) {
+        throw new BadRequestException('Mỗi bước phải có thứ tự');
+      }
+      if (!step.instruction) {
+        throw new BadRequestException('Mỗi bước phải có hướng dẫn');
+      }
+    }
+
     // Start transaction
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
+      // Generate UUID for recipe
+      const recipeId = uuidv4();
+
       // 1. Tạo recipe
       const recipe = this.recipeRepo.create({
+        id: recipeId,
         ...dto,
         accountId,
         status: dto.status,
       });
       const savedRecipe = await queryRunner.manager.save(Recipe, recipe);
+      console.log('Saved recipe:', savedRecipe);
 
       // 2. Lưu categories
       const categoryMappings = dto.categoryIds.map(categoryId => ({
@@ -126,6 +168,7 @@ export class RecipeService {
         recipeCategoryId: categoryId,
       }));
       await queryRunner.manager.save(RecipeCategoryMapping, categoryMappings);
+      console.log('Saved category mappings:', categoryMappings);
 
       // 3. Lưu ingredients
       const ingredients = dto.ingredients.map(ing => ({
@@ -135,6 +178,7 @@ export class RecipeService {
         unitId: ing.unitId,
       }));
       await queryRunner.manager.save(RecipeIngredient, ingredients);
+      console.log('Saved ingredients:', ingredients);
 
       // 4. Lưu steps
       const steps = dto.steps.map(step => ({
@@ -144,6 +188,7 @@ export class RecipeService {
         imageUrl: step.imageUrl,
       }));
       await queryRunner.manager.save(CookingStep, steps);
+      console.log('Saved steps:', steps);
 
       // Commit transaction
       await queryRunner.commitTransaction();
@@ -162,7 +207,7 @@ export class RecipeService {
           cookingSteps: true
         }
       });
-      console.log("TAO THANH CONG RECIPE ",fullRecipe)
+      console.log("Recipe created successfully:", fullRecipe);
       return {
         message: 'Tạo công thức thành công',
         data: fullRecipe
@@ -171,15 +216,60 @@ export class RecipeService {
     } catch (error) {
       // Rollback transaction on error
       await queryRunner.rollbackTransaction();
+      console.error('Error creating recipe:', error);
       
       if (error instanceof BadRequestException) {
         throw error;
       }
       
-      throw new InternalServerErrorException('Không thể tạo công thức');
+      // Log detailed error information
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
+      }
+      
+      throw new InternalServerErrorException('Không thể tạo công thức: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       // Release query runner
       await queryRunner.release();
     }
+  }
+
+
+  async findByIdWithStats(id: string) {
+    const recipe = await this.recipeRepo.findOne({
+      where: { id },
+      relations: ['account', 'categoryMappings', 'categoryMappings.recipeCategory', 'recipeIngredients', 'cookingSteps'],
+    });
+  
+    if (!recipe) {
+      throw new NotFoundException(`Không tìm thấy công thức với id: ${id}`);
+    }
+  
+    // Đếm like
+    const totalLikes = await this.recipeLikeRepo.count({ where: { recipe: { id } } });
+  
+    // Đếm favorites
+    const totalFavorites = await this.favoriteRecipeRepo.count({ where: { recipe: { id } } });
+  
+    // Đếm views
+    const totalViews = await this.viewHistoryRepo.count({ where: { recipe: { id } } });
+  
+    return {
+      ...recipe,
+      totalLikes,
+      totalFavorites,
+      totalViews,
+    };
+  }
+  async getRecipeById(id: string) {
+    const recipe = await this.recipeRepo.findOne({
+      where: { id },
+      relations: ['account', 'categoryMappings', 'categoryMappings.recipeCategory', 'recipeIngredients', 'cookingSteps'],
+    });
+    return recipe;
   }
 }
