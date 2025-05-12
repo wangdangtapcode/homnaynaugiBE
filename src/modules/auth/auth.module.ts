@@ -12,6 +12,7 @@ import { RolesGuard } from './guard/roles.guard';
 import { AccountRole } from '../account_role/entities/account_role.entities';
 import { UserProfile } from '../user_profile/entitie/user_profiles.entities';
 import { Role } from '../role/entities/role.entities';
+import { AccountModule } from '../account/account.module';
 @Module({
   imports: [
     ConfigModule,
@@ -27,9 +28,10 @@ import { Role } from '../role/entities/role.entities';
     BullModule.registerQueue({
       name: 'mailer-queue',
     }),
+    AccountModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, MailerProducer, AuthGuard, RolesGuard],
-  exports: [AuthService, AuthGuard, RolesGuard],
+  exports: [AuthService, AuthGuard, RolesGuard,JwtModule],
 })
 export class AuthModule {}

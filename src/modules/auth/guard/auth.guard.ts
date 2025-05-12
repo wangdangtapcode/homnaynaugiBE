@@ -12,6 +12,8 @@ import {
   import { IS_PUBLIC_KEY } from '../decorator/public.decorator';
   import { Account } from '../../account/entities/account.entities';
   import { AuthService } from '../auth.service';
+  import { JwtService } from '@nestjs/jwt';
+  import { Request } from 'express';
 
   @Injectable()
   export class AuthGuard implements CanActivate {
@@ -21,6 +23,7 @@ import {
       private readonly accountRepository: Repository<Account>,
       private reflector: Reflector,
       private readonly authService: AuthService,
+      private jwtService: JwtService
     ) {}
   
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -67,7 +70,8 @@ import {
         request.user = {
           id: decoded.sub,
           username: decoded.username,
-          role: decoded.role,
+          role: decoded.roles?.[0],
+          roles: decoded.roles,
         };
         console.log('User set in request:', request.user);
   
@@ -75,7 +79,50 @@ import {
       } catch (error) {
         console.error('Token verification failed:', error.message);
         console.error('Error stack:', error.stack);
+        if (error.name === 'TokenExpiredError') {
+          // Token hết hạn, thử refresh token
+          try {
+            const refreshToken = request.cookies['refresh_token'];
+            if (!refreshToken) {
+              throw new UnauthorizedException('No refresh token');
+            }
+
+            // Verify refresh token
+            const refreshPayload = await this.jwtService.verifyAsync(refreshToken, {
+              secret: process.env.JWT_REFRESH_SECRET
+            });
+
+            // Tạo access token mới
+            const newAccessToken = await this.jwtService.signAsync({
+              sub: refreshPayload.sub,
+              username: refreshPayload.username,
+              roles: refreshPayload.roles
+            }, {
+              secret: process.env.JWT_SECRET,
+              expiresIn: '15m'
+            });
+
+            // Set token mới vào header
+            request.headers.authorization = `Bearer ${newAccessToken}`;
+
+            // Set user info từ refresh payload
+            request.user = {
+              id: refreshPayload.sub,
+              username: refreshPayload.username,
+              role: refreshPayload.roles?.[0]
+            };
+
+            return true;
+          } catch (refreshError) {
+            throw new UnauthorizedException('Invalid refresh token');
+          }
+        }
         throw new UnauthorizedException('Token không hợp lệ');
       }
+    }
+
+    private extractTokenFromHeader(request: Request): string | undefined {
+      const [type, token] = request.headers.authorization?.split(' ') ?? [];
+      return type === 'Bearer' ? token : undefined;
     }
   }

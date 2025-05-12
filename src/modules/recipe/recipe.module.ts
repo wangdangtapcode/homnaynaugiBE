@@ -9,6 +9,7 @@ import { RecipeIngredient } from '../recipe_ingredient/entities/recipe_ingredien
 import { CookingStep } from '../cooking_step/entities/cooking_step.entities';
 import { Account } from '../account/entities/account.entities';
 import { AuthModule } from '../auth/auth.module';
+import { CloudinaryModule } from '../../config/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { AuthModule } from '../auth/auth.module';
       CookingStep,
       Account
     ]),
-    AuthModule
+    AuthModule,
+    CloudinaryModule
   ],
   controllers: [RecipeController, AdminRecipeController],
   providers: [RecipeService],

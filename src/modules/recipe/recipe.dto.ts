@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber, Min, IsEnum, IsArray, ValidateNested } from 'class-validator';
+import { IsOptional, IsString, IsNumber, Min, IsEnum, IsArray, ValidateNested, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { RecipeStatus } from './entities/recipe.entities';
 
@@ -41,15 +41,18 @@ class RecipeIngredientDto {
 
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   quantity?: number | null;
 
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   unitId?: number | null;
 }
 
 class CookingStepDto {
   @IsNumber()
+  @Type(()=>Number)
   stepOrder: number;
 
   @IsString()
@@ -58,6 +61,11 @@ class CookingStepDto {
   @IsOptional()
   @IsString()
   imageUrl?: string | null;
+
+  @IsOptional()
+  @IsBoolean() // Hoặc @IsBooleanString() nếu từ FormData
+  @Type(() => Boolean) // Để transform 'true'/'false' thành boolean
+  hasNewImageFile?: boolean;
 }
 
 export class CreateRecipeDto {
@@ -70,18 +78,22 @@ export class CreateRecipeDto {
 
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   protein?: number;
 
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   fat?: number;
 
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   calories?: number;
 
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   carbohydrates?: number;
 
   @IsOptional()
@@ -89,7 +101,13 @@ export class CreateRecipeDto {
   imageUrl?: string;
 
   @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  hasNewRecipeImageFile?: boolean;
+  
+  @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   preparationTimeMinutes?: number;
 
   @IsOptional()
@@ -100,6 +118,8 @@ export class CreateRecipeDto {
   status: RecipeStatus;
 
   @IsArray()
+  @IsNumber({}, { each: true }) // Đảm bảo mỗi phần tử là số sau khi transform
+  @Type(() => Number)
   categoryIds: number[];
 
   @IsArray()

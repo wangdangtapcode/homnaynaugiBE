@@ -20,6 +20,21 @@ export class AccountService {
     private readonly roleRepository: Repository<Role>,
   ) {}
 
+  async findByUsername(username: string): Promise<Account | null> {
+    return this.accountRepository.findOne({
+      where: { username },
+      relations: ['userProfile', 'accountRoles', 'accountRoles.role'],
+    });
+  }
+
+  async getUserRoles(accountId: string): Promise<Role[]> {
+    const accountRoles = await this.accountRoleRepository.find({
+      where: { accountId, isActive: true },
+      relations: ['role'],
+    });
+    return accountRoles.map(ar => ar.role);
+  }
+
   async findByUsernameOrEmail(username: string, email: string): Promise<Account | null> {
     return this.accountRepository.findOne({
       where: [

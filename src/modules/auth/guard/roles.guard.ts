@@ -24,21 +24,23 @@ import {
   
       const request = context.switchToHttp().getRequest();
       const user = request.user;
-  
+      
       if (!user) {
         throw new ForbiddenException('Bạn không có quyền truy cập!');
       }
   
-      // Kiểm tra xem role từ token có trong danh sách requiredRoles không
-      // Chúng ta kiểm tra user.role (được set trong token) thay vì user.roles
-      const hasRole = requiredRoles.includes(user.role as RoleName);
-  
+      const userRoles = user.roles || [];
+
+      const hasRole = userRoles.some((role: string) =>
+        requiredRoles.includes(role as RoleName),
+      );
+      
       if (!hasRole) {
         throw new ForbiddenException('Bạn không đủ quyền!');
       }
   
-      console.log('User from request:', request.user);
       console.log('Required roles:', requiredRoles);
+      console.log('User from request:', user);
       console.log('User role:', user.role);
   
       return true;

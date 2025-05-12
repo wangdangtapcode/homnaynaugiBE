@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Recipe } from './entities/recipe.entities';
 import { SearchRecipeQueryDto, CreateRecipeDto } from './recipe.dto';
 import { RecipeCategoryMapping } from '../recipe_category_mapping/entities/recipe_category_mapping.entities';
 import { RecipeIngredient } from '../recipe_ingredient/entities/recipe_ingredient.entities';
 import { CookingStep } from '../cooking_step/entities/cooking_step.entities';
+import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
+import { Express } from 'express';
 
 @Injectable()
 export class RecipeService {
@@ -18,6 +20,8 @@ export class RecipeService {
     private ingredientRepo: Repository<RecipeIngredient>,
     @InjectRepository(CookingStep)
     private stepRepo: Repository<CookingStep>,
+    private dataSource: DataSource,
+    private cloudinaryService: CloudinaryService,
   ) {}
 
   async searchRecipes(queryDto: SearchRecipeQueryDto) {
@@ -88,43 +92,94 @@ export class RecipeService {
     return (result.affected ?? 0) > 0;
   }
 
-  async createRecipe(dto: CreateRecipeDto) {
-
-    // 1. Tạo recipe
-    const recipe = this.recipeRepo.create({
-      ...dto,
-      status: dto.status,
-    });
-    await this.recipeRepo.save(recipe);
-
-    // 2. Lưu categories
-    for (const categoryId of dto.categoryIds) {
-      await this.categoryMappingRepo.save({
-        recipeId: recipe.id,
-        recipeCategoryId: categoryId,
-      });
+  async createRecipe(dto: CreateRecipeDto, accountId: string) {
+    // Validate input
+    if (!dto.name || !dto.categoryIds || dto.categoryIds.length === 0) {
+      throw new BadRequestException('Tên công thức và danh mục là bắt buộc');
     }
 
-    // 3. Lưu ingredients
-    for (const ing of dto.ingredients) {
-      await this.ingredientRepo.save({
-        recipeId: recipe.id,
+    if (!dto.ingredients || dto.ingredients.length === 0) {
+      throw new BadRequestException('Công thức phải có ít nhất một nguyên liệu');
+    }
+
+    if (!dto.steps || dto.steps.length === 0) {
+      throw new BadRequestException('Công thức phải có ít nhất một bước nấu');
+    }
+
+    // Start transaction
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // 1. Tạo recipe
+      const recipe = this.recipeRepo.create({
+        ...dto,
+        accountId,
+        status: dto.status,
+      });
+      const savedRecipe = await queryRunner.manager.save(Recipe, recipe);
+
+      // 2. Lưu categories
+      const categoryMappings = dto.categoryIds.map(categoryId => ({
+        recipeId: savedRecipe.id,
+        recipeCategoryId: categoryId,
+      }));
+      await queryRunner.manager.save(RecipeCategoryMapping, categoryMappings);
+
+      // 3. Lưu ingredients
+      const ingredients = dto.ingredients.map(ing => ({
+        recipeId: savedRecipe.id,
         ingredientId: ing.ingredientId,
         quantity: ing.quantity,
         unitId: ing.unitId,
-      });
-    }
+      }));
+      await queryRunner.manager.save(RecipeIngredient, ingredients);
 
-    // 4. Lưu steps
-    for (const step of dto.steps) {
-      await this.stepRepo.save({
-        recipeId: recipe.id,
+      // 4. Lưu steps
+      const steps = dto.steps.map(step => ({
+        recipeId: savedRecipe.id,
         stepOrder: step.stepOrder,
         instruction: step.instruction,
         imageUrl: step.imageUrl,
-      });
-    }
+      }));
+      await queryRunner.manager.save(CookingStep, steps);
 
-    return { message: 'Recipe created', id: recipe.id };
+      // Commit transaction
+      await queryRunner.commitTransaction();
+
+      // Return full recipe data
+      const fullRecipe = await this.recipeRepo.findOne({
+        where: { id: savedRecipe.id },
+        relations: {
+          categoryMappings: {
+            recipeCategory: true
+          },
+          recipeIngredients: {
+            ingredient: true,
+            unit: true
+          },
+          cookingSteps: true
+        }
+      });
+      console.log("TAO THANH CONG RECIPE ",fullRecipe)
+      return {
+        message: 'Tạo công thức thành công',
+        data: fullRecipe
+      };
+
+    } catch (error) {
+      // Rollback transaction on error
+      await queryRunner.rollbackTransaction();
+      
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      
+      throw new InternalServerErrorException('Không thể tạo công thức');
+    } finally {
+      // Release query runner
+      await queryRunner.release();
+    }
   }
 }

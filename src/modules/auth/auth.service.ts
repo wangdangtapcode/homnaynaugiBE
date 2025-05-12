@@ -21,6 +21,8 @@ import {
   
   import { LoginDto, RegisterDto, CreateAdminDto } from './auth.dto'; 
   import { v4 as uuidv4 } from 'uuid'; 
+  import { AccountService } from '../account/account.service';
+  import * as bcrypt from 'bcrypt';
   
   @Injectable()
   export class AuthService {
@@ -39,6 +41,7 @@ import {
       private config: ConfigService,
       private jwt: JwtService,
       private readonly mailerProducer: MailerProducer,
+      private accountService: AccountService,
     ) {}
   
     async register(dto: RegisterDto) {
@@ -64,7 +67,7 @@ import {
       }
   
       // Hash password
-      const hashedPassword = await argon2.hash(password);
+      const hashedPassword = await bcrypt.hash(password,10);
   
       // Create new account
       const account = this.accountRepository.create({
@@ -103,56 +106,52 @@ import {
       };
     }
   
-    async login(dto: LoginDto, response: Response) {
-      const { loginIdentifier, password } = dto;
-      
-  
-      // Find account by username or email
-      const account = await this.accountRepository.findOne({
-        where: [
-          { username: loginIdentifier },
-          { userProfile: { email: loginIdentifier } },
-        ],
-        relations: ['userProfile', 'accountRoles', 'accountRoles.role'],
-      });
+    async validateUser(username: string, password: string): Promise<any> {
+      const account = await this.accountService.findByUsername(username);
       if (!account) {
-        throw new UnauthorizedException('Sai thông tin đăng nhập');
+        throw new UnauthorizedException('Invalid credentials');
       }
 
-      // Check if account is active
-      if (account.status !== 'active') {
-        throw new UnauthorizedException('Tài khoản đã bị vô hiệu hóa hoặc chưa được kích hoạt');
-      }
-      // Verify password
-      const isPasswordValid = await argon2.verify(account.password, password);
+      const isPasswordValid = await bcrypt.compare(password, account.password);
       if (!isPasswordValid) {
-        throw new UnauthorizedException('Sai mật khẩu');
+        throw new UnauthorizedException('Invalid credentials');
       }
-  
-      // Get active role
-      const activeRole = account.accountRoles?.find(ar => ar.isActive)?.role;
-      if (!activeRole) {
-        throw new UnauthorizedException('No active role found');
-      }
-      
-      // Update last login timestamp
-      account.lastLoginAt = new Date();
-      await this.accountRepository.save(account);
 
-      // Generate tokens
-      const tokens = await this.generateTokens(account.id, account.username, activeRole.name);
-  
+      // Lấy roles của user
+      const roles = await this.accountService.getUserRoles(account.id);
+      const roleNames = roles.map(role => role.name);
+
       return {
-        message: 'Login successful',
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-        account: {
-          id: account.id,
-          username: account.username,
-          email: account.userProfile?.email,
-          name: account.userProfile?.fullName,
-          role: activeRole.name,
-        },
+        id: account.id,
+        username: account.username,
+        roles: roleNames
+      };
+    }
+  
+    async login(user: any) {
+      const payload = {
+        sub: user.id,
+        username: user.username,
+        roles: user.roles
+      };
+      // Tạo access token
+      const accessToken = await this.jwt.signAsync(payload, {
+        secret: this.config.get<string>('JWT_ACCESS_SECRET'),
+        expiresIn: '15m'
+      });
+      // Tạo refresh token
+      const refreshToken = await this.jwt.signAsync(payload, {
+        secret: this.config.get<string>('JWT_REFRESH_SECRET'),
+        expiresIn: '7d'
+      });
+      return {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        user: {
+          id: user.id,
+          username: user.username,
+          roles: user.roles
+        }
       };
     }
   
@@ -199,57 +198,25 @@ import {
   
     async refreshToken(refreshToken: string) {
       try {
-        // Verify refresh token
         const payload = await this.jwt.verifyAsync(refreshToken, {
-          secret: this.config.get<string>('JWT_REFRESH_SECRET'),
+          secret: this.config.get<string>('JWT_REFRESH_SECRET')
         });
 
-        // Get user from database
-        const account = await this.accountRepository.findOne({
-          where: { id: payload.sub },
-          relations: ['userProfile', 'accountRoles', 'accountRoles.role'],
+        const newAccessToken = await this.jwt.signAsync({
+          sub: payload.sub,
+          username: payload.username,
+          roles: payload.roles
+        }, {
+          secret: this.config.get<string>('JWT_ACCESS_SECRET'),
+          expiresIn: '15m'
         });
-
-        if (!account) {
-          throw new UnauthorizedException('Invalid refresh token');
-        }
-
-        // Generate new access token
-        const accessToken = await this.generateAccessToken(account);
 
         return {
-          accessToken,
-          refreshToken, // Return the same refresh token
+          access_token: newAccessToken
         };
       } catch (error) {
         throw new UnauthorizedException('Invalid refresh token');
       }
-    }
-  
-    private async generateAccessToken(account: Account) {
-      const roles = account.accountRoles.map((ar) => ar.role.name);
-      const payload = {
-        sub: account.id,
-        username: account.username,
-        roles: roles,
-      };
-
-      return this.jwt.signAsync(payload, {
-        secret: this.config.get<string>('JWT_ACCESS_SECRET'),
-        expiresIn: '30m',
-      });
-    }
-  
-    private async generateRefreshToken(account: Account) {
-      const payload = {
-        sub: account.id,
-        tokenId: uuidv4(),
-      };
-
-      return this.jwt.signAsync(payload, {
-        secret: this.config.get<string>('JWT_REFRESH_SECRET'),
-        expiresIn: '7d', // Refresh token valid for 7 days
-      });
     }
   
     async logout(response: Response, token: string) {
@@ -304,7 +271,7 @@ import {
       }
   
       // Hash password
-      const hashedPassword = await argon2.hash(password);
+      const hashedPassword = await bcrypt.hash(password,10);
   
       // Create new account
       const account = this.accountRepository.create({
