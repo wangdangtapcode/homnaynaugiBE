@@ -1,0 +1,5 @@
+uvicorn
+google-generativeai
+pillow
+dotenv
+fastapi
