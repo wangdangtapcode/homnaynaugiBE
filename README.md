@@ -96,3 +96,87 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+# Hướng dẫn tích hợp HomNayNauGi Backend với AI Service
+
+## Giới thiệu
+
+Dự án này tích hợp backend NestJS với AI service bằng cách gọi trực tiếp file Python thay vì qua API:
+- **Backend NestJS (HomNayNauGi)**: Quản lý người dùng, công thức, nguyên liệu
+- **Python AI**: Nhận diện nguyên liệu từ hình ảnh bằng AI (nằm trong thư mục src/ai)
+
+## Cài đặt
+
+### 1. Backend NestJS (HomNayNauGi)
+
+```bash
+cd homnaynaugiBE
+yarn install
+```
+
+### 2. Python AI
+
+```bash
+cd homnaynaugiBE/src/ai
+pip install -r requirements.txt
+```
+
+## Cấu hình
+
+### 1. Tạo file .env trong thư mục homnaynaugiBE
+
+```
+# Các cấu hình khác của bạn...
+
+# Nếu muốn thay đổi đường dẫn AI (mặc định là src/ai)
+# AI_SERVICE_PATH=/đường/dẫn/tùy/chỉnh
+```
+
+### 2. Đảm bảo Python hoạt động
+
+- Cài đặt Python trên server
+- Cài đặt các thư viện cần thiết trong `requirements.txt`
+- Kiểm tra file `assistant.py` có thể chạy với câu lệnh:
+
+```bash
+cd src/ai
+python assistant.py <đường_dẫn_đến_file_ảnh>
+```
+
+## Cách hoạt động
+
+1. Khi một hình ảnh được gửi đến NestJS backend
+2. NestJS lưu ảnh vào thư mục tạm
+3. NestJS gọi trực tiếp `assistant.py` với đường dẫn của ảnh
+4. Python xử lý ảnh và trả về kết quả
+5. NestJS đọc kết quả từ output và gửi lại cho frontend
+
+## Sử dụng API
+
+API trích xuất nguyên liệu:
+
+```
+POST http://localhost:3001/ai/extract-ingredients
+```
+
+Upload file hình ảnh với form-data key là `file`.
+
+### Ví dụ:
+
+```typescript
+const formData = new FormData();
+formData.append('file', imageFile);
+
+const response = await fetch('http://localhost:3001/ai/extract-ingredients', {
+  method: 'POST',
+  body: formData,
+});
+
+const result = await response.json();
+console.log(result.ingredients); // Danh sách nguyên liệu
+```
+
+## Lưu ý
+
+- Python và các thư viện cần thiết phải được cài đặt trên server
+- API_KEY cho Google Gemini cần được đặt trong file `.env` của thư mục src/ai

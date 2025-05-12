@@ -29,6 +29,7 @@ import { RecipeCategoryModule } from './modules/recipe_categorie/recipe_categori
 import { RecipeCategoryMapping } from './modules/recipe_category_mapping/entities/recipe_category_mapping.entities';
 import { IngredientCategoryMapping } from './modules/ingredient_category_mapping/entities/ingredient_category_mapping.entities';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
+import { AiModule } from './modules/ai/ai.module';
 import { RecipeModule } from './modules/recipe/recipe.module';
 import { UnitOfMeasureModule } from './modules/unit_of_measure/unit_of_measure.module';
 
@@ -82,8 +83,8 @@ import { UnitOfMeasureModule } from './modules/unit_of_measure/unit_of_measure.m
     RecipeCategoryModule,
     IngredientModule,
     RecipeModule,
-    RecipeCategoryModule,
-    UnitOfMeasureModule
+    UnitOfMeasureModule,
+    AiModule
   ],
   controllers: [AppController],
   providers: [
