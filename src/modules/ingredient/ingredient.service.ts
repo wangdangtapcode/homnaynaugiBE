@@ -58,4 +58,17 @@ export class IngredientService {
       limit,
     };
   }
+
+  async getRandomIngredients(limit = 6) {
+    const results = await this.ingredientRepository
+      .createQueryBuilder('ingredient')
+      .orderBy('RAND()') // PostgreSQL dùng RANDOM()
+      .limit(limit)
+      .getMany();
+
+    return {
+      data: results,
+      total: results.length,
+    };
+  }
 }

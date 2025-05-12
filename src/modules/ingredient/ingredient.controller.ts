@@ -16,4 +16,11 @@ export class IngredientController {
   async searchIngredients(@Query() queryDto: SearchIngredientQueryDto) {
     return this.ingredientService.searchIngredients(queryDto);
   }
+
+  @Get('suggested')
+  @ApiOperation({ summary: 'Lấy danh sách nguyên liệu ngẫu nhiên gợi ý' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng nguyên liệu trả về', example: 6 })
+  async getSuggestedIngredients(@Query('limit') limit?: number) {
+    return this.ingredientService.getRandomIngredients(limit);
+  }
 }
