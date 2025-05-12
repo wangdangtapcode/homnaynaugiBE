@@ -39,7 +39,10 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Đăng nhập thành công' })
   @ApiResponse({ status: 401, description: 'Thông tin đăng nhập không chính xác' })
   async login(@Body() dto: LoginDto) {
+
     const user = await this.authService.validateUser(dto.loginIdentifier, dto.password);
+
+
     return this.authService.login(user);
   }
 

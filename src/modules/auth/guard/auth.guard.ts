@@ -34,10 +34,10 @@ import {
       if (isPublic) return true;
   
       const request = context.switchToHttp().getRequest();
-      console.log('Request headers:', request.headers);
+      // console.log('Request headers:', request.headers);
       
       const authHeader = request.headers['authorization'];
-      console.log('Auth header:', authHeader);
+      // console.log('Auth header:', authHeader);
   
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         console.log('No authorization header or invalid format');
@@ -45,7 +45,7 @@ import {
       }
   
       const token = authHeader.split(' ')[1].trim();
-      console.log('Token received:', token);
+      // console.log('Token received:', token);
   
       // Kiểm tra token có trong blacklist không
       if (this.authService.isTokenBlacklisted(token)) {
@@ -55,16 +55,16 @@ import {
   
       try {
         const secret = this.config.get<string>('JWT_ACCESS_SECRET');
-        console.log('JWT_ACCESS_SECRET from config:', secret);
+        // console.log('JWT_ACCESS_SECRET from config:', secret);
         
         if (!secret) {
           console.error('JWT_ACCESS_SECRET is not configured');
           throw new Error('JWT_ACCESS_SECRET is not configured');
         }
   
-        console.log('Verifying token with secret:', secret);
+        // console.log('Verifying token with secret:', secret);
         const decoded = jwt.verify(token, secret) as any;
-        console.log('Token decoded:', decoded);
+        // console.log('Token decoded:', decoded);
   
         // Sử dụng thông tin trực tiếp từ token
         request.user = {
@@ -73,51 +73,59 @@ import {
           role: decoded.roles?.[0],
           roles: decoded.roles,
         };
-        console.log('User set in request:', request.user);
+        console.log('User set in request in Auth:', request.user);
   
         return true;
       } catch (error) {
-        console.error('Token verification failed:', error.message);
-        console.error('Error stack:', error.stack);
-        if (error.name === 'TokenExpiredError') {
-          // Token hết hạn, thử refresh token
-          try {
-            const refreshToken = request.cookies['refresh_token'];
-            if (!refreshToken) {
-              throw new UnauthorizedException('No refresh token');
-            }
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token đã hết hạn.');
+      }
+      if (error.name === 'JsonWebTokenError') {
+        throw new UnauthorizedException('Token không hợp lệ.');
+      }
+      // Các lỗi khác cũng có thể coi là không hợp lệ
+      throw new UnauthorizedException('Lỗi xác thực token.');
+        // console.error('Token verification failed:', error.message);
+        // console.error('Error stack:', error.stack);
+        // if (error.name === 'TokenExpiredError') {
+        //   // Token hết hạn, thử refresh token
+        //   try {
+        //     const refreshToken = request.cookies['refresh_token'];
+        //     if (!refreshToken) {
+        //       throw new UnauthorizedException('No refresh token');
+        //     }
 
-            // Verify refresh token
-            const refreshPayload = await this.jwtService.verifyAsync(refreshToken, {
-              secret: process.env.JWT_REFRESH_SECRET
-            });
+        //     // Verify refresh token
+        //     const refreshPayload = await this.jwtService.verifyAsync(refreshToken, {
+        //       secret: process.env.JWT_REFRESH_SECRET
+        //     });
 
-            // Tạo access token mới
-            const newAccessToken = await this.jwtService.signAsync({
-              sub: refreshPayload.sub,
-              username: refreshPayload.username,
-              roles: refreshPayload.roles
-            }, {
-              secret: process.env.JWT_SECRET,
-              expiresIn: '15m'
-            });
+        //     // Tạo access token mới
+        //     const newAccessToken = await this.jwtService.signAsync({
+        //       sub: refreshPayload.sub,
+        //       username: refreshPayload.username,
+        //       roles: refreshPayload.roles
+        //     }, {
+        //       secret: process.env.JWT_SECRET,
+        //       expiresIn: '15m'
+        //     });
 
-            // Set token mới vào header
-            request.headers.authorization = `Bearer ${newAccessToken}`;
+        //     // Set token mới vào header
+        //     request.headers.authorization = `Bearer ${newAccessToken}`;
 
-            // Set user info từ refresh payload
-            request.user = {
-              id: refreshPayload.sub,
-              username: refreshPayload.username,
-              role: refreshPayload.roles?.[0]
-            };
+        //     // Set user info từ refresh payload
+        //     request.user = {
+        //       id: refreshPayload.sub,
+        //       username: refreshPayload.username,
+        //       role: refreshPayload.roles?.[0]
+        //     };
 
-            return true;
-          } catch (refreshError) {
-            throw new UnauthorizedException('Invalid refresh token');
-          }
-        }
-        throw new UnauthorizedException('Token không hợp lệ');
+        //     return true;
+        //   } catch (refreshError) {
+        //     throw new UnauthorizedException('Invalid refresh token');
+        //   }
+        // }
+        // throw new UnauthorizedException('Token không hợp lệ');
       }
     }
 

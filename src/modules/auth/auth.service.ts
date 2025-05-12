@@ -108,10 +108,11 @@ import {
   
     async validateUser(username: string, password: string): Promise<any> {
       const account = await this.accountService.findByUsername(username);
+    
+      
       if (!account) {
         throw new UnauthorizedException('Invalid credentials');
       }
-
       const isPasswordValid = await bcrypt.compare(password, account.password);
       if (!isPasswordValid) {
         throw new UnauthorizedException('Invalid credentials');
@@ -210,9 +211,9 @@ import {
           secret: this.config.get<string>('JWT_ACCESS_SECRET'),
           expiresIn: '15m'
         });
-
+        console.log("accesstoken moi ne",newAccessToken)
         return {
-          access_token: newAccessToken
+          accessToken: newAccessToken
         };
       } catch (error) {
         throw new UnauthorizedException('Invalid refresh token');

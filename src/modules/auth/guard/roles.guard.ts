@@ -39,9 +39,9 @@ import {
         throw new ForbiddenException('Bạn không đủ quyền!');
       }
   
-      console.log('Required roles:', requiredRoles);
-      console.log('User from request:', user);
-      console.log('User role:', user.role);
+      console.log('Required roles in roles guard:', requiredRoles);
+      console.log('User from request in roles guard:', user);
+      console.log('User role in roles guard :', user.roles);
   
       return true;
     }
