@@ -44,3 +44,9 @@ export class IngredientResponseDto {
   //   imageUrl: string | null;
   // }[];
 }
+
+export class FindIngredientsByNamesDto {
+  @IsArray()
+  @IsString({ each: true })
+  names: string[];
+}
