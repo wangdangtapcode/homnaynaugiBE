@@ -58,4 +58,24 @@ export class IngredientService {
       limit,
     };
   }
+
+  async findIngredientsByNames(names: string[]) {
+    const queryBuilder = this.ingredientRepository.createQueryBuilder('ingredient');
+    
+    // Sử dụng LOWER để so sánh chữ thường
+    const conditions = names.map((name, index) => {
+      const paramName = `name${index}`;
+      queryBuilder.orWhere(`LOWER(ingredient.name) LIKE :${paramName}`, { 
+        [paramName]: `%${name.toLowerCase()}%` 
+      });
+    });
+
+    const ingredients = await queryBuilder.getMany();
+
+    return ingredients.map(ingredient => ({
+      id: ingredient.id,
+      name: ingredient.name,
+      imageUrl: ingredient.imageUrl
+    }));
+  }
 }

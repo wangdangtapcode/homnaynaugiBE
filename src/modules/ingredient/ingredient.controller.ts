@@ -1,6 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
-import { SearchIngredientQueryDto } from './ingredient.dto';
+import { SearchIngredientQueryDto, FindIngredientsByNamesDto } from './ingredient.dto';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 @ApiTags('Ingredients')
 @Controller('ingredients')
@@ -15,5 +15,11 @@ export class IngredientController {
   @ApiQuery({ name: 'categoryIds', required: false, description: 'ID danh mục' })
   async searchIngredients(@Query() queryDto: SearchIngredientQueryDto) {
     return this.ingredientService.searchIngredients(queryDto);
+  }
+
+  @Post('find-by-names')
+  @ApiOperation({ summary: 'Tìm kiếm nguyên liệu theo danh sách tên' })
+  async findIngredientsByNames(@Body() dto: FindIngredientsByNamesDto) {
+    return this.ingredientService.findIngredientsByNames(dto.names);
   }
 }

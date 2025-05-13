@@ -34,6 +34,7 @@ import { RecipeModule } from './modules/recipe/recipe.module';
 import { UnitOfMeasureModule } from './modules/unit_of_measure/unit_of_measure.module';
 import { FavoriteRecipeModule } from './modules/favorite_recipe/favorite_recipe.module';
 import { RecipeLikeModule } from './modules/recipe_like/recipe_like.module';
+import { RecipeIngredientModule } from './modules/recipe_ingredient/recipe_ingredient.module';
 
 @Module({
   imports: [
@@ -88,7 +89,8 @@ import { RecipeLikeModule } from './modules/recipe_like/recipe_like.module';
     UnitOfMeasureModule,
     AiModule,
     FavoriteRecipeModule,
-    RecipeLikeModule
+    RecipeLikeModule,
+    RecipeIngredientModule
   ],
   controllers: [AppController],
   providers: [
