@@ -57,9 +57,6 @@ export class RecipeIngredientService {
           description: recipe.description,
           imageUrl: recipe.imageUrl,
           preparationTimeMinutes: recipe.preparationTimeMinutes,
-          matchPercentage: Math.round(matchPercentage),
-          matchedIngredients: matchedIngredients.length,
-          totalIngredients: recipe.recipeIngredients.length,
           ingredients: recipe.recipeIngredients.map(ri => ({
             id: ri.ingredient.id,
             name: ri.ingredient.name,
@@ -71,11 +68,9 @@ export class RecipeIngredientService {
       })
     );
 
-    // Lọc bỏ các công thức không đủ điều kiện và sắp xếp theo % match
-    const filteredRecipes = recipesWithMatch
-      .filter(recipe => recipe !== null)
-      .sort((a, b) => b.matchPercentage - a.matchPercentage);
-
+    // Lọc bỏ các giá trị null và trả về kết quả
+    const filteredRecipes = recipesWithMatch.filter(recipe => recipe !== null);
+    
     return {
       data: filteredRecipes,
       total: filteredRecipes.length
