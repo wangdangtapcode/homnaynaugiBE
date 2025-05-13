@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UnitOfMeasure } from './entities/unit_of_measure.entities';
-import { UnitOfMeasureResponseDto } from './unit_of_measure.dto';
+import { ResponseUnitOfMeasureDto } from './unit_of_measure.dto';
 
 @Injectable()
 export class UnitOfMeasureService {
@@ -23,7 +23,7 @@ export class UnitOfMeasureService {
     return unit;
   }
 
-  async getAllUnits(): Promise<UnitOfMeasureResponseDto[]> {
+  async getAllUnits(): Promise<ResponseUnitOfMeasureDto[]> {
     const units = await this.unitOfMeasureRepository.find();
 
     return units.map((unit) => ({
