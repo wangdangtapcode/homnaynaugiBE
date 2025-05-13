@@ -5,6 +5,7 @@ import { CloudinaryService } from "src/config/cloudinary/cloudinary.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateRecipeCategoryDto } from "./recipe_categorie.dto";
 import { Public } from "../auth/decorator/public.decorator";
+import { RecipeCategory } from "./entities/recipe_categorie.entities";
 
 @ApiTags('Recipe Categories')
 @Controller('recipe-categories')
@@ -57,5 +58,11 @@ export class RecipeCategoryController{
         message: 'Lấy danh sách thành công',
         data: categories,
       };
+    }
+
+    @Get()
+    @ApiOperation({ summary: 'Lấy tất cả danh mục món ăn' })
+    async getAllCategories(): Promise<RecipeCategory[]> {
+      return this.recipeCategoryService.getAllCategories();
     }
 }
