@@ -69,6 +69,7 @@ export class UserProfileController {
       }),
     }),
   )
+  
   async updateProfile(
     @UploadedFile() avatar: Express.Multer.File,
     @Body() updatedData: UpdateUserProfileDto,
