@@ -20,6 +20,17 @@ export class RecipeService {
     private stepRepo: Repository<CookingStep>,
   ) {}
 
+  async getTopFavoriteRecipes(limit = 5): Promise<Recipe[]> {
+  return this.recipeRepo
+    .createQueryBuilder('recipe')
+    .leftJoin('recipe.favorites', 'favorite') // dùng relation OneToMany
+    .groupBy('recipe.id')
+    .orderBy('COUNT(favorite.account_id)', 'DESC')
+    .limit(limit)
+    .getMany();
+}
+
+
   async searchRecipes(queryDto: SearchRecipeQueryDto) {
     const { query, status, offset = 0, limit = 10 } = queryDto;
 

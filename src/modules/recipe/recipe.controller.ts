@@ -2,6 +2,9 @@ import { Controller, Get, Query, Param } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { SearchRecipeQueryDto } from './recipe.dto';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Recipe } from './entities/recipe.entities';
+
+
 
 @ApiTags('Recipes')
 @Controller('recipes')
@@ -17,6 +20,15 @@ export class RecipeController {
   async searchRecipes(@Query() queryDto: SearchRecipeQueryDto) {
     return this.recipeService.searchRecipes(queryDto);
   }
+
+  @Get('top-favorites')
+  async getTopFavoriteRecipes(
+    @Query('limit') limit?: number,
+  ): Promise<Recipe[]> {
+    const recipeLimit = limit && +limit > 0 ? +limit : 5;
+    return this.recipeService.getTopFavoriteRecipes(recipeLimit);
+  }
+
 
  
 }
