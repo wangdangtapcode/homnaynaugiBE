@@ -22,6 +22,10 @@ export class SearchRecipeQueryDto {
   @IsNumber()
   @Min(1)
   limit?: number = 10;
+
+  @IsOptional()
+  @IsString()
+  keyword?: string;
 }
 
 export class RecipeResponseDto {

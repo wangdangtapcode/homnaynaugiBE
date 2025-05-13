@@ -1,7 +1,8 @@
 import { Controller, Get, Query, Post, Body } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { SearchIngredientQueryDto, FindIngredientsByNamesDto } from './ingredient.dto';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { IngredientResponseDto } from './ingredient.dto';
+import { ApiOperation, ApiQuery, ApiTags,ApiOkResponse } from '@nestjs/swagger';
 @ApiTags('Ingredients')
 @Controller('ingredients')
 export class IngredientController {
@@ -15,6 +16,19 @@ export class IngredientController {
   @ApiQuery({ name: 'categoryIds', required: false, description: 'ID danh mục' })
   async searchIngredients(@Query() queryDto: SearchIngredientQueryDto) {
     return this.ingredientService.searchIngredients(queryDto);
+  }
+
+  @Get('suggested')
+  @ApiOperation({ summary: 'Lấy danh sách nguyên liệu ngẫu nhiên gợi ý' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng nguyên liệu trả về', example: 6 })
+  async getSuggestedIngredients(@Query('limit') limit?: number) {
+    return this.ingredientService.getRandomIngredients(limit);
+  }
+
+  @Get()
+  @ApiOkResponse({ type: [IngredientResponseDto], description: 'Danh sách tất cả nguyên liệu' })
+  getAllIngredients(): Promise<IngredientResponseDto[]> {
+    return this.ingredientService.getAllIngredients();
   }
 
   @Post('find-by-names')

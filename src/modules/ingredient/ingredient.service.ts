@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, In } from 'typeorm';
 import { Ingredient } from './entities/ingredient.entities';
 import { SearchIngredientQueryDto } from './ingredient.dto';
+import { IngredientResponseDto } from './ingredient.dto';
 
 @Injectable()
 export class IngredientService {
@@ -57,6 +58,29 @@ export class IngredientService {
       offset,
       limit,
     };
+  }
+
+  async getRandomIngredients(limit = 6) {
+    const results = await this.ingredientRepository
+      .createQueryBuilder('ingredient')
+      .orderBy('RAND()') // PostgreSQL dùng RANDOM()
+      .limit(limit)
+      .getMany();
+
+    return {
+      data: results,
+      total: results.length,
+    };
+  }
+
+
+    async getAllIngredients(): Promise<IngredientResponseDto[]> {
+    const ingredients = await this.ingredientRepository.find();
+    return ingredients.map((ingredient) => ({
+      id: ingredient.id,
+      name: ingredient.name,
+      imageUrl: ingredient.imageUrl,
+    }));
   }
 
   async findIngredientsByNames(names: string[]) {
