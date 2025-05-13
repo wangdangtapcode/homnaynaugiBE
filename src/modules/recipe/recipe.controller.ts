@@ -11,6 +11,7 @@ import { FavoriteRecipeService } from '../favorite_recipe/favorite_recipe.servic
 import { ToggleFavoriteRecipeDto } from '../favorite_recipe/favorite_recipe.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Recipe } from './entities/recipe.entities';
 
 interface RequestWithUser extends Request {
   user?: {
@@ -52,9 +53,9 @@ export class RecipeController {
   @Get('popular')
   @Public()
   @ApiOperation({ summary: 'Lấy 5 công thức phổ biến nhất' })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'Trả về danh sách 5 công thức phổ biến nhất, được tính điểm dựa trên công thức: (số lượt xem * 0.5 + số lượt like * 2 + số lượt yêu thích * 3)' 
+  @ApiResponse({
+    status: 200,
+    description: 'Trả về danh sách 5 công thức phổ biến nhất, được tính điểm dựa trên công thức: (số lượt xem * 0.5 + số lượt like * 2 + số lượt yêu thích * 3)'
   })
   async getPopularRecipes(@Req() req: RequestWithUser) {
     const accountId = req.user?.id;
@@ -65,9 +66,9 @@ export class RecipeController {
   @Public()
   @ApiOperation({ summary: 'Lấy 4 công thức nổi bật nhất theo danh mục' })
   @ApiParam({ name: 'categoryId', description: 'ID của danh mục' })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'Trả về danh sách 4 công thức nổi bật nhất trong danh mục, được tính điểm dựa trên công thức: (số lượt xem * 0.5 + số lượt like * 2 + số lượt yêu thích * 3)' 
+  @ApiResponse({
+    status: 200,
+    description: 'Trả về danh sách 4 công thức nổi bật nhất trong danh mục, được tính điểm dựa trên công thức: (số lượt xem * 0.5 + số lượt like * 2 + số lượt yêu thích * 3)'
   })
   async getTopRecipesByCategory(
     @Param('categoryId', ParseIntPipe) categoryId: number,
@@ -89,7 +90,7 @@ export class RecipeController {
     let accountId: string | undefined;
     let tokenStatus = 'none'; // none, valid, expired
     const authHeader = req.headers['authorization'];
-    
+
     if (authHeader && authHeader.startsWith('Bearer ')) {
       try {
         const token = authHeader.split(' ')[1];
@@ -104,7 +105,7 @@ export class RecipeController {
         console.log('Error type:', error.constructor.name);
         console.log('Error name:', error.name);
         console.log('Error message:', error.message);
-        
+
         // Kiểm tra chi tiết hơn về lỗi
         if (error.name === 'TokenExpiredError' || error.message.includes('expired')) {
           tokenStatus = 'expired';
@@ -115,12 +116,12 @@ export class RecipeController {
         }
       }
     }
-    
+
     const shouldIncreaseView = increaseView !== 'false';
     const recipe = await this.recipeService.getRecipeDetailForUser(id, accountId, shouldIncreaseView);
-    
+
     console.log('Returning token status:', tokenStatus);
-    
+
     return {
       message: 'Lấy chi tiết công thức thành công',
       data: recipe,
@@ -156,5 +157,13 @@ export class RecipeController {
     }
     const dto: ToggleFavoriteRecipeDto = { recipeId: id };
     return this.favoriteRecipeService.toggleFavorite(req.user.id, dto);
+  }
+
+  @Get('top-favorites')
+  async getTopFavoriteRecipes(
+    @Query('limit') limit?: number,
+  ): Promise<Recipe[]> {
+    const recipeLimit = limit && +limit > 0 ? +limit : 5;
+    return this.recipeService.getTopFavoriteRecipes(recipeLimit);
   }
 }
