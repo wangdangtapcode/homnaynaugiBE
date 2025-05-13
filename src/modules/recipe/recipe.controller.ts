@@ -1,9 +1,16 @@
-import { Controller, Get, Query, Param, ParseIntPipe, Req } from '@nestjs/common';
+import { Controller, Get, Query, Param, ParseIntPipe, Req, Post, UseGuards } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { SearchRecipeQueryDto } from './recipe.dto';
 import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Request } from 'express';
 import { Public } from '../auth/decorator/public.decorator';
+import { AuthGuard } from '../auth/guard/auth.guard';
+import { RecipeLikeService } from '../recipe_like/recipe_like.service';
+import { ToggleRecipeLikeDto } from '../recipe_like/recipe_like.dto';
+import { FavoriteRecipeService } from '../favorite_recipe/favorite_recipe.service';
+import { ToggleFavoriteRecipeDto } from '../favorite_recipe/favorite_recipe.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 interface RequestWithUser extends Request {
   user?: {
@@ -14,7 +21,13 @@ interface RequestWithUser extends Request {
 @ApiTags('Recipes')
 @Controller('recipes')
 export class RecipeController {
-  constructor(private readonly recipeService: RecipeService) {}
+  constructor(
+    private readonly recipeService: RecipeService,
+    private readonly recipeLikeService: RecipeLikeService,
+    private readonly favoriteRecipeService: FavoriteRecipeService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get("search")
   @Public()
@@ -62,5 +75,86 @@ export class RecipeController {
   ) {
     const accountId = req.user?.id;
     return this.recipeService.getTopRecipesByCategory(categoryId, accountId);
+  }
+
+  @Get('detail/:id')
+  @Public()
+  @ApiOperation({ summary: 'Chi tiết công thức' })
+  async getDetail(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Query('increaseView') increaseView?: string
+  ) {
+    // Tự trích xuất và xác thực token nếu có
+    let accountId: string | undefined;
+    let tokenStatus = 'none'; // none, valid, expired
+    const authHeader = req.headers['authorization'];
+    
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const token = authHeader.split(' ')[1];
+        // Xác thực và giải mã token
+        const decoded = this.jwtService.verify(token, {
+          secret: this.configService.get<string>('JWT_ACCESS_SECRET')
+        });
+        accountId = decoded.sub;
+        tokenStatus = 'valid';
+      } catch (error) {
+        // Token không hợp lệ hoặc hết hạn
+        console.log('Error type:', error.constructor.name);
+        console.log('Error name:', error.name);
+        console.log('Error message:', error.message);
+        
+        // Kiểm tra chi tiết hơn về lỗi
+        if (error.name === 'TokenExpiredError' || error.message.includes('expired')) {
+          tokenStatus = 'expired';
+          console.log('Token status set to expired');
+        } else {
+          tokenStatus = 'invalid';
+          console.log('Token status set to invalid');
+        }
+      }
+    }
+    
+    const shouldIncreaseView = increaseView !== 'false';
+    const recipe = await this.recipeService.getRecipeDetailForUser(id, accountId, shouldIncreaseView);
+    
+    console.log('Returning token status:', tokenStatus);
+    
+    return {
+      message: 'Lấy chi tiết công thức thành công',
+      data: recipe,
+      tokenStatus
+    };
+  }
+
+  @Post(':id/like')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Thích/bỏ thích công thức' })
+  @ApiParam({ name: 'id', description: 'ID của công thức' })
+  async toggleLike(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser
+  ) {
+    if (!req.user) {
+      throw new Error('Bạn cần đăng nhập để thực hiện hành động này');
+    }
+    const dto: ToggleRecipeLikeDto = { recipeId: id };
+    return this.recipeLikeService.toggleLike(req.user.id, dto);
+  }
+
+  @Post(':id/favorite')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Thêm/xóa công thức khỏi danh sách yêu thích' })
+  @ApiParam({ name: 'id', description: 'ID của công thức' })
+  async toggleFavorite(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser
+  ) {
+    if (!req.user) {
+      throw new Error('Bạn cần đăng nhập để thực hiện hành động này');
+    }
+    const dto: ToggleFavoriteRecipeDto = { recipeId: id };
+    return this.favoriteRecipeService.toggleFavorite(req.user.id, dto);
   }
 }
