@@ -13,6 +13,8 @@ import { CloudinaryModule } from '../../config/cloudinary/cloudinary.module';
 import { RecipeLike } from '../recipe_like/entities/recipe_like.entities';
 import { ViewHistory } from '../view_history/entities/view_history.entities';
 import { FavoriteRecipe } from '../favorite_recipe/entities/favorite_recipe.entities';
+import { RecipeLikeModule } from '../recipe_like/recipe_like.module';
+import { FavoriteRecipeModule } from '../favorite_recipe/favorite_recipe.module';
 
 @Module({
   imports: [
@@ -27,7 +29,9 @@ import { FavoriteRecipe } from '../favorite_recipe/entities/favorite_recipe.enti
       FavoriteRecipe
     ]),
     AuthModule,
-    CloudinaryModule
+    CloudinaryModule,
+    RecipeLikeModule,
+    FavoriteRecipeModule
   ],
   controllers: [RecipeController, AdminRecipeController],
   providers: [RecipeService],

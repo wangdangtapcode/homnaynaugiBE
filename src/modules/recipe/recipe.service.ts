@@ -37,27 +37,34 @@ export class RecipeService {
 
   async searchRecipes(queryDto: SearchRecipeQueryDto) {
     const { query, status, offset = 0, limit = 10 } = queryDto;
-
+  
     const qb = this.recipeRepo.createQueryBuilder('recipe')
       .leftJoinAndSelect('recipe.account', 'account')
       .leftJoinAndSelect('recipe.categoryMappings', 'categoryMappings')
       .leftJoinAndSelect('categoryMappings.recipeCategory', 'category');
-
+  
     if (query) {
-      qb.andWhere('recipe.name ILIKE :query OR recipe.description ILIKE :query', {
+      qb.andWhere('LOWER(recipe.name) LIKE LOWER(:query)', {
         query: `%${query}%`,
       });
     }
-
+  
     if (status) {
       qb.andWhere('recipe.status = :status', { status });
     }
-
+  
+    // Thêm GROUP BY cho tất cả các cột cần thiết
+    qb.groupBy('recipe.id')
+      .addGroupBy('account.id')
+      .addGroupBy('categoryMappings.recipe_id')
+      .addGroupBy('categoryMappings.recipe_category_id')
+      .addGroupBy('category.id');
+  
     const [data, total] = await qb
       .skip(offset)
       .take(limit)
       .getManyAndCount();
-
+  
     return {
       data,
       total,
@@ -384,6 +391,89 @@ export class RecipeService {
       totalViews,
     };
   }
+
+  async getRecipeDetailForUser(id: string, accountId?: string, increaseView = true) {
+    const recipe = await this.recipeRepo.findOne({
+      where: { 
+        id,
+        status: RecipeStatus.PUBLIC // Chỉ lấy công thức công khai
+      },
+      relations: [
+        'account',
+        'account.userProfile',
+        'categoryMappings',
+        'categoryMappings.recipeCategory',
+        'recipeIngredients',
+        'recipeIngredients.ingredient',
+        'recipeIngredients.unit',
+        'cookingSteps'
+      ],
+    });
+
+    if (!recipe) {
+      throw new NotFoundException(`Không tìm thấy công thức với id: ${id}`);
+    }
+
+    // Đếm like
+// Đếm likes
+const totalLikes = await this.recipeLikeRepo.count({
+  where: { recipeId: id }
+});
+
+// Đếm favorites
+const totalFavorites = await this.favoriteRecipeRepo.count({
+  where: { recipeId: id }
+});
+
+// Đếm views
+const totalViews = await this.viewHistoryRepo.count({
+  where: { recipeId: id }
+});
+
+
+    // Kiểm tra xem công thức có phải là favorite của người dùng hiện tại không
+    let isFavorite = false;
+    // Kiểm tra xem người dùng đã like công thức này chưa
+    let isLiked = false;
+    if (accountId) {
+      // Kiểm tra favorite
+      const favorite = await this.favoriteRecipeRepo.findOne({
+        where: {
+          recipeId: id,
+          accountId: accountId
+        }
+      });
+      isFavorite = !!favorite;
+      
+      // Kiểm tra like
+      const like = await this.recipeLikeRepo.findOne({
+        where: {
+          recipeId: id ,
+          accountId: accountId
+        }
+      });
+      isLiked = !!like;
+    }
+
+    // Tăng lượt xem cho tất cả người dùng
+    if (increaseView) {
+      await this.viewHistoryRepo.save({
+        accountId: accountId || null,
+        recipeId: id,
+        viewedAt: new Date()
+      });
+    }
+
+    return {
+      ...recipe,
+      totalLikes,
+      totalFavorites,
+      totalViews,
+      isFavorite,
+      isLiked
+    };
+  }
+
   async getRecipeById(id: string) {
     const recipe = await this.recipeRepo.findOne({
       where: { id },
@@ -404,10 +494,13 @@ export class RecipeService {
     if (!recipe) {
       throw new NotFoundException('Không tìm thấy công thức phù hợp');
     }
-
     return {
       message: 'Lấy công thức thành công',
-      data: recipe,
+      data: {
+        id: recipe.id,
+        imageUrl: recipe.imageUrl,
+        description: recipe.description,
+      }
     };
   }
 
@@ -415,6 +508,7 @@ export class RecipeService {
     const qb = this.recipeRepo
       .createQueryBuilder('recipe')
       .leftJoinAndSelect('recipe.account', 'account')
+      .leftJoinAndSelect('account.userProfile', 'userProfile')
       .leftJoinAndSelect('recipe.categoryMappings', 'categoryMappings')
       .leftJoinAndSelect('categoryMappings.recipeCategory', 'category')
       .where('recipe.status = :status', { status: 'public' });
@@ -460,6 +554,7 @@ export class RecipeService {
     const qb = this.recipeRepo
       .createQueryBuilder('recipe')
       .leftJoinAndSelect('recipe.account', 'account')
+      .leftJoinAndSelect('account.userProfile', 'userProfile')
       .leftJoinAndSelect('recipe.categoryMappings', 'categoryMappings')
       .leftJoinAndSelect('categoryMappings.recipeCategory', 'category')
       .where('recipe.status = :status', { status: 'public' })
