@@ -1,7 +1,15 @@
-import { Controller, Get, Query, Param } from '@nestjs/common';
+import { Controller, Get, Query, Param, ParseIntPipe, Req } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { SearchRecipeQueryDto } from './recipe.dto';
-import { ApiOperation, ApiQuery, ApiTags, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { Request } from 'express';
+import { Public } from '../auth/decorator/public.decorator';
+
+interface RequestWithUser extends Request {
+  user?: {
+    id: string;
+  };
+}
 
 @ApiTags('Recipes')
 @Controller('recipes')
@@ -9,6 +17,7 @@ export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
   @Get("search")
+  @Public()
   @ApiOperation({ summary: 'Tìm kiếm công thức' })
   @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
   @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức' })
@@ -18,4 +27,40 @@ export class RecipeController {
     return this.recipeService.searchRecipes(queryDto);
   }
 
+  @Get('banner')
+  @Public()
+  @ApiOperation({ summary: 'Lấy ngẫu nhiên một công thức công khai' })
+  @ApiResponse({ status: 200, description: 'Trả về một công thức ngẫu nhiên' })
+  @ApiResponse({ status: 404, description: 'Không tìm thấy công thức phù hợp' })
+  async getBannerRecipe() {
+    return this.recipeService.getRandomRecipe();
+  }
+
+  @Get('popular')
+  @Public()
+  @ApiOperation({ summary: 'Lấy 5 công thức phổ biến nhất' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Trả về danh sách 5 công thức phổ biến nhất, được tính điểm dựa trên công thức: (số lượt xem * 0.5 + số lượt like * 2 + số lượt yêu thích * 3)' 
+  })
+  async getPopularRecipes(@Req() req: RequestWithUser) {
+    const accountId = req.user?.id;
+    return this.recipeService.getPopularRecipes(accountId);
+  }
+
+  @Get('category/:categoryId/top')
+  @Public()
+  @ApiOperation({ summary: 'Lấy 4 công thức nổi bật nhất theo danh mục' })
+  @ApiParam({ name: 'categoryId', description: 'ID của danh mục' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Trả về danh sách 4 công thức nổi bật nhất trong danh mục, được tính điểm dựa trên công thức: (số lượt xem * 0.5 + số lượt like * 2 + số lượt yêu thích * 3)' 
+  })
+  async getTopRecipesByCategory(
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+    @Req() req: RequestWithUser
+  ) {
+    const accountId = req.user?.id;
+    return this.recipeService.getTopRecipesByCategory(categoryId, accountId);
+  }
 }

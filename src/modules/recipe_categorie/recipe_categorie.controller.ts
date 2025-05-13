@@ -4,8 +4,7 @@ import { RecipeCategoryService } from "./recipe_categorie.service";
 import { CloudinaryService } from "src/config/cloudinary/cloudinary.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateRecipeCategoryDto } from "./recipe_categorie.dto";
-
-
+import { Public } from "../auth/decorator/public.decorator";
 
 @ApiTags('Recipe Categories')
 @Controller('recipe-categories')
@@ -16,6 +15,7 @@ export class RecipeCategoryController{
     ){}
 
     @Get("search")
+    @Public()
     @ApiOperation({ summary: 'Lấy danh sách danh mục món ăn' })
     @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
     @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
@@ -35,6 +35,7 @@ export class RecipeCategoryController{
     }
   
     @Get('seach/:id')
+    @Public()
     @ApiOperation({ summary: 'Lấy thông tin danh mục món ăn' })
     @ApiResponse({ status: 200, description: 'Lấy thông tin thành công' })
     @ApiResponse({ status: 404, description: 'Không tìm thấy danh mục' })
@@ -43,6 +44,18 @@ export class RecipeCategoryController{
       return {
         message: 'Lấy thông tin thành công',
         data: category,
+      };
+    }
+
+    @Get('random')
+    @Public()
+    @ApiOperation({ summary: 'Lấy ngẫu nhiên 6 danh mục món ăn' })
+    @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
+    async getRandomCategories() {
+      const categories = await this.recipeCategoryService.getRandomCategories();
+      return {
+        message: 'Lấy danh sách thành công',
+        data: categories,
       };
     }
 }

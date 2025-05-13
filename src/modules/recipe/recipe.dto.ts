@@ -132,3 +132,9 @@ export class CreateRecipeDto {
   @Type(() => CookingStepDto)
   steps: CookingStepDto[];
 }
+
+export class UpdateRecipeDto extends CreateRecipeDto {
+  @IsOptional()
+  @IsString()
+  id: string;
+}
