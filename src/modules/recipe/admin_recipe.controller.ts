@@ -68,7 +68,7 @@ export class AdminRecipeController {
   @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu' })
   @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả' })
   async searchRecipes(@Query() queryDto: SearchRecipeQueryDto) {
-    return this.recipeService.searchRecipes(queryDto);
+    return this.recipeService.searchRecipesForAdmin(queryDto);
   }
   @Get('get-recipe/:id')
   @Roles(RoleName.ADMIN)

@@ -1,25 +1,30 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
-import { UnitOfMeasureService } from './unit_of_measure.service';
-import { RolesGuard } from '../auth/guard/roles.guard';
-import { AuthGuard } from '../auth/guard/auth.guard';
-import {
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get} from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ResponseUnitOfMeasureDto } from "./unit_of_measure.dto";
+import { UnitOfMeasureService } from "./unit_of_measure.service";
+import { Public } from "../auth/decorator/public.decorator";
 
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { ResponseUnitOfMeasureDto } from './unit_of_measure.dto';
 
-@ApiTags('Units of Measure')
-@Controller('units')
-@UseGuards(AuthGuard, RolesGuard)
-@ApiBearerAuth()
+@ApiTags('Unit Of Measure')
+@Controller('unit-of-measure')
 export class UnitOfMeasureController {
-  constructor(private readonly unitService: UnitOfMeasureService) {}
+    constructor(private readonly unitOfMeasureService:UnitOfMeasureService){}
 
-  @Get()
-  @ApiOkResponse({ type: [ResponseUnitOfMeasureDto], description: 'Danh sách đơn vị đo lường' })
-  getAllUnits(): Promise<ResponseUnitOfMeasureDto[]> {
-    return this.unitService.getAllUnits();
-  }
+
+    @Get('all')
+    @Public()
+@ApiResponse({
+  status: 200,
+  description: 'Danh sách đơn vị đo',
+  type: ResponseUnitOfMeasureDto,
+  isArray: true,
+})
+async findAll(): Promise<ResponseUnitOfMeasureDto[]> {
+  const units = await this.unitOfMeasureService.findAll();
+  return units.map((unit) => ({
+    id: unit.id,
+    unitName: unit.unitName,
+    symbol: unit.symbol,
+  }));
+}
 }
