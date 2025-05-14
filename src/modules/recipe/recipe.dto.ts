@@ -12,6 +12,10 @@ export class SearchRecipeQueryDto {
   status?: RecipeStatus;
 
   @IsOptional()
+  @IsString()
+  accountId?: string;
+
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(0)

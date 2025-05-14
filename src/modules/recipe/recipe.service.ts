@@ -7,7 +7,6 @@ import { RecipeCategoryMapping } from '../recipe_category_mapping/entities/recip
 import { RecipeIngredient } from '../recipe_ingredient/entities/recipe_ingredient.entities';
 import { CookingStep } from '../cooking_step/entities/cooking_step.entities';
 import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
-import { Express } from 'express';
 import { RecipeLike } from '../recipe_like/entities/recipe_like.entities';
 import { ViewHistory } from '../view_history/entities/view_history.entities';
 import { FavoriteRecipe } from '../favorite_recipe/entities/favorite_recipe.entities';
@@ -25,18 +24,17 @@ export class RecipeService {
     @InjectRepository(CookingStep)
     private stepRepo: Repository<CookingStep>,
     @InjectRepository(RecipeLike)
-    private recipeLikeRepo:Repository<RecipeLike>,
+    private recipeLikeRepo: Repository<RecipeLike>,
     @InjectRepository(ViewHistory)
-    private viewHistoryRepo:Repository<ViewHistory>,
+    private viewHistoryRepo: Repository<ViewHistory>,
     @InjectRepository(FavoriteRecipe)
-    private favoriteRecipeRepo:Repository<FavoriteRecipe>,
+    private favoriteRecipeRepo: Repository<FavoriteRecipe>,
     private dataSource: DataSource,
     private cloudinaryService: CloudinaryService,
-
   ) {}
 
   async searchRecipes(queryDto: SearchRecipeQueryDto) {
-    const { query, status, offset = 0, limit = 10 } = queryDto;
+    const { query, status, accountId, offset = 0, limit = 10 } = queryDto;
 
     // Build query builder
     const queryBuilder = this.recipeRepo.createQueryBuilder('recipe')
@@ -44,18 +42,31 @@ export class RecipeService {
       .leftJoin('recipe.likes', 'recipeLike')
       .leftJoin('recipe.favorites', 'favoriteRecipe')
       .select([
-        'recipe.id',
-        'recipe.name',
-        'recipe.status',
-        'recipe.imageUrl',
-        'recipe.createdAt',
+        'recipe.id as recipe_id',
+        'recipe.name as recipe_name',
+        'recipe.status as recipe_status',
+        'recipe.imageUrl as recipe_imageUrl',
+        'recipe.preparationTimeMinutes as recipe_preparationTimeMinutes',
+        'recipe.description as recipe_description',
+        'recipe.createdAt as recipe_createdAt',
         'COUNT(DISTINCT viewHistory.id) as viewCount',
-        'COUNT(DISTINCT CONCAT(recipeLike.accountId, "-", recipeLike.recipeId)) as likeCount',
-        'COUNT(DISTINCT CONCAT(favoriteRecipe.accountId, "-", favoriteRecipe.recipeId)) as favoriteCount'
+        'COUNT(DISTINCT CONCAT(recipeLike.accountId, \'-\', recipeLike.recipeId)) as likeCount',
+        'COUNT(DISTINCT CONCAT(favoriteRecipe.accountId, \'-\', favoriteRecipe.recipeId)) as favoriteCount'
       ])
-      .groupBy('recipe.id');
+      .groupBy('recipe.id')
+      .addGroupBy('recipe.name')
+      .addGroupBy('recipe.status')
+      .addGroupBy('recipe.imageUrl')
+      .addGroupBy('recipe.preparationTimeMinutes')
+      .addGroupBy('recipe.description')
+      .addGroupBy('recipe.createdAt');
 
-    // Add search conditions
+    // Lọc theo accountId nếu có
+    if (accountId) {
+      queryBuilder.andWhere('recipe.accountId = :accountId', { accountId });
+    }
+
+    // Lọc theo query và status
     if (query) {
       queryBuilder.andWhere('recipe.name LIKE :query', { query: `%${query}%` });
     }
@@ -71,27 +82,24 @@ export class RecipeService {
       .orderBy('recipe.createdAt', 'DESC');
 
     // Execute query
-    const [recipes, total] = await queryBuilder.getManyAndCount();
+    const rawResults = await queryBuilder.getRawMany();
+    const total = rawResults.length;
 
-    // Transform the response and ensure unique recipes
-    const uniqueRecipes = new Map();
-    recipes.forEach(recipe => {
-      if (!uniqueRecipes.has(recipe.id)) {
-        uniqueRecipes.set(recipe.id, {
-          id: recipe.id,
-          name: recipe.name,
-          status: recipe.status,
-          imageUrl: recipe.imageUrl,
-          viewCount: Number(recipe['viewCount'] || 0),
-          likeCount: Number(recipe['likeCount'] || 0),
-          favoriteCount: Number(recipe['favoriteCount'] || 0),
-          createdAt: recipe.createdAt,
-        });
-      }
-    });
+    const data = rawResults.map(row => ({
+      id: row.recipe_id,
+      name: row.recipe_name,
+      status: row.recipe_status,
+      imageUrl: row.recipe_imageUrl,
+      preparationTimeMinutes: row.recipe_preparationTimeMinutes || 0,
+      description: row.recipe_description,
+      createdAt: row.recipe_createdAt,
+      viewCount: Number(row.viewCount || 0),
+      likeCount: Number(row.likeCount || 0),
+      favoriteCount: Number(row.favoriteCount || 0)
+    }));
 
     return {
-      data: Array.from(uniqueRecipes.values()),
+      data,
       total,
       offset,
       limit,
@@ -217,11 +225,11 @@ export class RecipeService {
       // Rollback transaction on error
       await queryRunner.rollbackTransaction();
       console.error('Error creating recipe:', error);
-      
+
       if (error instanceof BadRequestException) {
         throw error;
       }
-      
+
       // Log detailed error information
       if (error instanceof Error) {
         console.error('Error details:', {
@@ -230,7 +238,7 @@ export class RecipeService {
           name: error.name
         });
       }
-      
+
       throw new InternalServerErrorException('Không thể tạo công thức: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       // Release query runner
@@ -238,26 +246,25 @@ export class RecipeService {
     }
   }
 
-
   async findByIdWithStats(id: string) {
     const recipe = await this.recipeRepo.findOne({
       where: { id },
       relations: ['account', 'categoryMappings', 'categoryMappings.recipeCategory', 'recipeIngredients', 'cookingSteps'],
     });
-  
+
     if (!recipe) {
       throw new NotFoundException(`Không tìm thấy công thức với id: ${id}`);
     }
-  
+
     // Đếm like
     const totalLikes = await this.recipeLikeRepo.count({ where: { recipe: { id } } });
-  
+
     // Đếm favorites
     const totalFavorites = await this.favoriteRecipeRepo.count({ where: { recipe: { id } } });
-  
+
     // Đếm views
     const totalViews = await this.viewHistoryRepo.count({ where: { recipe: { id } } });
-  
+
     return {
       ...recipe,
       totalLikes,
@@ -265,6 +272,7 @@ export class RecipeService {
       totalViews,
     };
   }
+
   async getRecipeById(id: string) {
     const recipe = await this.recipeRepo.findOne({
       where: { id },

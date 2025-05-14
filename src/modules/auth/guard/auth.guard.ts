@@ -32,21 +32,21 @@ import {
         context.getClass(),
       ]);
       if (isPublic) return true;
-  
+
       const request = context.switchToHttp().getRequest();
       // console.log('Request headers:', request.headers);
       
       const authHeader = request.headers['authorization'];
       // console.log('Auth header:', authHeader);
-  
+
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         console.log('No authorization header or invalid format');
         throw new UnauthorizedException('Bạn chưa đăng nhập!');
       }
-  
+
       const token = authHeader.split(' ')[1].trim();
       // console.log('Token received:', token);
-  
+
       // Kiểm tra token có trong blacklist không
       if (this.authService.isTokenBlacklisted(token)) {
         console.log('Token is blacklisted');
@@ -68,19 +68,18 @@ import {
   
         // Sử dụng thông tin trực tiếp từ token
         request.user = {
-          id: decoded.sub,
-          username: decoded.username,
-          role: decoded.roles?.[0],
-          roles: decoded.roles,
+          id: payload.sub,
+          username: payload.username,
+          role: payload.roles?.[0],
+          roles: payload.roles,
         };
-        console.log('/////////////////////////////////////////\nUser set in request in Auth:', request.user);
-  
+        console.log('User set in request:', request.user);
         return true;
       } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Token đã hết hạn.');
-      }
-      if (error.name === 'JsonWebTokenError') {
+        console.error('Token validation error:', error.message);
+        if (error.name === 'TokenExpiredError') {
+          throw new UnauthorizedException('Token đã hết hạn.');
+        }
         throw new UnauthorizedException('Token không hợp lệ.');
       }
       // Các lỗi khác cũng có thể coi là không hợp lệ
