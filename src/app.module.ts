@@ -36,6 +36,7 @@ import { FavoriteRecipeModule } from './modules/favorite_recipe/favorite_recipe.
 import { RecipeLikeModule } from './modules/recipe_like/recipe_like.module';
 import { RecipeIngredientModule } from './modules/recipe_ingredient/recipe_ingredient.module';
 import { SearchModule } from './modules/search/search.module';
+import { AccountPantryItemModule } from './modules/account_pantry_item/account_pantry_item.module';
 
 @Module({
   imports: [
@@ -92,7 +93,8 @@ import { SearchModule } from './modules/search/search.module';
     FavoriteRecipeModule,
     RecipeLikeModule,
     SearchModule,
-    RecipeIngredientModule
+    RecipeIngredientModule,
+    AccountPantryItemModule
   ],
   controllers: [AppController],
   providers: [
