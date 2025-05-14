@@ -23,6 +23,8 @@ export class RecipeIngredientService {
       .leftJoinAndSelect('recipe.recipeIngredients', 'recipeIngredient')
       .leftJoinAndSelect('recipeIngredient.ingredient', 'ingredient')
       .leftJoinAndSelect('recipeIngredient.unit', 'unit')
+      .leftJoinAndSelect('recipe.account', 'account')
+      .leftJoinAndSelect('account.userProfile', 'userProfile')
       .where('ingredient.id IN (:...ingredientIds)', {
         ingredientIds: ingredients.map(i => i.id)
       })
@@ -43,6 +45,13 @@ export class RecipeIngredientService {
         description: recipe.description,
         imageUrl: recipe.imageUrl,
         preparationTimeMinutes: recipe.preparationTimeMinutes,
+        account: {
+          username: recipe.account?.username,
+          userProfile: {
+            fullName: recipe.account?.userProfile?.fullName || 'Ẩn danh',
+            avatarUrl: recipe.account?.userProfile?.avatarUrl || 'https://via.placeholder.com/150'
+          }
+        },
         ingredients: recipe.recipeIngredients.map(ri => ({
           id: ri.ingredient.id,
           name: ri.ingredient.name,
