@@ -15,6 +15,8 @@ export class CreateIngredientCategoryDto {
     example: 'https://example.com/images/vegetables.png',
     required: false,
   })
+
+  
   @IsString()
   @IsOptional()
   imageUrl?: string;

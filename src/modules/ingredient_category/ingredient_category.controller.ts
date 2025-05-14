@@ -115,4 +115,9 @@ export class IngredientCategoryController {
       message: 'Xóa danh mục thành công',
     };
   }
+
+  // @Get()
+  // async getAllIngredients(): Promise<CreateIngredientCategoryDto[]> {
+  //   return this.ingredientCategoryService.getAllIngredients();
+  // }
 }

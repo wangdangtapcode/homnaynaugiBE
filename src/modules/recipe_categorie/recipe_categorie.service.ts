@@ -84,4 +84,8 @@ export class RecipeCategoryService{
 
         return categories;
       }
+
+      async getAllCategories(): Promise<RecipeCategory[]> {
+        return this.recipeCategoryRepository.find();
+      }
 }
