@@ -1,7 +1,7 @@
-import { Controller, Get, Query, Param, ParseIntPipe, Req, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Param, ParseIntPipe, Req, Post, UseGuards, UseInterceptors, UploadedFiles, Body, Put } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { SearchRecipeQueryDto } from './recipe.dto';
-import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { CreateRecipeDto, SearchRecipeQueryDto, UpdateRecipeDto } from './recipe.dto';
+import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse, ApiConsumes } from '@nestjs/swagger';
 import { Request } from 'express';
 import { Public } from '../auth/decorator/public.decorator';
 import { AuthGuard } from '../auth/guard/auth.guard';
@@ -11,6 +11,8 @@ import { FavoriteRecipeService } from '../favorite_recipe/favorite_recipe.servic
 import { ToggleFavoriteRecipeDto } from '../favorite_recipe/favorite_recipe.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
 
 interface RequestWithUser extends Request {
   user?: {
@@ -27,6 +29,7 @@ export class RecipeController {
     private readonly favoriteRecipeService: FavoriteRecipeService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   @Get("search")
@@ -156,5 +159,109 @@ export class RecipeController {
     }
     const dto: ToggleFavoriteRecipeDto = { recipeId: id };
     return this.favoriteRecipeService.toggleFavorite(req.user.id, dto);
+  }
+
+  @Post("create")
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Tạo mới công thức (User)' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FilesInterceptor('images'))
+  async createRecipe(
+    @Body() dto: CreateRecipeDto,
+    @Req() req: RequestWithUser,
+    @UploadedFiles() files?: Express.Multer.File[],
+  ) {
+
+    console.log('--- NESTJS CONTROLLER ---');
+    console.log('Received CreateRecipeDto:', JSON.stringify(dto, null, 2));
+    console.log('Received Files:', files?.map(f => ({ fieldname: f.fieldname, originalname: f.originalname, size: f.size })));
+    console.log('-------------------------');
+    let currentFileIndex = 0;
+    
+    // Upload recipe image if hasNewRecipeImageFile is true
+    if (dto.hasNewRecipeImageFile && files && files.length > currentFileIndex) {
+      const recipeImage = files[currentFileIndex];
+      const uploadResult = await this.cloudinaryService.uploadImage(recipeImage);
+      dto.imageUrl = uploadResult.secure_url;
+      currentFileIndex++;
+    }
+
+    // Upload step images if there are more files
+    if (files && files.length > currentFileIndex && dto.steps) {
+      // Lặp qua từng bước và kiểm tra hasNewImageFile
+      for (let i = 0; i < dto.steps.length; i++) {
+        const step = dto.steps[i];
+        if (step.hasNewImageFile && currentFileIndex < files.length) {
+          const stepImageResult = await this.cloudinaryService.uploadImage(files[currentFileIndex]);
+          dto.steps[i].imageUrl = stepImageResult.secure_url;
+          currentFileIndex++;
+        }
+      }
+    }
+    console.log("XONG BUOC UP FILE LEN CLOUD")
+    if (!req.user) {
+      throw new Error('Bạn cần đăng nhập để thực hiện hành động này');
+    }
+    return this.recipeService.createRecipe(dto, req.user.id);
+  }
+
+  @Put("update")
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Cập nhật công thức (User)' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FilesInterceptor('images'))
+  async updateRecipe(
+    @Body() dto: UpdateRecipeDto,
+    @Req() req: RequestWithUser,
+    @UploadedFiles() files?: Express.Multer.File[],
+  ) {
+    console.log('--- NESTJS CONTROLLER UPDATE ---');
+    console.log('Received UpdateRecipeDto:', JSON.stringify(dto, null, 2));
+    console.log('Received Files:', files?.map(f => ({ fieldname: f.fieldname, originalname: f.originalname, size: f.size })));
+    console.log('-------------------------');
+
+    if (!req.user) {
+      throw new Error('Bạn cần đăng nhập để thực hiện hành động này');
+    }
+
+    if (!dto.id) {
+      throw new Error('ID công thức là bắt buộc cho việc cập nhật');
+    }
+
+    // Kiểm tra quyền sở hữu công thức
+    const recipe = await this.recipeService.getRecipeById(dto.id);
+    if (!recipe) {
+      throw new Error('Không tìm thấy công thức');
+    }
+
+    if (recipe.accountId !== req.user.id) {
+      throw new Error('Bạn không có quyền cập nhật công thức này');
+    }
+
+    let currentFileIndex = 0;
+    
+    // Upload recipe image if hasNewRecipeImageFile is true
+    if (dto.hasNewRecipeImageFile && files && files.length > currentFileIndex) {
+      const recipeImage = files[currentFileIndex];
+      const uploadResult = await this.cloudinaryService.uploadImage(recipeImage);
+      dto.imageUrl = uploadResult.secure_url;
+      currentFileIndex++;
+    }
+
+    // Upload step images if there are more files
+    if (files && files.length > currentFileIndex && dto.steps) {
+      // Lặp qua từng bước và kiểm tra hasNewImageFile
+      for (let i = 0; i < dto.steps.length; i++) {
+        const step = dto.steps[i];
+        if (step.hasNewImageFile && currentFileIndex < files.length) {
+          const stepImageResult = await this.cloudinaryService.uploadImage(files[currentFileIndex]);
+          dto.steps[i].imageUrl = stepImageResult.secure_url;
+          currentFileIndex++;
+        }
+      }
+    }
+
+    console.log("XONG BUOC UP FILE LEN CLOUD")
+    return this.recipeService.updateRecipe(dto, req.user.id);
   }
 }
