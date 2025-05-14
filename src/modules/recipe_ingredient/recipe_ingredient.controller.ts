@@ -34,11 +34,8 @@ export class RecipeIngredientController {
               id: { type: 'string', example: '550e8400-e29b-41d4-a716-446655440001' },
               name: { type: 'string', example: 'Bò xào nấm' },
               description: { type: 'string', example: 'Món bò xào nấm thơm ngon' },
-              imageUrl: { type: 'string', example: 'https://example.com/bo-xao-nam.jpg' },
               preparationTimeMinutes: { type: 'number', example: 30 },
-              matchPercentage: { type: 'number', example: 85 },
-              matchedIngredients: { type: 'number', example: 3 },
-              totalIngredients: { type: 'number', example: 5 },
+              imageUrl: { type: 'string', example: 'https://example.com/bo-xao-nam.jpg' },
               ingredients: {
                 type: 'array',
                 items: {
