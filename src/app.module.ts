@@ -37,6 +37,7 @@ import { RecipeLikeModule } from './modules/recipe_like/recipe_like.module';
 import { RecipeIngredientModule } from './modules/recipe_ingredient/recipe_ingredient.module';
 import { SearchModule } from './modules/search/search.module';
 import { AccountPantryItemModule } from './modules/account_pantry_item/account_pantry_item.module';
+import {RecipeCategoryMappingModule} from './modules/recipe_category_mapping/recipe_category_mapping.module';
 
 @Module({
   imports: [
@@ -94,7 +95,8 @@ import { AccountPantryItemModule } from './modules/account_pantry_item/account_p
     RecipeLikeModule,
     SearchModule,
     RecipeIngredientModule,
-    AccountPantryItemModule
+    AccountPantryItemModule,
+    RecipeCategoryMappingModule
   ],
   controllers: [AppController],
   providers: [

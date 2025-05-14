@@ -2,13 +2,14 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { RecipeIngredientService } from './recipe_ingredient.service';
 import { FindRecipesByIngredientsDto } from './recipe_ingredient.dto';
+import { Public } from '../auth/decorator/public.decorator';
 
 @ApiTags('Công thức theo nguyên liệu')
 @Controller('recipe-ingredients')
 export class RecipeIngredientController {
   constructor(private readonly recipeIngredientService: RecipeIngredientService) {}
-
   @Post('find-recipes')
+  @Public()
   @ApiOperation({ 
     summary: 'Tìm công thức dựa trên danh sách nguyên liệu',
     description: `

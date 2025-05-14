@@ -15,19 +15,19 @@ export class AdminUnitOfMeasureController {
     constructor(private readonly unitOfMeasureService:UnitOfMeasureService){}
 
 
-    @Get('all')
-@ApiResponse({
-  status: 200,
-  description: 'Danh sách đơn vị đo',
-  type: ResponseUnitOfMeasureDto,
-  isArray: true,
-})
-async findAll(): Promise<ResponseUnitOfMeasureDto[]> {
-  const units = await this.unitOfMeasureService.findAll();
-  return units.map((unit) => ({
-    id: unit.id,
-    unitName: unit.unitName,
-    symbol: unit.symbol,
+  @Get('all')
+  @ApiResponse({
+    status: 200,
+    description: 'Danh sách đơn vị đo',
+    type: ResponseUnitOfMeasureDto,
+    isArray: true,
+  })
+  async findAll(): Promise<ResponseUnitOfMeasureDto[]> {
+    const units = await this.unitOfMeasureService.findAll();
+    return units.map((unit) => ({
+      id: unit.id,
+      unitName: unit.unitName,
+      symbol: unit.symbol,
   }));
 }
 }
