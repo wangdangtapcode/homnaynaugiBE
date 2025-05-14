@@ -28,4 +28,3 @@ async findAll(): Promise<ResponseUnitOfMeasureDto[]> {
   }));
 }
 }
-}
