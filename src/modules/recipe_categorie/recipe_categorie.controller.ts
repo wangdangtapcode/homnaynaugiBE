@@ -35,7 +35,7 @@ export class RecipeCategoryController{
       };
     }
   
-    @Get('seach/:id')
+    @Get('search/:id')
     @Public()
     @ApiOperation({ summary: 'Lấy thông tin danh mục món ăn' })
     @ApiResponse({ status: 200, description: 'Lấy thông tin thành công' })

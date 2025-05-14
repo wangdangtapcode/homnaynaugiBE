@@ -58,5 +58,5 @@ import { IngredientCategoryMapping } from 'src/modules/ingredient_category_mappi
       inject: [ConfigService],
     }),
   ],
-})
+}) // lag vhaizzzz
 export class DatabaseModule {}
