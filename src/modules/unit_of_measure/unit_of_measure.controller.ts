@@ -1,8 +1,5 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { AuthGuard } from "../auth/guard/auth.guard";
-import { RolesGuard } from "../auth/guard/roles.guard";
-import { UnitOfMeasure } from "./entities/unit_of_measure.entities";
+import { Controller, Get} from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { ResponseUnitOfMeasureDto } from "./unit_of_measure.dto";
 import { UnitOfMeasureService } from "./unit_of_measure.service";
 import { Public } from "../auth/decorator/public.decorator";
@@ -14,8 +11,8 @@ export class UnitOfMeasureController {
     constructor(private readonly unitOfMeasureService:UnitOfMeasureService){}
 
 
-@Get('all')
-@Public()
+    @Get('all')
+    @Public()
 @ApiResponse({
   status: 200,
   description: 'Danh sách đơn vị đo',
@@ -29,5 +26,6 @@ async findAll(): Promise<ResponseUnitOfMeasureDto[]> {
     unitName: unit.unitName,
     symbol: unit.symbol,
   }));
+}
 }
 }

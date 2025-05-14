@@ -713,4 +713,106 @@ export class RecipeService {
       .andWhere('recipe.status = :status', { status: 'public' })
       .getMany();
   }
+
+  async searchRecipesForAdmin(queryDto: SearchRecipeQueryDto) {
+    const { query, status, offset = 0, limit = 10 } = queryDto;
+  
+    // Tạo query builder với các join cần thiết
+    const qb = this.recipeRepo.createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.account', 'account')
+      .leftJoinAndSelect('recipe.categoryMappings', 'categoryMappings')
+      .leftJoinAndSelect('categoryMappings.recipeCategory', 'category');
+  
+    // Áp dụng điều kiện tìm kiếm nếu có
+    if (query) {
+      qb.andWhere('LOWER(recipe.name) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      });
+    }
+  
+    if (status) {
+      qb.andWhere('recipe.status = :status', { status });
+    }
+  
+    // Thêm GROUP BY để tránh duplicate
+    qb.groupBy('recipe.id')
+      .addGroupBy('account.id')
+      .addGroupBy('categoryMappings.recipe_id')
+      .addGroupBy('categoryMappings.recipe_category_id')
+      .addGroupBy('category.id');
+  
+    const [recipes, total] = await qb
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
+      
+    // Nếu không có recipes, trả về kết quả trống
+    if (recipes.length === 0) {
+      return {
+        data: [],
+        total: 0,
+      };
+    }
+    
+    // Lấy tất cả recipeIds để thực hiện các truy vấn tổng hợp
+    const recipeIds = recipes.map(recipe => recipe.id);
+    
+    // 1. Truy vấn tổng hợp để đếm likes cho tất cả công thức
+    const likesQuery = this.recipeLikeRepo.createQueryBuilder('like')
+      .select('like.recipeId', 'recipeId')
+      .addSelect('COUNT(*)', 'count')
+      .where('like.recipeId IN (:...recipeIds)', { recipeIds })
+      .groupBy('like.recipeId');
+      
+    const likesResult = await likesQuery.getRawMany();
+    
+    // Tạo map từ recipeId đến số lượng likes
+    const likesMap = new Map<string, number>();
+    likesResult.forEach(item => {
+      likesMap.set(item.recipeId, parseInt(item.count, 10));
+    });
+    
+    // 2. Truy vấn tổng hợp để đếm favorites cho tất cả công thức
+    const favoritesQuery = this.favoriteRecipeRepo.createQueryBuilder('favorite')
+      .select('favorite.recipeId', 'recipeId')
+      .addSelect('COUNT(*)', 'count')
+      .where('favorite.recipeId IN (:...recipeIds)', { recipeIds })
+      .groupBy('favorite.recipeId');
+      
+    const favoritesResult = await favoritesQuery.getRawMany();
+    
+    // Tạo map từ recipeId đến số lượng favorites
+    const favoritesMap = new Map<string, number>();
+    favoritesResult.forEach(item => {
+      favoritesMap.set(item.recipeId, parseInt(item.count, 10));
+    });
+    
+    // 3. Truy vấn tổng hợp để đếm views cho tất cả công thức
+    const viewsQuery = this.viewHistoryRepo.createQueryBuilder('view')
+      .select('view.recipeId', 'recipeId')
+      .addSelect('COUNT(*)', 'count')
+      .where('view.recipeId IN (:...recipeIds)', { recipeIds })
+      .groupBy('view.recipeId');
+      
+    const viewsResult = await viewsQuery.getRawMany();
+    
+    // Tạo map từ recipeId đến số lượng views
+    const viewsMap = new Map<string, number>();
+    viewsResult.forEach(item => {
+      viewsMap.set(item.recipeId, parseInt(item.count, 10));
+    });
+    
+    // Thêm thông tin thống kê vào mỗi recipe
+    const recipesWithStats = recipes.map(recipe => ({
+      ...recipe,
+      totalLikes: likesMap.get(recipe.id) || 0,
+      totalFavorites: favoritesMap.get(recipe.id) || 0,
+      totalViews: viewsMap.get(recipe.id) || 0,
+    }));
+  
+    return {
+      data: recipesWithStats,
+      total,
+    };
+  }
 }

@@ -6,7 +6,7 @@ import { AuthModule } from "../auth/auth.module";
 import { Account } from "../account/entities/account.entities";
 import { AdminUnitOfMeasureController } from "./admin_unit_of_measure.controller";
 import { UnitOfMeasureService } from "./unit_of_measure.service";
-import {UnitOfMeasureController } from "./unit_of_measure.controller";
+import { UnitOfMeasureController } from "./unit_of_measure.controller";
 @Module({
     imports: [
         TypeOrmModule.forFeature([UnitOfMeasure, Account]),
