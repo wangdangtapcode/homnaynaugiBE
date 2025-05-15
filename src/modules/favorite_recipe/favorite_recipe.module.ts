@@ -1,19 +1,21 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FavoriteRecipe } from './entities/favorite_recipe.entities';
-import { FavoriteRecipeService } from './favorite_recipe.service';
-import { FavoriteRecipeController } from './favorite_recipe.controller';
-import { Account } from '../account/entities/account.entities';
 import { Recipe } from '../recipe/entities/recipe.entities';
+import { FavoriteRecipeController } from './favorite_recipe.controller';
+import { FavoriteRecipeService } from './favorite_recipe.service';
+import { AccountModule } from '../account/account.module';
 import { AuthModule } from '../auth/auth.module';
+import { Account } from '../account/entities/account.entities';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([FavoriteRecipe, Account, Recipe]),
-    AuthModule,
+    TypeOrmModule.forFeature([FavoriteRecipe, Recipe,Account]),
+    AccountModule,
+    AuthModule
   ],
   controllers: [FavoriteRecipeController],
   providers: [FavoriteRecipeService],
-  exports: [FavoriteRecipeService],
+  exports: [FavoriteRecipeService]
 })
-export class FavoriteRecipeModule {} 
+export class FavoriteRecipeModule {}

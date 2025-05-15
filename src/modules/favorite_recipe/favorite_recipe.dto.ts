@@ -1,54 +1,66 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsBoolean } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty } from 'class-validator';
 
-// DTO con: Thông tin công thức trong danh sách yêu thích
-export class RecipeInFavoriteDto {
-  @ApiProperty({ description: 'ID của công thức' })
-  id: string;
-
-  @ApiProperty({ description: 'Tên công thức' })
-  name: string;
-
-  @ApiProperty({ description: 'Mô tả công thức', nullable: true })
-  description: string | null;
-
-  @ApiProperty({ description: 'URL ảnh công thức', nullable: true })
-  image_url: string | null;
-
-  @ApiProperty({ description: 'Thời gian chuẩn bị (phút)', nullable: true })
-  prep_time: number | null;
+// DTO dùng cho đầu vào (add/remove/toggle yêu thích)
+export class ToggleFavoriteRecipeDto {
+  @ApiProperty({
+    description: 'ID của công thức',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @IsString()
+  @IsNotEmpty({ message: 'ID công thức không được để trống' })
+  recipeId: string;
 }
 
-// DTO cho response khi lấy thông tin yêu thích
-export class FavoriteRecipeResponseDto {
-  @ApiProperty({ description: 'ID của bản ghi yêu thích' })
-  @IsNumber()
+export class AddFavoriteRecipeDto {
+  @ApiProperty({
+    description: 'ID của công thức cần thêm vào yêu thích',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @IsString()
+  @IsNotEmpty({ message: 'ID công thức không được để trống' })
+  recipeId: string;
+}
+
+export class RemoveFavoriteRecipeDto {
+  @ApiProperty({
+    description: 'ID của công thức cần xóa khỏi yêu thích',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @IsString()
+  @IsNotEmpty({ message: 'ID công thức không được để trống' })
+  recipeId: string;
+}
+
+// DTO con chứa thông tin tóm tắt về công thức
+export class RecipeShortDto {
+  @ApiProperty({ example: 1 })
   id: number;
 
-  @ApiProperty({ description: 'Thông tin công thức', type: () => RecipeInFavoriteDto })
-  @Type(() => RecipeInFavoriteDto)
-  recipe: RecipeInFavoriteDto;
+  @ApiProperty({ example: 'Gà chiên nước mắm' })
+  name: string;
 
-  @ApiProperty({ description: 'Thời gian tạo' })
-  @Type(() => Date)
+  @ApiProperty({ example: 'Món gà chiên thơm ngon đậm đà vị mắm' })
+  description: string;
+
+  @ApiProperty({ example: 'https://example.com/image.jpg' })
+  image_url: string;
+
+  @ApiProperty({ example: 30, description: 'Thời gian chuẩn bị (phút)' })
+  prep_time: number;
+}
+
+// DTO trả về khi lấy danh sách hoặc thêm công thức yêu thích
+export class FavoriteRecipeResponseDto {
+  @ApiProperty({ example: 101 })
+  id: number;
+
+  @ApiProperty({ type: () => RecipeShortDto })
+  recipe: RecipeShortDto;
+
+  @ApiProperty({ example: '2025-05-14T12:00:00.000Z' })
   created_at: Date;
 
-  @ApiProperty({ description: 'Trạng thái hoạt động' })
-  @IsBoolean()
+  @ApiProperty({ example: true })
   is_active: boolean;
-}
-
-// DTO cho request khi thêm công thức vào yêu thích
-export class AddFavoriteRecipeDto {
-  @ApiProperty({ description: 'ID của công thức cần thêm vào yêu thích' })
-  @IsNumber()
-  recipeId: number;
-}
-
-// DTO cho request khi xóa công thức khỏi yêu thích
-export class RemoveFavoriteRecipeDto {
-  @ApiProperty({ description: 'ID của công thức cần xóa khỏi yêu thích' })
-  @IsNumber()
-  recipeId: number;
 }
