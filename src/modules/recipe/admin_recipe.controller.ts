@@ -6,7 +6,7 @@ import { AuthGuard } from '../auth/guard/auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { RoleName } from '../role/enum/role.enum';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/config/cloudinary/cloudinary.service';
 
 @ApiTags('Admin/Recipes')
