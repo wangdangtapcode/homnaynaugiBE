@@ -1,6 +1,8 @@
 import { IsOptional, IsString, IsNumber, Min, IsEnum, IsArray, ValidateNested, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { RecipeStatus } from './entities/recipe.entities';
+import {IsInt} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class SearchRecipeQueryDto {
   @IsOptional()
@@ -10,6 +12,37 @@ export class SearchRecipeQueryDto {
   @IsOptional()
   @IsEnum(RecipeStatus)
   status?: RecipeStatus;
+
+  @IsOptional()
+  @IsString()
+  accountId?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  offset?: number = 0;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  limit?: number = 10;
+
+  @IsOptional()
+  @IsString()
+  keyword?: string;
+
+  
+}
+export class SearchRecipeQueryAndCategoryDto {
+  @IsOptional()
+  @IsString()
+  query?: string;
+
+  @IsOptional()
+  @IsNumber()
+  categoryId?: number;
 
   @IsOptional()
   @Type(() => Number)
@@ -27,7 +60,6 @@ export class SearchRecipeQueryDto {
   @IsString()
   keyword?: string;
 }
-
 export class RecipeResponseDto {
   id: string;
   name: string;
@@ -70,6 +102,25 @@ class CookingStepDto {
   @IsBoolean() // Hoặc @IsBooleanString() nếu từ FormData
   @Type(() => Boolean) // Để transform 'true'/'false' thành boolean
   hasNewImageFile?: boolean;
+}
+
+export class SearchRecipeDto {
+  @ApiProperty({ example: 'phở', description: 'Từ khóa tên món ăn' })
+  @IsString()
+  @IsOptional()
+  query?: string;
+
+  @ApiProperty({ example: 0, required: false })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  offset?: number;
+
+  @ApiProperty({ example: 10, required: false })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  limit?: number;
 }
 
 export class CreateRecipeDto {
