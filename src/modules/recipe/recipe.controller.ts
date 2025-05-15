@@ -47,15 +47,6 @@ export class RecipeController {
 
   @Get("searchName")
   @Public()
-  @ApiOperation({ summary: 'Tìm kiếm công thức công khai' })
-  @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
-  @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức (PUBLIC, PRIVATE, DRAFT)' })
-  @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu (mặc định: 0)' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả (mặc định: 10)' })
-  @ApiResponse({ status: 200, description: 'Danh sách công thức công khai' })
-
-  @Get("searchName")
-  @Public()
   @ApiOperation({ summary: 'Tìm kiếm công thức' })
   @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
   @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức' })
