@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Param, ParseIntPipe, Req, Post, UseGuards, UseInterceptors, UploadedFiles, Body, Put, Request} from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { CreateRecipeDto, SearchRecipeQueryDto, UpdateRecipeDto } from './recipe.dto';
+import { CreateRecipeDto, SearchRecipeQueryAndCategoryDto, SearchRecipeQueryDto, UpdateRecipeDto } from './recipe.dto';
 import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse, ApiConsumes, ApiBearerAuth} from '@nestjs/swagger';
 import { Public } from '../auth/decorator/public.decorator';
 import { AuthGuard } from '../auth/guard/auth.guard';
@@ -32,6 +32,7 @@ export class RecipeController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+
   @Get("search")
   @Public()
   @ApiOperation({ summary: 'Tìm kiếm công thức công khai' })
@@ -42,6 +43,26 @@ export class RecipeController {
   @ApiResponse({ status: 200, description: 'Danh sách công thức công khai' })
   async searchRecipes(@Query() queryDto: SearchRecipeQueryDto) {
     return this.recipeService.searchRecipes(queryDto);
+  }
+
+  @Get("searchName")
+  @Public()
+  @ApiOperation({ summary: 'Tìm kiếm công thức công khai' })
+  @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
+  @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức (PUBLIC, PRIVATE, DRAFT)' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu (mặc định: 0)' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả (mặc định: 10)' })
+  @ApiResponse({ status: 200, description: 'Danh sách công thức công khai' })
+
+  @Get("searchName")
+  @Public()
+  @ApiOperation({ summary: 'Tìm kiếm công thức' })
+  @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
+  @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả' })
+  async searchRecipesFor(@Query() queryDto: SearchRecipeQueryAndCategoryDto) {
+  return this.recipeService.searchRecipesFor(queryDto);
   }
 
   @Get('banner')

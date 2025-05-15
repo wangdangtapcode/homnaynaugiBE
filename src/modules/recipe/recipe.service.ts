@@ -5,12 +5,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, Brackets } from 'typeorm';
 import { Recipe, RecipeStatus } from './entities/recipe.entities';
 import {
   SearchRecipeQueryDto,
   CreateRecipeDto,
   UpdateRecipeDto,
+  SearchRecipeQueryAndCategoryDto,
 } from './recipe.dto';
 import { RecipeCategoryMapping } from '../recipe_category_mapping/entities/recipe_category_mapping.entities';
 import { RecipeIngredient } from '../recipe_ingredient/entities/recipe_ingredient.entities';
@@ -133,6 +134,106 @@ export class RecipeService {
       likeCount: Number(row.likeCount || 0),
       favoriteCount: Number(row.favoriteCount || 0)
     }));
+
+    return {
+      data,
+      total,
+    };
+  }
+
+  async searchRecipes2(queryDto: SearchRecipeQueryAndCategoryDto) {
+    const { query, categoryId, offset = 0, limit = 10 } = queryDto;
+
+    const qb = this.recipeRepo
+    .createQueryBuilder('recipe')
+    .leftJoinAndSelect('recipe.account', 'account')
+    .leftJoinAndSelect('recipe.categoryMappings', 'categoryMappings')
+    .leftJoinAndSelect('categoryMappings.recipeCategory', 'category');
+
+    // Build query builder
+    const queryBuilder = this.recipeRepo
+      .createQueryBuilder('recipe')
+      .leftJoin('recipe.viewHistories', 'viewHistory')
+      .leftJoin('recipe.likes', 'recipeLike')
+      .leftJoin('recipe.favorites', 'favoriteRecipe')
+      .leftJoinAndSelect('recipe.recipeIngredients', 'recipeIngredient')
+      .leftJoinAndSelect('recipeIngredient.ingredient', 'ingredient')
+      .leftJoinAndSelect('recipe.categoryMappings', 'recipeCategoryMapping')
+      .leftJoinAndSelect('recipeCategoryMapping.recipeCategory', 'category')
+      .where('recipe.name LIKE :kw', { kw: `%${queryDto}%` })
+      .orWhere('ingredient.name LIKE :kw', { kw: `%${queryDto}%` })
+      .orWhere('category.name LIKE :kw', { kw: `%${queryDto}%` })
+      .andWhere('recipe.status = :status', { status: 'public' })
+      .select([
+        'recipe.id',
+        'recipe.name',
+        'recipe.status',
+        'recipe.imageUrl',
+        'recipe.createdAt',
+        'COUNT(DISTINCT viewHistory.id) as viewCount',
+        'COUNT(DISTINCT CONCAT(recipeLike.accountId, "-", recipeLike.recipeId)) as likeCount',
+        'COUNT(DISTINCT CONCAT(favoriteRecipe.accountId, "-", favoriteRecipe.recipeId)) as favoriteCount',
+      ])
+
+      .groupBy('recipe.id');
+
+    // Add search conditions
+    if (query) {
+      qb.andWhere('LOWER(recipe.name) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      });
+    }
+
+    if (status) {
+      qb.andWhere('recipe.status = :status', { status });
+    }
+
+    // Thêm GROUP BY cho tất cả các cột cần thiết
+    qb.groupBy('recipe.id')
+      .addGroupBy('account.id')
+      .addGroupBy('categoryMappings.recipe_id')
+      .addGroupBy('categoryMappings.recipe_category_id')
+      .addGroupBy('category.id');
+
+    const [data, total] = await qb.skip(offset).take(limit).getManyAndCount();
+
+    return {
+      data,
+      total,
+    };
+  }
+
+  async searchRecipesFor(queryDto: SearchRecipeQueryDto) {
+    const { query, status, offset = 0, limit = 10 } = queryDto;
+
+    const qb = this.recipeRepo
+      .createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.account', 'account')
+      .leftJoinAndSelect('recipe.categoryMappings', 'mapping')
+      .leftJoinAndSelect('mapping.recipeCategory', 'category')
+      .where('1=1');
+
+    // Tìm theo tên món hoặc tên danh mục
+    if (query) {
+      qb.andWhere(
+        new Brackets((qbWhere) => {
+          qbWhere
+            .where('LOWER(recipe.name) LIKE LOWER(:q)', { q: `%${query}%` })
+            .orWhere('LOWER(category.name) LIKE LOWER(:q)', { q: `%${query}%` });
+        })
+      );
+    }
+
+    // Lọc theo trạng thái nếu có
+    if (status) {
+      qb.andWhere('recipe.status = :status', { status });
+    }
+
+    qb.orderBy('recipe.createdAt', 'DESC')
+      .skip(offset)
+      .take(limit);
+
+    const [data, total] = await qb.getManyAndCount();
 
     return {
       data,
