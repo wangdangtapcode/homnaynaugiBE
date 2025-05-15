@@ -133,14 +133,13 @@ export class FavoriteRecipeService {
     const favorites = await this.favoriteRecipeRepo.find({
       where: { account: { id: accountId }  },
       relations: ['recipe'],
-      order: { created_at: 'DESC' },
+      order: { savedAt: 'DESC' },
       skip: (page - 1) * limit,
       take: limit,
     });
 
     const data: ToggleFavoriteRecipeDto[] = favorites.map((fav) => ({
       recipeId: fav.recipe.id,
-      id: fav.id,
       recipe: {
         id: fav.recipe.id,
         name: fav.recipe.name,
@@ -148,8 +147,7 @@ export class FavoriteRecipeService {
         image_url: fav.recipe.imageUrl,
         prep_time: fav.recipe.preparationTimeMinutes,
       },
-      created_at: fav.created_at,
-      is_active: fav.is_active,
+      saved_at: fav.savedAt
     }));
 
     const total = await this.favoriteRecipeRepo.count({ where: { account } });

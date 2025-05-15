@@ -138,8 +138,8 @@ class PromptAssistant:
         prompt = IMAGE_EXTRACT_PROMPT
         text_result = self._send_image_to_model(prompt, image_data)
         
-        # Chuyển đổi chuỗi text thành danh sách Python
-        ingredients_list = [ingredient.strip() for ingredient in text_result.split('\n') if ingredient.strip()]
+        # Chuyển đổi chuỗi text thành danh sách Python và loại bỏ "- " ở đầu mỗi dòng
+        ingredients_list = [ingredient.strip().lstrip('- ') for ingredient in text_result.split('\n') if ingredient.strip()]
         return ingredients_list
 
 # Thêm hàm main để chạy trực tiếp

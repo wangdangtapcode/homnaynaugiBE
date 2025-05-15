@@ -10,7 +10,7 @@ export class AiController {
   constructor(private readonly aiService: AiService) {}
 
   @Post('extract-ingredients')
-  @ApiOperation({ summary: 'Trích xuất nguyên liệu từ hình ảnh' })
+  @ApiOperation({ summary: 'Trích xuất và tìm kiếm nguyên liệu từ hình ảnh' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -23,7 +23,7 @@ export class AiController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Thành công trích xuất nguyên liệu' })
+  @ApiResponse({ status: 200, description: 'Thành công trích xuất và tìm kiếm nguyên liệu' })
   @ApiResponse({ status: 400, description: 'Không thể xử lý hình ảnh' })
   @UseInterceptors(FileInterceptor('file'))
   async extractIngredientsFromImage(@UploadedFile() file: Express.Multer.File, @Req() req: Request) {
@@ -42,16 +42,15 @@ export class AiController {
       console.log('Processing image with size:', file.size, 'bytes');
       console.log('Buffer valid:', !!file.buffer, 'Buffer size:', file.buffer.length);
       
-      const ingredientsList = await this.aiService.extractIngredientsFromImage(file.buffer);
+      const result = await this.aiService.extractAndFindIngredients(file.buffer);
       
       return { 
-        success: true,
-        ingredients: ingredientsList,
+        ...result,
         originalImage: file.originalname
       };
     } catch (error) {
       console.error('Error during image processing:', error);
-      throw new BadRequestException(`Lỗi khi trích xuất nguyên liệu: ${error.message}`);
+      throw new BadRequestException(`Lỗi khi xử lý nguyên liệu: ${error.message}`);
     }
   }
 } 

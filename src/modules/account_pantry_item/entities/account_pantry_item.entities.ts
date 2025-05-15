@@ -1,9 +1,9 @@
-
 import { Account } from '../../account/entities/account.entities';
 import { Ingredient } from '../../ingredient/entities/ingredient.entities';
-import { Entity, PrimaryColumn, ManyToOne, JoinColumn, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryColumn, ManyToOne, JoinColumn, CreateDateColumn, Unique } from 'typeorm';
 
 @Entity('account_pantry_items')
+@Unique(['accountId', 'ingredientId'])
 export class AccountPantryItem {
   @PrimaryColumn({ type: 'char', length: 36, name: 'account_id' })
   accountId: string;

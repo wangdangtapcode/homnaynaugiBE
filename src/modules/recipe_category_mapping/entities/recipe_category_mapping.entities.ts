@@ -23,10 +23,4 @@ export class RecipeCategoryMapping {
   })
   @JoinColumn({ name: 'recipe_category_id', referencedColumnName: 'id' })
   recipeCategory: RecipeCategory;
-
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt: Date;
 }

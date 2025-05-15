@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -28,7 +28,7 @@ import { AccountModule } from '../account/account.module';
     BullModule.registerQueue({
       name: 'mailer-queue',
     }),
-    AccountModule,
+    forwardRef(() => AccountModule),
   ],
   controllers: [AuthController],
   providers: [AuthService, MailerProducer, AuthGuard, RolesGuard],

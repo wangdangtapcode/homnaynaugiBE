@@ -32,6 +32,12 @@ import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { AiModule } from './modules/ai/ai.module';
 import { RecipeModule } from './modules/recipe/recipe.module';
 import { UnitOfMeasureModule } from './modules/unit_of_measure/unit_of_measure.module';
+import { FavoriteRecipeModule } from './modules/favorite_recipe/favorite_recipe.module';
+import { RecipeLikeModule } from './modules/recipe_like/recipe_like.module';
+import { RecipeIngredientModule } from './modules/recipe_ingredient/recipe_ingredient.module';
+import { SearchModule } from './modules/search/search.module';
+import { AccountPantryItemModule } from './modules/account_pantry_item/account_pantry_item.module';
+import {RecipeCategoryMappingModule} from './modules/recipe_category_mapping/recipe_category_mapping.module';
 
 @Module({
   imports: [
@@ -84,7 +90,13 @@ import { UnitOfMeasureModule } from './modules/unit_of_measure/unit_of_measure.m
     IngredientModule,
     RecipeModule,
     UnitOfMeasureModule,
-    AiModule
+    AiModule,
+    FavoriteRecipeModule,
+    RecipeLikeModule,
+    SearchModule,
+    RecipeIngredientModule,
+    AccountPantryItemModule,
+    RecipeCategoryMappingModule
   ],
   controllers: [AppController],
   providers: [

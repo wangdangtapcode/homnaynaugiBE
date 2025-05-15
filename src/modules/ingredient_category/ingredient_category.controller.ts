@@ -16,6 +16,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiQuery } from '@nest
 import { IngredientCategoryService } from './ingredient_category.service';
 import { CreateIngredientCategoryDto } from './ingredient_category.dto';
 import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
+import { Public } from '../auth/decorator/public.decorator';
 
 @ApiTags('Ingredient Categories')
 @Controller('ingredient-categories')
@@ -25,7 +26,7 @@ export class IngredientCategoryController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  @Post('admin/create')
+  @Post('create')
   @ApiOperation({ summary: 'Tạo danh mục nguyên liệu mới' })
   @ApiResponse({ status: 201, description: 'Tạo danh mục thành công' })
   @ApiResponse({ status: 400, description: 'Dữ liệu không hợp lệ' })
@@ -49,7 +50,8 @@ export class IngredientCategoryController {
     };
   }
 
-  @Get("admin/search")
+  @Get("search")
+  @Public()
   @ApiOperation({ summary: 'Lấy danh sách danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
   @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
@@ -68,7 +70,7 @@ export class IngredientCategoryController {
     };
   }
 
-  @Get('admin/search/:id')
+  @Get('search/:id')
   @ApiOperation({ summary: 'Lấy thông tin danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Lấy thông tin thành công' })
   @ApiResponse({ status: 404, description: 'Không tìm thấy danh mục' })
@@ -80,7 +82,7 @@ export class IngredientCategoryController {
     };
   }
 
-  @Put('admin/edit/:id')
+  @Put('edit/:id')
   @ApiOperation({ summary: 'Cập nhật danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Cập nhật thành công' })
   @ApiResponse({ status: 404, description: 'Không tìm thấy danh mục' })
@@ -103,7 +105,7 @@ export class IngredientCategoryController {
     };
   }
 
-  @Delete('admin/delete/:id')
+  @Delete('delete/:id')
   @ApiOperation({ summary: 'Xóa danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Xóa thành công' })
   @ApiResponse({ status: 404, description: 'Không tìm thấy danh mục' })
@@ -113,4 +115,9 @@ export class IngredientCategoryController {
       message: 'Xóa danh mục thành công',
     };
   }
+
+  // @Get()
+  // async getAllIngredients(): Promise<CreateIngredientCategoryDto[]> {
+  //   return this.ingredientCategoryService.getAllIngredients();
+  // }
 }

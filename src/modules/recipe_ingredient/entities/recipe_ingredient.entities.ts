@@ -1,11 +1,10 @@
+import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Recipe } from '../../recipe/entities/recipe.entities';
 import { Ingredient } from '../../ingredient/entities/ingredient.entities';
-import { UnitOfMeasure } from '../../unit_of_measure/entities/unit_of_measure.entities'; 
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { UnitOfMeasure } from '../../unit_of_measure/entities/unit_of_measure.entities';
 
-@Entity('recipe_ingredients') // Ánh xạ tới bảng 'recipe_ingredients'
+@Entity('recipe_ingredients')
 export class RecipeIngredient {
-  // Khóa chính kết hợp (Composite Primary Key)
   @PrimaryColumn({ type: 'char', length: 36, name: 'recipe_id' })
   recipeId: string;
 
@@ -19,12 +18,10 @@ export class RecipeIngredient {
     nullable: true,
     name: 'quantity',
   })
-  quantity: number | null; // Số lượng
+  quantity: number | null;
 
   @Column({ type: 'int', nullable: true, name: 'unit_id' })
-  unitId: number | null; // ID của đơn vị đo lường
-
-  // --- Mối quan hệ ---
+  unitId: number | null;
 
   @ManyToOne(() => Recipe, (recipe) => recipe.recipeIngredients, {
     onDelete: 'CASCADE',
@@ -38,10 +35,10 @@ export class RecipeIngredient {
   @JoinColumn({ name: 'ingredient_id', referencedColumnName: 'id' })
   ingredient: Ingredient;
 
-  @ManyToOne(() => UnitOfMeasure, (unit) => unit.recipeIngredients, { // Giả sử UnitOfMeasure có 'recipeIngredients'
+  @ManyToOne(() => UnitOfMeasure, (unit) => unit.recipeIngredients, {
     nullable: true,
-    onDelete: 'RESTRICT', // Hoặc 'SET NULL' tùy theo định nghĩa CSDL của bạn
+    onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'unit_id', referencedColumnName: 'id' })
-  unit: UnitOfMeasure | null; // Đối tượng đơn vị đo lường, có thể null
+  unit: UnitOfMeasure | null;
 }

@@ -74,4 +74,18 @@ export class RecipeCategoryService{
         const category = await this.findOne(id);
         await this.recipeCategoryRepository.remove(category);
       }
+
+      async getRandomCategories() {
+        const categories = await this.recipeCategoryRepository
+          .createQueryBuilder('category')
+          .orderBy('RAND()')
+          .take(6)
+          .getMany();
+
+        return categories;
+      }
+
+      async getAllCategories(): Promise<RecipeCategory[]> {
+        return this.recipeCategoryRepository.find();
+      }
 }

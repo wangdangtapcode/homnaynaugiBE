@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { IngredientService } from '../ingredient/ingredient.service';
 import * as path from 'path';
 import { spawn } from 'child_process';
 
@@ -9,9 +10,31 @@ export class AiService {
 
   constructor(
     private readonly configService: ConfigService,
+    private readonly ingredientService: IngredientService,
   ) {
     // Đường dẫn đến thư mục AI (mặc định trong src/ai)
     this.aiServicePath = this.configService.get<string>('AI_SERVICE_PATH') || path.join(process.cwd(), 'src', 'ai');
+  }
+
+  /**
+   * Trích xuất nguyên liệu từ hình ảnh và tìm kiếm trong database
+   */
+  async extractAndFindIngredients(imageBuffer: Buffer): Promise<any> {
+    try {
+      // Trích xuất danh sách nguyên liệu từ ảnh
+      const extractedIngredients = await this.extractIngredientsFromImage(imageBuffer);
+      
+      // Tìm kiếm thông tin chi tiết của các nguyên liệu trong database
+      const detailedIngredients = await this.ingredientService.findIngredientsByNames(extractedIngredients);
+      
+      return {
+        success: true,
+        ingredients: detailedIngredients,
+      };
+    } catch (error) {
+      console.error('Error in AI service:', error);
+      throw new Error(`Không thể xử lý nguyên liệu: ${error.message}`);
+    }
   }
 
   /**

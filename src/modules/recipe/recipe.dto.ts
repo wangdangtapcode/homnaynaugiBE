@@ -26,6 +26,10 @@ export class SearchRecipeQueryDto {
   @IsNumber()
   @Min(1)
   limit?: number = 10;
+
+  @IsOptional()
+  @IsString()
+  keyword?: string;
 }
 
 export class RecipeResponseDto {
@@ -135,4 +139,10 @@ export class CreateRecipeDto {
   @ValidateNested({ each: true })
   @Type(() => CookingStepDto)
   steps: CookingStepDto[];
+}
+
+export class UpdateRecipeDto extends CreateRecipeDto {
+  @IsOptional()
+  @IsString()
+  id: string;
 }

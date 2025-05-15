@@ -83,6 +83,7 @@ import {
         accountId: account.id,
         email,
         fullName: name,
+        avatarUrl: 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747122246/inye5wmzkrwrmc99dl75.jpg',
       });
       await this.userProfileRepository.save(userProfile);
   
@@ -138,7 +139,7 @@ import {
       // Tạo access token
       const accessToken = await this.jwt.signAsync(payload, {
         secret: this.config.get<string>('JWT_ACCESS_SECRET'),
-        expiresIn: '15m'
+        expiresIn: '1d'
       });
       // Tạo refresh token
       const refreshToken = await this.jwt.signAsync(payload, {
@@ -288,6 +289,7 @@ import {
         accountId: account.id,
         email,
         fullName: name,
+        avatarUrl: 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747122246/inye5wmzkrwrmc99dl75.jpg',
       });
       await this.userProfileRepository.save(userProfile);
   
