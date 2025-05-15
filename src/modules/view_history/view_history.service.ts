@@ -11,24 +11,38 @@ export class ViewHistoryService {
   constructor(
     @InjectRepository(ViewHistory)
     private readonly viewHistoryRepository: Repository<ViewHistory>,
+    @InjectRepository(Recipe)
+    private readonly recipeRepository: Repository<Recipe>,
   ) {}
 
   // Tạo mới lịch sử xem
-  async create(createDto: ViewHistoryDto): Promise<ViewHistory> {
-    const viewHistory = this.viewHistoryRepository.create();
+  async createOrUpdate(createDto: ViewHistoryDto): Promise<ViewHistory> {
+  // Tìm lịch sử xem theo recipe_id (bỏ qua account_id)
+    const existing = await this.viewHistoryRepository.findOne({
+      where: {
+        recipe: { id: createDto.recipe_id },
+        // account: createDto.account_id ? { id: createDto.account_id } : null, // comment nếu không cần tìm theo account
+      },
+    });
 
-    // Nếu có accountId thì gán đối tượng Account (chỉ id)
-    if (createDto.account_id) {
-      viewHistory.account = { id: createDto.account_id } as Account;
+    if (existing) {
+      existing.viewedAt = new Date();
+      return this.viewHistoryRepository.save(existing);
     } else {
-      viewHistory.account = null; // xem ẩn danh
+      const viewHistory = this.viewHistoryRepository.create();
+
+      if (createDto.account_id) {
+        viewHistory.account = { id: createDto.account_id } as Account;
+      } else {
+        viewHistory.account = null;
+      }
+
+      viewHistory.recipe = { id: createDto.recipe_id } as Recipe;
+
+      return this.viewHistoryRepository.save(viewHistory);
     }
-
-    // Luôn phải có recipe_id, gán đối tượng Recipe (chỉ id)
-    viewHistory.recipe = { id: createDto.recipe_id } as Recipe;
-
-    return this.viewHistoryRepository.save(viewHistory);
   }
+
 
   // Lấy lịch sử xem theo accountId
   async findByAccountId(accountId: string): Promise<ViewHistory[]> {
@@ -46,4 +60,18 @@ export class ViewHistoryService {
       order: { viewedAt: 'DESC' },
     });
   }
+
+  async findRecipesCreatedBy(accountId: string): Promise<Recipe[]> {
+    return this.recipeRepository.find({
+      where: {
+        // Replace 'createdBy' with the actual property name in Recipe entity, e.g., 'account' or 'author'
+        // For example, if the property is 'account':
+        account: { id: accountId },
+      },
+      relations: ['account'], // add this if you want to join the account relation
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+
 }

@@ -53,6 +53,79 @@ export class RecipeService {
       .getMany();
   }
 
+  async searchRecipesMe(queryDto: SearchRecipeQueryDto) {
+    const { query, status, accountId, offset = 0, limit = 10 } = queryDto;
+
+    // Build query builder
+    const queryBuilder = this.recipeRepo.createQueryBuilder('recipe')
+      .leftJoin('recipe.viewHistories', 'viewHistory')
+      .leftJoin('recipe.likes', 'recipeLike')
+      .leftJoin('recipe.favorites', 'favoriteRecipe')
+      .select([
+        'recipe.id as recipe_id',
+        'recipe.name as recipe_name',
+        'recipe.status as recipe_status',
+        'recipe.imageUrl as recipe_imageUrl',
+        'recipe.preparationTimeMinutes as recipe_preparationTimeMinutes',
+        'recipe.description as recipe_description',
+        'recipe.createdAt as recipe_createdAt',
+        'COUNT(DISTINCT viewHistory.id) as viewCount',
+        'COUNT(DISTINCT CONCAT(recipeLike.accountId, \'-\', recipeLike.recipeId)) as likeCount',
+        'COUNT(DISTINCT CONCAT(favoriteRecipe.accountId, \'-\', favoriteRecipe.recipeId)) as favoriteCount'
+      ])
+      .groupBy('recipe.id')
+      .addGroupBy('recipe.name')
+      .addGroupBy('recipe.status')
+      .addGroupBy('recipe.imageUrl')
+      .addGroupBy('recipe.preparationTimeMinutes')
+      .addGroupBy('recipe.description')
+      .addGroupBy('recipe.createdAt');
+
+    // Lọc theo accountId nếu có
+    if (accountId) {
+      queryBuilder.andWhere('recipe.accountId = :accountId', { accountId });
+    }
+
+    // Lọc theo query và status
+    if (query) {
+      queryBuilder.andWhere('recipe.name LIKE :query', { query: `%${query}%` });
+    }
+
+    if (status) {
+      queryBuilder.andWhere('recipe.status = :status', { status });
+    }
+
+    // Add pagination and ordering
+    queryBuilder
+      .skip(offset)
+      .take(limit)
+      .orderBy('recipe.createdAt', 'DESC');
+
+    // Execute query
+    const rawResults = await queryBuilder.getRawMany();
+    const total = rawResults.length;
+
+    const data = rawResults.map(row => ({
+      id: row.recipe_id,
+      name: row.recipe_name,
+      status: row.recipe_status,
+      imageUrl: row.recipe_imageUrl,
+      preparationTimeMinutes: row.recipe_preparationTimeMinutes || 0,
+      description: row.recipe_description,
+      createdAt: row.recipe_createdAt,
+      viewCount: Number(row.viewCount || 0),
+      likeCount: Number(row.likeCount || 0),
+      favoriteCount: Number(row.favoriteCount || 0)
+    }));
+
+    return {
+      data,
+      total,
+      offset,
+      limit,
+    };
+  }
+
   async searchRecipes(queryDto: SearchRecipeQueryDto) {
     const { query, status, accountId, offset = 0, limit = 10 } = queryDto;
 
@@ -706,9 +779,12 @@ export class RecipeService {
       .orderBy('RAND()')
       .getOne();
 
-    if (!recipe) {
-      throw new NotFoundException('Không tìm thấy công thức phù hợp');
-    }
+  if (!recipe) {
+    return {
+      message: 'Không có công thức nào phù hợp',
+      data: [],
+    };
+  }
     return {
       message: 'Lấy công thức thành công',
       data: {

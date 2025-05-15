@@ -38,7 +38,7 @@ import { RecipeIngredientModule } from './modules/recipe_ingredient/recipe_ingre
 import { SearchModule } from './modules/search/search.module';
 import { AccountPantryItemModule } from './modules/account_pantry_item/account_pantry_item.module';
 import {RecipeCategoryMappingModule} from './modules/recipe_category_mapping/recipe_category_mapping.module';
-
+import { ViewHistoryModule } from './modules/view_history/view_history.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -96,7 +96,8 @@ import {RecipeCategoryMappingModule} from './modules/recipe_category_mapping/rec
     SearchModule,
     RecipeIngredientModule,
     AccountPantryItemModule,
-    RecipeCategoryMappingModule
+    RecipeCategoryMappingModule,
+    ViewHistoryModule
   ],
   controllers: [AppController],
   providers: [
