@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource, Brackets } from 'typeorm';
+import { Repository, DataSource, Brackets, Raw } from 'typeorm';
 import { Recipe, RecipeStatus } from './entities/recipe.entities';
 import {
   SearchRecipeQueryDto,
@@ -825,6 +825,172 @@ export class RecipeService {
     return {
       message: 'Lấy danh sách công thức nổi bật theo danh mục thành công',
       data: recipesWithFavorite,
+    };
+  }
+
+  async getRecipeFeed(options?: {
+    sortBy?: string;
+    limit?: number;
+    offset?: number;
+  }) {
+    const sortBy = options?.sortBy || 'recommended';
+    
+    // Đảm bảo limit và offset là số
+    let limit = 10;
+    if (options?.limit !== undefined) {
+      const parsedLimit = Number(options.limit);
+      limit = !isNaN(parsedLimit) ? parsedLimit : 10;
+    }
+    
+    let offset = 0;
+    if (options?.offset !== undefined) {
+      const parsedOffset = Number(options.offset);
+      offset = !isNaN(parsedOffset) ? parsedOffset : 0;
+    }
+    
+    // Tạo query builder cơ bản
+    const qb = this.recipeRepo.createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.account', 'account')
+      .leftJoinAndSelect('account.userProfile', 'userProfile')
+      .leftJoinAndSelect('recipe.categoryMappings', 'categoryMappings')
+      .leftJoinAndSelect('categoryMappings.recipeCategory', 'category')
+      .where('recipe.status = :status', { status: RecipeStatus.PUBLIC });
+  
+    // Tối đa 20 công thức
+    const maxRecipes = 15;
+    
+    // Nếu offset >= maxRecipes, trả về mảng rỗng
+    if (offset >= maxRecipes) {
+      return {
+        message: 'Lấy feed công thức thành công',
+        data: [],
+        pagination: {
+          page: Math.floor(offset / limit) + 1,
+          limit,
+          total: maxRecipes,
+          hasMore: false
+        }
+      };
+    }
+    
+    // Điều chỉnh limit nếu vượt quá maxRecipes
+    if (offset + limit > maxRecipes) {
+      limit = maxRecipes - offset;
+    }
+    
+    // Áp dụng sắp xếp dựa trên tham số sortBy
+    switch (sortBy) {
+      case 'newest':
+        // Lấy công thức mới nhất dựa trên ngày tạo
+        qb.orderBy('recipe.createdAt', 'DESC');
+        break;
+        
+      case 'views':
+        // Sắp xếp theo lượt xem
+        const viewsSubquery = this.viewHistoryRepo.createQueryBuilder('vh')
+          .select('COUNT(vh.id)', 'viewCount')
+          .where('vh.recipeId = recipe.id');
+        
+        qb.addSelect(`(${viewsSubquery.getQuery()})`, 'viewCount')
+          .orderBy('viewCount', 'DESC');
+        break;
+        
+      case 'likes':
+        // Sắp xếp theo lượt thích
+        const likesSubquery = this.recipeLikeRepo.createQueryBuilder('rl')
+          .select('COUNT(DISTINCT CONCAT(rl.accountId, "-", rl.recipeId))', 'likeCount')
+          .where('rl.recipeId = recipe.id');
+        
+        qb.addSelect(`(${likesSubquery.getQuery()})`, 'likeCount')
+          .orderBy('likeCount', 'DESC');
+        break;
+        
+      case 'favorites':
+        // Sắp xếp theo lượt yêu thích
+        const favoritesSubquery = this.favoriteRecipeRepo.createQueryBuilder('fr')
+          .select('COUNT(DISTINCT CONCAT(fr.accountId, "-", fr.recipeId))', 'favoriteCount')
+          .where('fr.recipeId = recipe.id');
+        
+        qb.addSelect(`(${favoritesSubquery.getQuery()})`, 'favoriteCount')
+          .orderBy('favoriteCount', 'DESC');
+        break;
+        
+      case 'recommended':
+      default:
+        // Sử dụng mảng scores để lưu các thành phần điểm
+        qb.leftJoin('recipe.viewHistories', 'vh')
+          .leftJoin('recipe.likes', 'l')
+          .leftJoin('recipe.favorites', 'f')
+          .addSelect('COUNT(DISTINCT vh.id)', 'view_count')
+          .addSelect('COUNT(DISTINCT CONCAT(l.accountId, "-", l.recipeId))', 'like_count')
+          .addSelect('COUNT(DISTINCT CONCAT(f.accountId, "-", f.recipeId))', 'favorite_count')
+          // Thêm trường tính độ mới
+          .addSelect(`CASE 
+            WHEN recipe.createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN 5
+            WHEN recipe.createdAt >= DATE_SUB(NOW(), INTERVAL 14 DAY) THEN 3
+            ELSE 1 
+          END`, 'recency')
+          // Thêm yếu tố ngẫu nhiên
+          .addSelect('RAND()', 'random_factor')
+          // Thêm trường điểm tổng hợp
+          .addSelect(`(
+            CASE 
+              WHEN recipe.createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN 5
+              WHEN recipe.createdAt >= DATE_SUB(NOW(), INTERVAL 14 DAY) THEN 3
+              ELSE 1 
+            END + 
+            (COUNT(DISTINCT vh.id) * 0.2) + 
+            (COUNT(DISTINCT CONCAT(l.accountId, "-", l.recipeId)) * 0.8) + 
+            COUNT(DISTINCT CONCAT(f.accountId, "-", f.recipeId)) + 
+            RAND() * 2
+          )`, 'total_score')
+          .groupBy('recipe.id')
+          .addGroupBy('account.id')
+          .addGroupBy('userProfile.id')
+          .addGroupBy('categoryMappings.recipe_id')
+          .addGroupBy('categoryMappings.recipe_category_id')
+          .addGroupBy('category.id')
+          // Sắp xếp theo điểm tổng hợp đã tính
+          .orderBy('total_score', 'DESC');
+        break;
+    }
+    
+    // Áp dụng phân trang
+    qb.skip(offset).take(limit);
+    
+    // Thực hiện truy vấn
+    const recipes = await qb.getRawAndEntities();
+    
+    // Kết hợp dữ liệu entities và thông tin bổ sung từ raw
+    const result = recipes.entities.map((recipe, index) => {
+      const raw = recipes.raw[index] || {};
+      return {
+        id: recipe.id,
+        name: recipe.name,
+        imageUrl: recipe.imageUrl,
+        description: recipe.description ? 
+          (recipe.description.length > 100 ? recipe.description.substring(0, 100) + '...' : recipe.description) : '',
+        author: {
+          id: recipe.account?.id || '',
+          name: recipe.account?.userProfile?.fullName || recipe.account?.userProfile?.displayName || 'Người dùng ẩn danh',
+          avatar: recipe.account?.userProfile?.avatarUrl || null
+        },
+        viewCount: raw.viewCount ? parseInt(raw.viewCount) : 0,
+        likeCount: raw.likeCount ? parseInt(raw.likeCount) : 0,
+        favoriteCount: raw.favoriteCount ? parseInt(raw.favoriteCount) : 0,
+        createdAt: recipe.createdAt
+      };
+    });
+    
+    return {
+      message: 'Lấy feed công thức thành công',
+      data: result,
+      pagination: {
+        page: Math.floor(offset / limit) + 1,
+        limit,
+        total: Math.min(await qb.getCount(), maxRecipes),
+        hasMore: offset + limit < maxRecipes
+      }
     };
   }
 

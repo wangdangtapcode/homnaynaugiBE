@@ -55,6 +55,16 @@ export class RecipeController {
   async searchRecipesFor(@Query() queryDto: SearchRecipeQueryAndCategoryDto) {
   return this.recipeService.searchRecipesFor(queryDto);
   }
+  // @Get("search")
+  // @Public()
+  // @ApiOperation({ summary: 'Tìm kiếm công thức' })
+  // @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
+  // @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức' })
+  // @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu' })
+  // @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả' })
+  // async searchRecipes(@Query() queryDto: SearchRecipeQueryDto) {
+  //   return this.recipeService.searchRecipes(queryDto);
+  // }
 
   @Get('banner')
   @Public()
@@ -92,6 +102,22 @@ export class RecipeController {
     const accountId = req.user?.id;
     return this.recipeService.getTopRecipesByCategory(categoryId, accountId);
   }
+  
+  @Get("recipeFeed")
+  @Public()
+  @ApiOperation({ summary: 'Hiển thị công thức món ăn'})
+  @ApiQuery({ name: 'sortBy', required: false, description: 'Cách sắp xếp: newest, views, likes, favorites, recommended' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả trả về' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu (dùng cho infinite scroll)' })
+  async getRecipeFeed(
+    @Query('sortBy') sortBy?: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number
+  ) {
+    return this.recipeService.getRecipeFeed({sortBy, limit, offset});
+  }
+
+
 
   @Get('detail/:id')
   @Public()
