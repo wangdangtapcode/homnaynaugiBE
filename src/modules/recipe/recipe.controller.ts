@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Param, ParseIntPipe, Req, Post, UseGuards, UseInterceptors, UploadedFiles, Body, Put } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { CreateRecipeDto, SearchRecipeQueryDto, UpdateRecipeDto } from './recipe.dto';
+import { CreateRecipeDto, SearchRecipeQueryAndCategoryDto, SearchRecipeQueryDto, UpdateRecipeDto } from './recipe.dto';
 import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse, ApiConsumes } from '@nestjs/swagger';
 import { Request } from 'express';
 import { Public } from '../auth/decorator/public.decorator';
@@ -33,6 +33,7 @@ export class RecipeController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+
   @Get("search")
   @Public()
   @ApiOperation({ summary: 'Tìm kiếm công thức' })
@@ -42,6 +43,17 @@ export class RecipeController {
   @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả' })
   async searchRecipes(@Query() queryDto: SearchRecipeQueryDto) {
     return this.recipeService.searchRecipes(queryDto);
+  }
+
+  @Get("searchName")
+  @Public()
+  @ApiOperation({ summary: 'Tìm kiếm công thức' })
+  @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
+  @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả' })
+  async searchRecipesFor(@Query() queryDto: SearchRecipeQueryAndCategoryDto) {
+  return this.recipeService.searchRecipesFor(queryDto);
   }
 
   @Get('banner')
