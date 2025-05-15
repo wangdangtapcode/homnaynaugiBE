@@ -5,10 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserProfile } from './entitie/user_profiles.entities';
 import { UserProfileService } from './user_profile.service';
 import { UserProfileController } from './user_profile.controller';
+import { Account } from '../account/entities/account.entities';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserProfile]),
+    TypeOrmModule.forFeature([UserProfile, Account]),
+    AuthModule,
     // forwardRef(() => AccountModule), // Sử dụng forwardRef nếu AccountModule cũng import UserProfileModule
   ],
   controllers: [UserProfileController],
