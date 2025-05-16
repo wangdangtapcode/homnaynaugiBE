@@ -536,7 +536,8 @@ export class RecipeService {
       // 1. Update recipe
       const recipe = this.recipeRepo.create({
         ...dto,
-        accountId,
+        accountId: existingRecipe.accountId, // Preserve original creator
+        updatedBy: accountId, // Set the updater ID
         status: dto.status,
       });
       const updatedRecipe = await queryRunner.manager.save(Recipe, recipe);
@@ -596,6 +597,8 @@ export class RecipeService {
             unit: true,
           },
           cookingSteps: true,
+          account: true,
+          updatedByAccount: true,
         },
       });
       console.log('Recipe updated successfully:', fullRecipe);
@@ -640,6 +643,8 @@ export class RecipeService {
       relations: [
         'account',
         'account.userProfile',
+        'updatedByAccount',
+        'updatedByAccount.userProfile',
         'categoryMappings',
         'categoryMappings.recipeCategory',
         'recipeIngredients',
@@ -766,6 +771,7 @@ export class RecipeService {
       where: { id },
       relations: [
         'account',
+        'updatedByAccount',
         'categoryMappings',
         'categoryMappings.recipeCategory',
         'recipeIngredients',
@@ -912,12 +918,9 @@ export class RecipeService {
   }
 
   async getRecipeFeed(options?: {
-    sortBy?: string;
     limit?: number;
     offset?: number;
-  }) {
-    const sortBy = options?.sortBy || 'recommended';
-    
+  }) {    
     // Đảm bảo limit và offset là số
     let limit = 10;
     if (options?.limit !== undefined) {
@@ -961,82 +964,8 @@ export class RecipeService {
       limit = maxRecipes - offset;
     }
     
-    // Áp dụng sắp xếp dựa trên tham số sortBy
-    switch (sortBy) {
-      case 'newest':
-        // Lấy công thức mới nhất dựa trên ngày tạo
-        qb.orderBy('recipe.createdAt', 'DESC');
-        break;
-        
-      case 'views':
-        // Sắp xếp theo lượt xem
-        const viewsSubquery = this.viewHistoryRepo.createQueryBuilder('vh')
-          .select('COUNT(vh.id)', 'viewCount')
-          .where('vh.recipeId = recipe.id');
-        
-        qb.addSelect(`(${viewsSubquery.getQuery()})`, 'viewCount')
-          .orderBy('viewCount', 'DESC');
-        break;
-        
-      case 'likes':
-        // Sắp xếp theo lượt thích
-        const likesSubquery = this.recipeLikeRepo.createQueryBuilder('rl')
-          .select('COUNT(DISTINCT CONCAT(rl.accountId, "-", rl.recipeId))', 'likeCount')
-          .where('rl.recipeId = recipe.id');
-        
-        qb.addSelect(`(${likesSubquery.getQuery()})`, 'likeCount')
-          .orderBy('likeCount', 'DESC');
-        break;
-        
-      case 'favorites':
-        // Sắp xếp theo lượt yêu thích
-        const favoritesSubquery = this.favoriteRecipeRepo.createQueryBuilder('fr')
-          .select('COUNT(DISTINCT CONCAT(fr.accountId, "-", fr.recipeId))', 'favoriteCount')
-          .where('fr.recipeId = recipe.id');
-        
-        qb.addSelect(`(${favoritesSubquery.getQuery()})`, 'favoriteCount')
-          .orderBy('favoriteCount', 'DESC');
-        break;
-        
-      case 'recommended':
-      default:
-        // Sử dụng mảng scores để lưu các thành phần điểm
-        qb.leftJoin('recipe.viewHistories', 'vh')
-          .leftJoin('recipe.likes', 'l')
-          .leftJoin('recipe.favorites', 'f')
-          .addSelect('COUNT(DISTINCT vh.id)', 'view_count')
-          .addSelect('COUNT(DISTINCT CONCAT(l.accountId, "-", l.recipeId))', 'like_count')
-          .addSelect('COUNT(DISTINCT CONCAT(f.accountId, "-", f.recipeId))', 'favorite_count')
-          // Thêm trường tính độ mới
-          .addSelect(`CASE 
-            WHEN recipe.createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN 5
-            WHEN recipe.createdAt >= DATE_SUB(NOW(), INTERVAL 14 DAY) THEN 3
-            ELSE 1 
-          END`, 'recency')
-          // Thêm yếu tố ngẫu nhiên
-          .addSelect('RAND()', 'random_factor')
-          // Thêm trường điểm tổng hợp
-          .addSelect(`(
-            CASE 
-              WHEN recipe.createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN 5
-              WHEN recipe.createdAt >= DATE_SUB(NOW(), INTERVAL 14 DAY) THEN 3
-              ELSE 1 
-            END + 
-            (COUNT(DISTINCT vh.id) * 0.2) + 
-            (COUNT(DISTINCT CONCAT(l.accountId, "-", l.recipeId)) * 0.8) + 
-            COUNT(DISTINCT CONCAT(f.accountId, "-", f.recipeId)) + 
-            RAND() * 2
-          )`, 'total_score')
-          .groupBy('recipe.id')
-          .addGroupBy('account.id')
-          .addGroupBy('userProfile.id')
-          .addGroupBy('categoryMappings.recipe_id')
-          .addGroupBy('categoryMappings.recipe_category_id')
-          .addGroupBy('category.id')
-          // Sắp xếp theo điểm tổng hợp đã tính
-          .orderBy('total_score', 'DESC');
-        break;
-    }
+    // Sắp xếp ngẫu nhiên
+    qb.orderBy('RAND()');
     
     // Áp dụng phân trang
     qb.skip(offset).take(limit);

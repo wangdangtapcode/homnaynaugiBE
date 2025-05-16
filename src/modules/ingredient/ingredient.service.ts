@@ -1,15 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, In } from 'typeorm';
+import { Repository, Like, In, DataSource } from 'typeorm';
 import { Ingredient } from './entities/ingredient.entities';
-import { SearchIngredientQueryDto } from './ingredient.dto';
+import { SearchIngredientQueryDto, CreateIngredientDto, UpdateIngredientDto } from './ingredient.dto';
 import { IngredientResponseDto } from './ingredient.dto';
+import { IngredientCategoryMapping } from '../ingredient_category_mapping/entities/ingredient_category_mapping.entities';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class IngredientService {
   constructor(
     @InjectRepository(Ingredient)
     private ingredientRepository: Repository<Ingredient>,
+    @InjectRepository(IngredientCategoryMapping)
+    private categoryMappingRepository: Repository<IngredientCategoryMapping>,
+    private dataSource: DataSource,
   ) {}
 
   async searchIngredients(queryDto: SearchIngredientQueryDto) {
@@ -74,7 +79,7 @@ export class IngredientService {
   }
 
 
-    async getAllIngredients(): Promise<IngredientResponseDto[]> {
+  async getAllIngredients(): Promise<IngredientResponseDto[]> {
     const ingredients = await this.ingredientRepository.find();
     return ingredients.map((ingredient) => ({
       id: ingredient.id,
@@ -101,5 +106,177 @@ export class IngredientService {
       name: ingredient.name,
       imageUrl: ingredient.imageUrl
     }));
+  }
+
+  async getIngredientById(id: string, includeCategories: boolean = true): Promise<Ingredient> {
+    const queryBuilder = this.ingredientRepository.createQueryBuilder('ingredient')
+      .where('ingredient.id = :id', { id });
+    
+    if (includeCategories) {
+      queryBuilder.leftJoinAndSelect('ingredient.categoryMappings', 'categoryMappings')
+                 .leftJoinAndSelect('categoryMappings.ingredientCategory', 'ingredientCategory');
+    }
+    
+    const ingredient = await queryBuilder.getOne();
+    
+    if (!ingredient) {
+      throw new NotFoundException(`Không tìm thấy nguyên liệu với id: ${id}`);
+    }
+    
+    return ingredient;
+  }
+
+  async createIngredient(dto: CreateIngredientDto): Promise<Ingredient> {
+    // Check if ingredient with same name exists
+    const existingIngredient = await this.ingredientRepository.findOne({
+      where: { name: dto.name }
+    });
+
+    if (existingIngredient) {
+      throw new ConflictException(`Nguyên liệu với tên '${dto.name}' đã tồn tại`);
+    }
+
+    // Start transaction
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Create ingredient
+      const ingredientId = uuidv4();
+      const ingredient = queryRunner.manager.create(Ingredient, {
+        id: ingredientId,
+        name: dto.name,
+        imageUrl: dto.imageUrl || null
+      });
+      
+      await queryRunner.manager.save(Ingredient, ingredient);
+
+      // Create category mappings
+      if (dto.categoryIds && dto.categoryIds.length > 0) {
+        const categoryMappings = dto.categoryIds.map(categoryId => ({
+          ingredientId: ingredientId,
+          ingredientCategoryId: categoryId
+        }));
+        
+        await queryRunner.manager.save(IngredientCategoryMapping, categoryMappings);
+      }
+
+      // Commit transaction
+      await queryRunner.commitTransaction();
+
+      // Get the complete ingredient with categories
+      return this.getIngredientById(ingredientId);
+    } catch (error) {
+      // Rollback transaction on error
+      await queryRunner.rollbackTransaction();
+      
+      if (error instanceof ConflictException || error instanceof NotFoundException) {
+        throw error;
+      }
+      
+      throw new InternalServerErrorException(`Lỗi khi tạo nguyên liệu: ${error.message}`);
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async updateIngredient(dto: UpdateIngredientDto): Promise<Ingredient> {
+    // Check if ingredient exists
+    const ingredient = await this.getIngredientById(dto.id, false);
+    
+    // Check if name is already used by another ingredient
+    if (dto.name !== ingredient.name) {
+      const existingIngredient = await this.ingredientRepository.findOne({
+        where: { name: dto.name }
+      });
+
+      if (existingIngredient && existingIngredient.id !== dto.id) {
+        throw new ConflictException(`Nguyên liệu với tên '${dto.name}' đã tồn tại`);
+      }
+    }
+    
+    // Start transaction
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Update ingredient properties
+      ingredient.name = dto.name;
+      if (dto.imageUrl) {
+        ingredient.imageUrl = dto.imageUrl;
+      }
+      
+      await queryRunner.manager.save(Ingredient, ingredient);
+      
+      // Remove existing category mappings
+      await queryRunner.manager.delete(IngredientCategoryMapping, {
+        ingredientId: dto.id
+      });
+
+      // Create new category mappings
+      if (dto.categoryIds && dto.categoryIds.length > 0) {
+        const categoryMappings = dto.categoryIds.map(categoryId => ({
+          ingredientId: dto.id,
+          ingredientCategoryId: categoryId
+        }));
+        
+        await queryRunner.manager.save(IngredientCategoryMapping, categoryMappings);
+      }
+      
+      // Commit transaction
+      await queryRunner.commitTransaction();
+      
+      // Return updated ingredient with categories
+      return this.getIngredientById(dto.id);
+    } catch (error) {
+      // Rollback transaction on error
+      await queryRunner.rollbackTransaction();
+      
+      if (error instanceof ConflictException || error instanceof NotFoundException) {
+        throw error;
+      }
+      
+      throw new InternalServerErrorException(`Lỗi khi cập nhật nguyên liệu: ${error.message}`);
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async deleteIngredient(id: string): Promise<boolean> {
+    // Check if ingredient exists
+    const ingredient = await this.getIngredientById(id, false);
+    
+    // Start transaction
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Delete category mappings first (to maintain referential integrity)
+      await queryRunner.manager.delete(IngredientCategoryMapping, {
+        ingredientId: id
+      });
+      
+      // Delete the ingredient
+      await queryRunner.manager.remove(ingredient);
+      
+      // Commit transaction
+      await queryRunner.commitTransaction();
+      
+      return true;
+    } catch (error) {
+      // Rollback transaction on error
+      await queryRunner.rollbackTransaction();
+      
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      
+      throw new InternalServerErrorException(`Lỗi khi xóa nguyên liệu: ${error.message}`);
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

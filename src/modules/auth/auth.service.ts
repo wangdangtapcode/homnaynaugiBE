@@ -110,13 +110,19 @@ import {
     async validateUser(username: string, password: string): Promise<any> {
       const account = await this.accountService.findByUsername(username);
     
-      
       if (!account) {
-        throw new UnauthorizedException('Invalid credentials');
+        return {
+          success: false,
+          message: 'Sai thông tin đăng nhập hoặc mật khẩu'
+        };
       }
+      
       const isPasswordValid = await bcrypt.compare(password, account.password);
       if (!isPasswordValid) {
-        throw new UnauthorizedException('Invalid credentials');
+        return {
+          success: false,
+          message: 'Sai thông tin đăng nhập hoặc mật khẩu'
+        };
       }
 
       // Lấy roles của user
@@ -124,9 +130,12 @@ import {
       const roleNames = roles.map(role => role.name);
 
       return {
-        id: account.id,
-        username: account.username,
-        roles: roleNames
+        success: true,
+        data: {
+          id: account.id,
+          username: account.username,
+          roles: roleNames
+        }
       };
     }
   
