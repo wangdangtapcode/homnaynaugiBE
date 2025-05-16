@@ -38,6 +38,7 @@ import { RecipeIngredientModule } from './modules/recipe_ingredient/recipe_ingre
 import { SearchModule } from './modules/search/search.module';
 import { AccountPantryItemModule } from './modules/account_pantry_item/account_pantry_item.module';
 import {RecipeCategoryMappingModule} from './modules/recipe_category_mapping/recipe_category_mapping.module';
+import { ViewHistoryModule } from './modules/view_history/view_history.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
 
 @Module({
@@ -98,6 +99,7 @@ import { StatisticModule } from './modules/statistic/statistic.module';
     RecipeIngredientModule,
     AccountPantryItemModule,
     RecipeCategoryMappingModule,
+    ViewHistoryModule,
     StatisticModule
   ],
   controllers: [AppController],

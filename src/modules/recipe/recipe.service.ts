@@ -5,18 +5,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource, Raw } from 'typeorm';
+import { Repository, DataSource, Brackets, Raw } from 'typeorm';
 import { Recipe, RecipeStatus } from './entities/recipe.entities';
 import {
   SearchRecipeQueryDto,
   CreateRecipeDto,
   UpdateRecipeDto,
+  SearchRecipeQueryAndCategoryDto,
 } from './recipe.dto';
 import { RecipeCategoryMapping } from '../recipe_category_mapping/entities/recipe_category_mapping.entities';
 import { RecipeIngredient } from '../recipe_ingredient/entities/recipe_ingredient.entities';
 import { CookingStep } from '../cooking_step/entities/cooking_step.entities';
 import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
-import { Express } from 'express';
 import { RecipeLike } from '../recipe_like/entities/recipe_like.entities';
 import { ViewHistory } from '../view_history/entities/view_history.entities';
 import { FavoriteRecipe } from '../favorite_recipe/entities/favorite_recipe.entities';
@@ -43,6 +43,13 @@ export class RecipeService {
     private cloudinaryService: CloudinaryService,
   ) {}
 
+  async findAll(): Promise<Recipe[]> {
+    return this.recipeRepo.find({
+      relations: ['account', 'categoryMappings', 'recipeIngredients', 'cookingSteps'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async getTopFavoriteRecipes(limit = 5): Promise<Recipe[]> {
     return this.recipeRepo
       .createQueryBuilder('recipe')
@@ -53,8 +60,169 @@ export class RecipeService {
       .getMany();
   }
 
+  async searchRecipesMe(queryDto: SearchRecipeQueryDto) {
+    const { query, status, accountId, offset = 0, limit = 10 } = queryDto;
+
+    // Build query builder
+    const queryBuilder = this.recipeRepo.createQueryBuilder('recipe')
+      .leftJoin('recipe.viewHistories', 'viewHistory')
+      .leftJoin('recipe.likes', 'recipeLike')
+      .leftJoin('recipe.favorites', 'favoriteRecipe')
+      .select([
+        'recipe.id as recipe_id',
+        'recipe.name as recipe_name',
+        'recipe.status as recipe_status',
+        'recipe.imageUrl as recipe_imageUrl',
+        'recipe.preparationTimeMinutes as recipe_preparationTimeMinutes',
+        'recipe.description as recipe_description',
+        'recipe.createdAt as recipe_createdAt',
+        'COUNT(DISTINCT viewHistory.id) as viewCount',
+        'COUNT(DISTINCT CONCAT(recipeLike.accountId, \'-\', recipeLike.recipeId)) as likeCount',
+        'COUNT(DISTINCT CONCAT(favoriteRecipe.accountId, \'-\', favoriteRecipe.recipeId)) as favoriteCount'
+      ])
+      .groupBy('recipe.id')
+      .addGroupBy('recipe.name')
+      .addGroupBy('recipe.status')
+      .addGroupBy('recipe.imageUrl')
+      .addGroupBy('recipe.preparationTimeMinutes')
+      .addGroupBy('recipe.description')
+      .addGroupBy('recipe.createdAt');
+
+    // Lọc theo accountId nếu có
+    if (accountId) {
+      queryBuilder.andWhere('recipe.accountId = :accountId', { accountId });
+    }
+
+    // Lọc theo query và status
+    if (query) {
+      queryBuilder.andWhere('recipe.name LIKE :query', { query: `%${query}%` });
+    }
+
+    if (status) {
+      queryBuilder.andWhere('recipe.status = :status', { status });
+    }
+
+    // Add pagination and ordering
+    queryBuilder
+      .skip(offset)
+      .take(limit)
+      .orderBy('recipe.createdAt', 'DESC');
+
+    // Execute query
+    const rawResults = await queryBuilder.getRawMany();
+    const total = rawResults.length;
+
+    const data = rawResults.map(row => ({
+      id: row.recipe_id,
+      name: row.recipe_name,
+      status: row.recipe_status,
+      imageUrl: row.recipe_imageUrl,
+      preparationTimeMinutes: row.recipe_preparationTimeMinutes || 0,
+      description: row.recipe_description,
+      createdAt: row.recipe_createdAt,
+      viewCount: Number(row.viewCount || 0),
+      likeCount: Number(row.likeCount || 0),
+      favoriteCount: Number(row.favoriteCount || 0)
+    }));
+
+    return {
+      data,
+      total,
+      offset,
+      limit,
+    };
+  }
+
   async searchRecipes(queryDto: SearchRecipeQueryDto) {
-    const { query, status, offset = 0, limit = 10 } = queryDto;
+    const { query, status, accountId, offset = 0, limit = 10 } = queryDto;
+
+    const qb = this.recipeRepo
+    .createQueryBuilder('recipe')
+    .leftJoinAndSelect('recipe.account', 'account')
+    .leftJoinAndSelect('recipe.categoryMappings', 'categoryMappings')
+    .leftJoinAndSelect('categoryMappings.recipeCategory', 'category');
+
+    // Build query builder
+    const queryBuilder = this.recipeRepo
+      .createQueryBuilder('recipe')
+      .leftJoin('recipe.viewHistories', 'viewHistory')
+      .leftJoin('recipe.likes', 'recipeLike')
+      .leftJoin('recipe.favorites', 'favoriteRecipe')
+      .leftJoinAndSelect('recipe.recipeIngredients', 'recipeIngredient')
+      .leftJoinAndSelect('recipeIngredient.ingredient', 'ingredient')
+      .leftJoinAndSelect('recipe.categoryMappings', 'recipeCategoryMapping')
+      .leftJoinAndSelect('recipeCategoryMapping.recipeCategory', 'category')
+      .where('recipe.name LIKE :kw', { kw: `%${queryDto}%` })
+      .orWhere('ingredient.name LIKE :kw', { kw: `%${queryDto}%` })
+      .orWhere('category.name LIKE :kw', { kw: `%${queryDto}%` })
+      .andWhere('recipe.status = :status', { status: 'public' })
+      .select([
+        'recipe.id as recipe_id',
+        'recipe.name as recipe_name',
+        'recipe.status as recipe_status',
+        'recipe.imageUrl as recipe_imageUrl',
+        'recipe.preparationTimeMinutes as recipe_preparationTimeMinutes',
+        'recipe.description as recipe_description',
+        'recipe.createdAt as recipe_createdAt',
+        'COUNT(DISTINCT viewHistory.id) as viewCount',
+        'COUNT(DISTINCT CONCAT(recipeLike.accountId, \'-\', recipeLike.recipeId)) as likeCount',
+        'COUNT(DISTINCT CONCAT(favoriteRecipe.accountId, \'-\', favoriteRecipe.recipeId)) as favoriteCount'
+      ])
+      .groupBy('recipe.id')
+      .addGroupBy('recipe.name')
+      .addGroupBy('recipe.status')
+      .addGroupBy('recipe.imageUrl')
+      .addGroupBy('recipe.preparationTimeMinutes')
+      .addGroupBy('recipe.description')
+      .addGroupBy('recipe.createdAt');
+
+    // Lọc theo accountId nếu có
+    if (accountId) {
+      queryBuilder.andWhere('recipe.accountId = :accountId', { accountId });
+    }
+
+    // Lọc theo query và status
+    if (query) {
+      qb.andWhere('LOWER(recipe.name) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      });
+    }
+
+    if (status) {
+      qb.andWhere('recipe.status = :status', { status });
+    }
+
+    // Add pagination and ordering
+    queryBuilder
+      .skip(offset)
+      .take(limit)
+      .orderBy('recipe.createdAt', 'DESC');
+
+    // Execute query
+    const rawResults = await queryBuilder.getRawMany();
+    const total = rawResults.length;
+
+    const data = rawResults.map(row => ({
+      id: row.recipe_id,
+      name: row.recipe_name,
+      status: row.recipe_status,
+      imageUrl: row.recipe_imageUrl,
+      preparationTimeMinutes: row.recipe_preparationTimeMinutes || 0,
+      description: row.recipe_description,
+      createdAt: row.recipe_createdAt,
+      viewCount: Number(row.viewCount || 0),
+      likeCount: Number(row.likeCount || 0),
+      favoriteCount: Number(row.favoriteCount || 0)
+    }));
+
+    return {
+      data,
+      total,
+    };
+  }
+
+  async searchRecipes2(queryDto: SearchRecipeQueryAndCategoryDto) {
+    const { query, categoryId, offset = 0, limit = 10 } = queryDto;
 
     const qb = this.recipeRepo
     .createQueryBuilder('recipe')
@@ -108,6 +276,44 @@ export class RecipeService {
       .addGroupBy('category.id');
 
     const [data, total] = await qb.skip(offset).take(limit).getManyAndCount();
+
+    return {
+      data,
+      total,
+    };
+  }
+
+  async searchRecipesFor(queryDto: SearchRecipeQueryDto) {
+    const { query, status, offset = 0, limit = 10 } = queryDto;
+
+    const qb = this.recipeRepo
+      .createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.account', 'account')
+      .leftJoinAndSelect('recipe.categoryMappings', 'mapping')
+      .leftJoinAndSelect('mapping.recipeCategory', 'category')
+      .where('1=1');
+
+    // Tìm theo tên món hoặc tên danh mục
+    if (query) {
+      qb.andWhere(
+        new Brackets((qbWhere) => {
+          qbWhere
+            .where('LOWER(recipe.name) LIKE LOWER(:q)', { q: `%${query}%` })
+            .orWhere('LOWER(category.name) LIKE LOWER(:q)', { q: `%${query}%` });
+        })
+      );
+    }
+
+    // Lọc theo trạng thái nếu có
+    if (status) {
+      qb.andWhere('recipe.status = :status', { status });
+    }
+
+    qb.orderBy('recipe.createdAt', 'DESC')
+      .skip(offset)
+      .take(limit);
+
+    const [data, total] = await qb.getManyAndCount();
 
     return {
       data,
@@ -238,9 +444,11 @@ export class RecipeService {
       await queryRunner.rollbackTransaction();
       console.error('Error creating recipe:', error);
 
+
       if (error instanceof BadRequestException) {
         throw error;
       }
+
 
       // Log detailed error information
       if (error instanceof Error) {
@@ -446,9 +654,11 @@ export class RecipeService {
       ],
     });
 
+
     if (!recipe) {
       throw new NotFoundException(`Không tìm thấy công thức với id: ${id}`);
     }
+
 
     // Đếm like
     const totalLikes = await this.recipeLikeRepo.count({
@@ -502,17 +712,17 @@ export class RecipeService {
     // Đếm like
     // Đếm likes
     const totalLikes = await this.recipeLikeRepo.count({
-      where: { recipeId: id },
+      where: { recipe: { id } },
     });
 
     // Đếm favorites
     const totalFavorites = await this.favoriteRecipeRepo.count({
-      where: { recipeId: id },
+      where: { recipe: { id } },
     });
 
     // Đếm views
     const totalViews = await this.viewHistoryRepo.count({
-      where: { recipeId: id },
+      where: { recipe: { id } },
     });
 
     // Kiểm tra xem công thức có phải là favorite của người dùng hiện tại không
@@ -523,8 +733,7 @@ export class RecipeService {
       // Kiểm tra favorite
       const favorite = await this.favoriteRecipeRepo.findOne({
         where: {
-          recipeId: id,
-          accountId: accountId,
+          recipe: { id },
         },
       });
       isFavorite = !!favorite;
@@ -532,8 +741,7 @@ export class RecipeService {
       // Kiểm tra like
       const like = await this.recipeLikeRepo.findOne({
         where: {
-          recipeId: id,
-          accountId: accountId,
+          recipe: { id },
         },
       });
       isLiked = !!like;
@@ -543,7 +751,7 @@ export class RecipeService {
     if (increaseView) {
       await this.viewHistoryRepo.save({
         accountId: accountId || null,
-        recipeId: id,
+        recipe: { id },
         viewedAt: new Date(),
       });
     }
@@ -584,9 +792,12 @@ export class RecipeService {
       .orderBy('RAND()')
       .getOne();
 
-    if (!recipe) {
-      throw new NotFoundException('Không tìm thấy công thức phù hợp');
-    }
+  if (!recipe) {
+    return {
+      message: 'Không có công thức nào phù hợp',
+      data: [],
+    };
+  }
     return {
       message: 'Lấy công thức thành công',
       data: {
@@ -910,4 +1121,26 @@ export class RecipeService {
       total,
     };
   }
+  async deleteMyRecipe(recipeId: string, userId: string) {
+    // Bước 1: Tìm công thức theo id và user (chỉ xóa công thức của chính user đó)
+    const recipe = await this.recipeRepo.findOne({
+      where: {
+        id: recipeId,
+        account: { id: userId },
+      },
+    });
+
+    // Bước 2: Nếu không tìm thấy thì báo lỗi
+    if (!recipe) {
+      throw new NotFoundException('Không tìm thấy công thức hoặc bạn không có quyền xóa');
+    }
+
+    // Bước 3: Xóa công thức
+    await this.recipeRepo.remove(recipe);
+
+    // Bước 4: Trả về thông báo hoặc dữ liệu xác nhận
+    return { message: 'Xóa công thức thành công' };
+  }
+
+
 }

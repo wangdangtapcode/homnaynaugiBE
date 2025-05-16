@@ -1,8 +1,7 @@
-import { Controller, Get, Query, Param, ParseIntPipe, Req, Post, UseGuards, UseInterceptors, UploadedFiles, Body, Put } from '@nestjs/common';
+import { Controller, Get, Query, Param, ParseIntPipe, Req, Delete, Post, UseGuards, UseInterceptors, UploadedFiles, Body, Put, Request} from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { CreateRecipeDto, SearchRecipeQueryDto, UpdateRecipeDto } from './recipe.dto';
-import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse, ApiConsumes } from '@nestjs/swagger';
-import { Request } from 'express';
+import { CreateRecipeDto, SearchRecipeQueryAndCategoryDto, SearchRecipeQueryDto, UpdateRecipeDto } from './recipe.dto';
+import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse, ApiConsumes, ApiBearerAuth} from '@nestjs/swagger';
 import { Public } from '../auth/decorator/public.decorator';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { RecipeLikeService } from '../recipe_like/recipe_like.service';
@@ -33,6 +32,34 @@ export class RecipeController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  @Get()
+  async getAllRecipes(): Promise<Recipe[]> {
+    return this.recipeService.findAll();
+  }
+
+
+  @Get("search")
+  @Public()
+  @ApiOperation({ summary: 'Tìm kiếm công thức công khai' })
+  @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
+  @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức (PUBLIC, PRIVATE, DRAFT)' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu (mặc định: 0)' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả (mặc định: 10)' })
+  @ApiResponse({ status: 200, description: 'Danh sách công thức công khai' })
+  async searchRecipes(@Query() queryDto: SearchRecipeQueryDto) {
+    return this.recipeService.searchRecipes(queryDto);
+  }
+
+  @Get("searchName")
+  @Public()
+  @ApiOperation({ summary: 'Tìm kiếm công thức' })
+  @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
+  @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả' })
+  async searchRecipesFor(@Query() queryDto: SearchRecipeQueryAndCategoryDto) {
+  return this.recipeService.searchRecipesFor(queryDto);
+  }
   // @Get("search")
   // @Public()
   // @ApiOperation({ summary: 'Tìm kiếm công thức' })
@@ -287,4 +314,33 @@ export class RecipeController {
     console.log("XONG BUOC UP FILE LEN CLOUD")
     return this.recipeService.updateRecipe(dto, req.user.id);
   }
+  @Get("me")
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Lấy danh sách công thức của user đang đăng nhập' })
+  @ApiQuery({ name: 'query', required: false, description: 'Từ khóa tìm kiếm' })
+  @ApiQuery({ name: 'status', required: false, description: 'Trạng thái công thức (PUBLIC, PRIVATE, DRAFT)' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu (mặc định: 0)' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả (mặc định: 10)' })
+  @ApiResponse({ status: 200, description: 'Danh sách công thức của user' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Chưa đăng nhập' })
+  async getMyRecipes(@Query() queryDto: SearchRecipeQueryDto, @Request() req) {
+    return this.recipeService.searchRecipesMe({
+      ...queryDto,
+      accountId: req.user.id
+    });
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Xóa món ăn do user đang đăng nhập tạo' })
+  @ApiResponse({ status: 200, description: 'Xóa công thức thành công' })
+  @ApiResponse({ status: 401, description: 'Chưa đăng nhập' })
+  @ApiResponse({ status: 404, description: 'Không tìm thấy công thức hoặc không có quyền xóa' })
+  async deleteMyRecipe(@Param('id') id: string, @Req() req: RequestWithUser) {
+    return this.recipeService.deleteMyRecipe(id, req.user!.id);
+  }
+
+
 }
