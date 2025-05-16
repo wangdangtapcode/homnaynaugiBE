@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Param, ParseIntPipe, Req, Post, UseGuards, UseInterceptors, UploadedFiles, Body, Put, Request} from '@nestjs/common';
+import { Controller, Get, Query, Param, ParseIntPipe, Req, Delete, Post, UseGuards, UseInterceptors, UploadedFiles, Body, Put, Request} from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { CreateRecipeDto, SearchRecipeQueryAndCategoryDto, SearchRecipeQueryDto, UpdateRecipeDto } from './recipe.dto';
 import { ApiOperation, ApiQuery, ApiTags, ApiParam, ApiResponse, ApiConsumes, ApiBearerAuth} from '@nestjs/swagger';
@@ -333,6 +333,16 @@ export class RecipeController {
     });
   }
 
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Xóa món ăn do user đang đăng nhập tạo' })
+  @ApiResponse({ status: 200, description: 'Xóa công thức thành công' })
+  @ApiResponse({ status: 401, description: 'Chưa đăng nhập' })
+  @ApiResponse({ status: 404, description: 'Không tìm thấy công thức hoặc không có quyền xóa' })
+  async deleteMyRecipe(@Param('id') id: string, @Req() req: RequestWithUser) {
+    return this.recipeService.deleteMyRecipe(id, req.user!.id);
+  }
 
 
 }
