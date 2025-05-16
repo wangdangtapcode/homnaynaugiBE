@@ -44,6 +44,14 @@ export class AccountPantryItemController {
     );
   }
 
+  @Delete('delete-all')
+  @ApiOperation({ summary: 'Remove all ingredients from user pantry' })
+  @ApiResponse({ status: 200, description: 'All ingredients removed successfully.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  async removeAllIngredientsFromPantry(@Request() req) {
+    return await this.accountPantryItemService.removeAllIngredientsFromPantry(req.user.id);
+  }
+
   @Delete(':ingredientId')
   @ApiOperation({ summary: 'Remove ingredient from user pantry' })
   @ApiResponse({ status: 200, description: 'Ingredient removed successfully.' })
@@ -59,11 +67,5 @@ export class AccountPantryItemController {
     );
   }
 
-  @Delete('delete-all')
-  @ApiOperation({ summary: 'Remove all ingredients from user pantry' })
-  @ApiResponse({ status: 200, description: 'All ingredients removed successfully.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  async removeAllIngredientsFromPantry(@Request() req) {
-    return await this.accountPantryItemService.removeAllIngredientsFromPantry(req.user.id);
-  }
+  
 }
