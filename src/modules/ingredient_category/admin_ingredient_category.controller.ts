@@ -109,4 +109,9 @@ export class AdminIngredientCategoryController {
       message: 'Xóa danh mục thành công',
     };
   }
+
+  @Get()
+  async getAllCategories() {
+    return this.ingredientCategoryService.findAll();
+  }
 }
