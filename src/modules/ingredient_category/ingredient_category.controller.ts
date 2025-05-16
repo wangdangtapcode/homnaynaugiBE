@@ -115,6 +115,11 @@ export class IngredientCategoryController {
       message: 'Xóa danh mục thành công',
     };
   }
+  // lấy danh mục nguyên liệu
+  @Get()
+  async getAllCategories() {
+    return this.ingredientCategoryService.findAll();
+  }
 
   // @Get()
   // async getAllIngredients(): Promise<CreateIngredientCategoryDto[]> {
