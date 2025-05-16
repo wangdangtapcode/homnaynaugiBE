@@ -83,7 +83,7 @@ import {
         accountId: account.id,
         email,
         fullName: name,
-        avatarUrl: 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747122246/inye5wmzkrwrmc99dl75.jpg',
+        avatarUrl: 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747310749/bxme4csc6yqy62t2cznt.jpg',
       });
       await this.userProfileRepository.save(userProfile);
   
@@ -289,7 +289,7 @@ import {
         accountId: account.id,
         email,
         fullName: name,
-        avatarUrl: 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747122246/inye5wmzkrwrmc99dl75.jpg',
+        avatarUrl: 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747310749/bxme4csc6yqy62t2cznt.jpg',
       });
       await this.userProfileRepository.save(userProfile);
   
