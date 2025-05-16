@@ -83,16 +83,14 @@ export class RecipeController {
   
   @Get("recipeFeed")
   @Public()
-  @ApiOperation({ summary: 'Hiển thị công thức món ăn'})
-  @ApiQuery({ name: 'sortBy', required: false, description: 'Cách sắp xếp: newest, views, likes, favorites, recommended' })
+  @ApiOperation({ summary: 'Hiển thị công thức món ăn ngẫu nhiên'})
   @ApiQuery({ name: 'limit', required: false, description: 'Số lượng kết quả trả về' })
   @ApiQuery({ name: 'offset', required: false, description: 'Vị trí bắt đầu (dùng cho infinite scroll)' })
   async getRecipeFeed(
-    @Query('sortBy') sortBy?: string,
     @Query('limit') limit?: number,
     @Query('offset') offset?: number
   ) {
-    return this.recipeService.getRecipeFeed({sortBy, limit, offset});
+    return this.recipeService.getRecipeFeed({limit, offset});
   }
 
 

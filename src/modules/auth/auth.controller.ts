@@ -39,11 +39,20 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Đăng nhập thành công' })
   @ApiResponse({ status: 401, description: 'Thông tin đăng nhập không chính xác' })
   async login(@Body() dto: LoginDto) {
+    const validateResult = await this.authService.validateUser(dto.loginIdentifier, dto.password);
 
-    const user = await this.authService.validateUser(dto.loginIdentifier, dto.password);
+    if (!validateResult.success) {
+      return {
+        success: false,
+        message: validateResult.message
+      };
+    }
 
-
-    return this.authService.login(user);
+    const loginResult = await this.authService.login(validateResult.data);
+    return {
+      success: true,
+      data: loginResult
+    };
   }
 
   @Public()
