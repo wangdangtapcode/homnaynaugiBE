@@ -83,6 +83,4 @@ export class IngredientCategoryService {
     const category = await this.findOne(id);
     await this.ingredientCategoryRepository.remove(category);
   }
-
-
 }
