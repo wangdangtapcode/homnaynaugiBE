@@ -43,6 +43,13 @@ export class RecipeService {
     private cloudinaryService: CloudinaryService,
   ) {}
 
+  async findAll(): Promise<Recipe[]> {
+    return this.recipeRepo.find({
+      relations: ['account', 'categoryMappings', 'recipeIngredients', 'cookingSteps'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async getTopFavoriteRecipes(limit = 5): Promise<Recipe[]> {
     return this.recipeRepo
       .createQueryBuilder('recipe')

@@ -32,6 +32,11 @@ export class RecipeController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  @Get()
+  async getAllRecipes(): Promise<Recipe[]> {
+    return this.recipeService.findAll();
+  }
+
 
   @Get("search")
   @Public()
@@ -327,5 +332,7 @@ export class RecipeController {
       accountId: req.user.id
     });
   }
-  
+
+
+
 }
