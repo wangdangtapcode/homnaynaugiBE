@@ -9,7 +9,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { AccountPantryItemService } from './account_pantry_item.service';
-import { CreateAccountPantryItemDto } from './account_pantry_item.dto';
+import { CreateAccountPantryItemDto, DeleteMultiplePantryItemsDto } from './account_pantry_item.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Pantry')
@@ -52,6 +52,21 @@ export class AccountPantryItemController {
     return await this.accountPantryItemService.removeAllIngredientsFromPantry(req.user.id);
   }
 
+  
+  @Delete('delete-multiple')
+  @ApiOperation({ summary: 'Xóa nhiều nguyên liệu khỏi kho của người dùng' })
+  @ApiResponse({ status: 200, description: 'Xóa nguyên liệu thành công.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  async removeMultipleIngredientsFromPantry(
+    @Request() req,
+    @Body() deleteDto: DeleteMultiplePantryItemsDto,
+  ) {
+    return await this.accountPantryItemService.removeMultipleIngredientsFromPantry(
+      req.user.id,
+      deleteDto.ingredientIds,
+    );
+  }
+
   @Delete(':ingredientId')
   @ApiOperation({ summary: 'Remove ingredient from user pantry' })
   @ApiResponse({ status: 200, description: 'Ingredient removed successfully.' })
@@ -67,5 +82,4 @@ export class AccountPantryItemController {
     );
   }
 
-  
 }

@@ -159,4 +159,35 @@ export class AccountPantryItemService {
       throw error;
     }
   }
+
+  async removeMultipleIngredientsFromPantry(accountId: string, ingredientIds: string[]) {
+    // Kiểm tra xem các nguyên liệu có tồn tại trong kho không
+    const existingItems = await this.accountPantryItemRepository.find({
+      where: {
+        accountId: accountId,
+        ingredientId: In(ingredientIds)
+      }
+    });
+
+    if (existingItems.length === 0) {
+      return {
+        message: 'Không tìm thấy nguyên liệu nào trong kho của bạn',
+        removedIngredients: [],
+        notFoundIngredients: ingredientIds
+      };
+    }
+
+    // Xóa các nguyên liệu
+    await this.accountPantryItemRepository.remove(existingItems);
+
+    // Lấy danh sách ID đã xóa và chưa tìm thấy
+    const removedIds = existingItems.map(item => item.ingredientId);
+    const notFoundIds = ingredientIds.filter(id => !removedIds.includes(id));
+
+    return {
+      message: 'Đã xóa các nguyên liệu khỏi kho',
+      removedIngredients: removedIds,
+      notFoundIngredients: notFoundIds
+    };
+  }
 }
