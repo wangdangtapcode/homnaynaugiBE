@@ -12,3 +12,10 @@ export class CreateAccountPantryItemDto {
   @IsNotEmpty({ each: true })
   ingredientIds: string[];
 }
+
+export class DeleteMultiplePantryItemsDto {
+  @ApiProperty({ type: [String], description: 'Danh sách ID nguyên liệu cần xóa' })
+  @IsArray()
+  @IsString({ each: true })
+  ingredientIds: string[];
+}

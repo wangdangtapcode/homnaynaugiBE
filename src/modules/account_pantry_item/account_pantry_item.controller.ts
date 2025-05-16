@@ -5,9 +5,11 @@ import {
   Get,
   UseGuards,
   Request,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { AccountPantryItemService } from './account_pantry_item.service';
-import { CreateAccountPantryItemDto } from './account_pantry_item.dto';
+import { CreateAccountPantryItemDto, DeleteMultiplePantryItemsDto } from './account_pantry_item.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Pantry')
@@ -32,7 +34,7 @@ export class AccountPantryItemController {
     );
   }
 
-  @Get()
+  @Get('me')
   @ApiOperation({ summary: 'Get all ingredients in user pantry' })
   @ApiResponse({ status: 200, description: 'Return list of pantry items.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
@@ -41,4 +43,43 @@ export class AccountPantryItemController {
       req.user.id,
     );
   }
+
+  @Delete('delete-all')
+  @ApiOperation({ summary: 'Remove all ingredients from user pantry' })
+  @ApiResponse({ status: 200, description: 'All ingredients removed successfully.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  async removeAllIngredientsFromPantry(@Request() req) {
+    return await this.accountPantryItemService.removeAllIngredientsFromPantry(req.user.id);
+  }
+
+  
+  @Delete('delete-multiple')
+  @ApiOperation({ summary: 'Xóa nhiều nguyên liệu khỏi kho của người dùng' })
+  @ApiResponse({ status: 200, description: 'Xóa nguyên liệu thành công.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  async removeMultipleIngredientsFromPantry(
+    @Request() req,
+    @Body() deleteDto: DeleteMultiplePantryItemsDto,
+  ) {
+    return await this.accountPantryItemService.removeMultipleIngredientsFromPantry(
+      req.user.id,
+      deleteDto.ingredientIds,
+    );
+  }
+
+  @Delete(':ingredientId')
+  @ApiOperation({ summary: 'Remove ingredient from user pantry' })
+  @ApiResponse({ status: 200, description: 'Ingredient removed successfully.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 404, description: 'Ingredient not found in pantry.' })
+  async removeIngredientFromPantry(
+    @Request() req,
+    @Param('ingredientId') ingredientId: string,
+  ) {
+    return await this.accountPantryItemService.removeIngredientFromPantry(
+      req.user.id,
+      ingredientId,
+    );
+  }
+
 }
