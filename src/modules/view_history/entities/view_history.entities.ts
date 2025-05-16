@@ -1,5 +1,3 @@
-
-
 import { Account } from '../../account/entities/account.entities'; 
 import { Recipe } from '../../recipe/entities/recipe.entities'; 
 import {
@@ -32,4 +30,7 @@ export class ViewHistory {
 
   @CreateDateColumn({ type: 'timestamp', name: 'viewed_at', default: () => 'CURRENT_TIMESTAMP(6)' })
   viewedAt: Date;
+
+  @JoinColumn({ name: 'created_by' }) // tên cột foreign key trong DB
+  createdBy: Account;
 }

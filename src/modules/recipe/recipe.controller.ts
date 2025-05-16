@@ -327,7 +327,7 @@ export class RecipeController {
   @ApiResponse({ status: 200, description: 'Danh sách công thức của user' })
   @ApiResponse({ status: 401, description: 'Unauthorized - Chưa đăng nhập' })
   async getMyRecipes(@Query() queryDto: SearchRecipeQueryDto, @Request() req) {
-    return this.recipeService.searchRecipes({
+    return this.recipeService.searchRecipesMe({
       ...queryDto,
       accountId: req.user.id
     });
