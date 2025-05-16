@@ -58,4 +58,31 @@ export class UserProfileService {
     Object.assign(profile, updateData);
     return await this.userProfileRepository.save(profile);
   }
+
+  async findAllProfiles(): Promise<UserProfile[]> {
+    return await this.userProfileRepository.find({
+      relations: ['account'],
+    });
+  }
+  async findProfileById(profileId: string): Promise<UserProfile> {
+    const profile = await this.userProfileRepository.findOne({
+      where: { id: Number(profileId) },
+      relations: ['account'],
+    });
+
+    if (!profile) throw new NotFoundException('Không tìm thấy profile');
+    return profile;
+  }
+
+  async adminUpdateUserProfile(profileId: string, updateData: Partial<UserProfile>): Promise<UserProfile> {
+    const profile = await this.findProfileById(profileId);
+    Object.assign(profile, updateData);
+    return await this.userProfileRepository.save(profile);
+  }
+
+  async deleteUserProfile(profileId: string): Promise<void> {
+    const profile = await this.findProfileById(profileId);
+    await this.userProfileRepository.remove(profile);
+  }
+
 }

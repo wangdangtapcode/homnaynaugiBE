@@ -1192,4 +1192,26 @@ export class RecipeService {
       total,
     };
   }
+  async deleteMyRecipe(recipeId: string, userId: string) {
+    // Bước 1: Tìm công thức theo id và user (chỉ xóa công thức của chính user đó)
+    const recipe = await this.recipeRepo.findOne({
+      where: {
+        id: recipeId,
+        account: { id: userId },
+      },
+    });
+
+    // Bước 2: Nếu không tìm thấy thì báo lỗi
+    if (!recipe) {
+      throw new NotFoundException('Không tìm thấy công thức hoặc bạn không có quyền xóa');
+    }
+
+    // Bước 3: Xóa công thức
+    await this.recipeRepo.remove(recipe);
+
+    // Bước 4: Trả về thông báo hoặc dữ liệu xác nhận
+    return { message: 'Xóa công thức thành công' };
+  }
+
+
 }
