@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { UserProfile } from './entitie/user_profiles.entities';
 import { Account } from '../account/entities/account.entities';
 import { RoleName } from '../role/enum/role.enum';
+import { UpdateUserProfileDto } from './user_profile.dto';
 
 @Injectable()
 export class UserProfileService {
@@ -27,35 +28,39 @@ export class UserProfileService {
       where: { id: accountId },
       relations: ['accountRoles', 'accountRoles.role'],
     });
-
     if (!account) {
+    console.log("account not foundfound")
+
       throw new NotFoundException('Không tìm thấy tài khoản');
     }
 
     const roles = this.extractRoles(account);
 
     if (roles.includes(RoleName.ADMIN.toLowerCase())) {
+      console.log("account not is admin")
       throw new ForbiddenException('Không thể truy cập profile của admin');
     }
 
     if (!roles.includes(RoleName.USER.toLowerCase())) {
       throw new ForbiddenException('Tài khoản không có quyền truy cập');
     }
-
+    console.log("account found")
     const profile = await this.userProfileRepository.findOne({
       where: { accountId },
     });
-
+    console.log("profile found")
     if (!profile) {
+      console.log("profile not found")
       throw new NotFoundException('Không tìm thấy thông tin profile');
     }
-
+    console.log(profile)
     return profile;
   }
 
-  async updateProfile(accountId: string, updateData: Partial<UserProfile>): Promise<UserProfile> {
+  async updateProfile(accountId: string, updateData: UpdateUserProfileDto): Promise<UserProfile> {
     const profile = await this.getProfile(accountId);
     Object.assign(profile, updateData);
+    console.log(profile)
     return await this.userProfileRepository.save(profile);
   }
 
