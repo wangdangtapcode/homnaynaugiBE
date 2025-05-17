@@ -9,5 +9,6 @@ import { Recipe } from '../recipe/entities/recipe.entities';
   imports: [TypeOrmModule.forFeature([ViewHistory, Recipe])],
   controllers: [ViewHistoryController], 
   providers: [ViewHistoryService],
+  exports: [ViewHistoryService],
 })
 export class ViewHistoryModule {}
