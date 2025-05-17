@@ -7,11 +7,13 @@ import { IngredientCategoryMapping } from '../ingredient_category_mapping/entiti
 import { AuthModule } from '../auth/auth.module';
 import { Account } from '../account/entities/account.entities';
 import { AdminIngredientController } from './admin_ingredient.controller';
+import { CloudinaryModule } from '../../config/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Ingredient, IngredientCategoryMapping, Account]),
-    AuthModule
+    AuthModule,
+    CloudinaryModule
   ],
   controllers: [IngredientController, AdminIngredientController],
   providers: [IngredientService],

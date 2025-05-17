@@ -1,4 +1,3 @@
-
 import { Account } from '../../account/entities/account.entities'; 
 import { RecipeCategory } from '../../recipe_categorie/entities/recipe_categorie.entities'; 
 import { RecipeIngredient } from '../../recipe_ingredient/entities/recipe_ingredient.entities'; 
@@ -108,12 +107,19 @@ export class Recipe {
   @Column({ type: 'char', length: 36, nullable: false, name: 'account_id' })
   accountId: string; // UUID của người tạo
 
+  @Column({ type: 'char', length: 36, nullable: true, name: 'updated_by' })
+  updatedBy: string | null; // UUID của người cập nhật gần nhất
+
   @ManyToOne(() => Account, (account) => account.recipes, { // Giả sử Account có thuộc tính 'recipes'
     nullable: false,
     onDelete: 'CASCADE', // Nếu tài khoản bị xóa, account_id của công thức sẽ là NULL
   })
   @JoinColumn({ name: 'account_id', referencedColumnName: 'id' })
   account: Account; // Đối tượng người tạo, có thể null
+
+  @ManyToOne(() => Account, { nullable: true })
+  @JoinColumn({ name: 'updated_by', referencedColumnName: 'id' })
+  updatedByAccount: Account; // Đối tượng người cập nhật gần nhất
 
 
   @OneToMany(() => RecipeCategoryMapping, (mapping) => mapping.recipe)

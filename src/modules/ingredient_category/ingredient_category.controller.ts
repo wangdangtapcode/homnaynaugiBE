@@ -70,6 +70,18 @@ export class IngredientCategoryController {
     };
   }
 
+  @Get('all')
+  @Public()
+  @ApiOperation({ summary: 'Lấy tất cả danh mục nguyên liệu không phân trang' })
+  @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
+  async getAllCategories() {
+    const { data } = await this.ingredientCategoryService.findAll(undefined, 0, 999);
+    return {
+      message: 'Lấy danh sách danh mục thành công',
+      data
+    };
+  }
+
   @Get('search/:id')
   @ApiOperation({ summary: 'Lấy thông tin danh mục nguyên liệu' })
   @ApiResponse({ status: 200, description: 'Lấy thông tin thành công' })
