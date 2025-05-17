@@ -121,7 +121,13 @@ export class RecipeController {
   ) {
     return this.recipeService.getRecipeFeed({sortBy, limit, offset});
   }
-
+  @Get('get-recipe/:id')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Lấy thông tin chi tiết công thức' })
+  @ApiParam({ name: 'id', description: 'ID của công thức' })
+  async getRecipeById(@Param('id') id: string) {
+    return this.recipeService.getRecipeById(id);
+  }
 
 
   @Get('detail/:id')
