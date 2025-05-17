@@ -13,6 +13,8 @@ import { ConfigService } from '@nestjs/config';
 import { Recipe } from './entities/recipe.entities';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../../config/cloudinary/cloudinary.service';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { RoleName } from '../role/enum/role.enum';
 
 interface RequestWithUser extends Request {
   user?: {
@@ -119,6 +121,7 @@ export class RecipeController {
   ) {
     return this.recipeService.getRecipeFeed({limit, offset});
   }
+
   @Get('get-recipe/:id')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Lấy thông tin chi tiết công thức' })
@@ -126,7 +129,6 @@ export class RecipeController {
   async getRecipeById(@Param('id') id: string) {
     return this.recipeService.getRecipeById(id);
   }
-
 
   @Get('detail/:id')
   @Public()
