@@ -252,30 +252,8 @@ INSERT INTO units_of_measure (unit_name, symbol) VALUES
 ('cái', 'cái'),
 ('thìa cà phê', 'thìa cà phê'),
 ('thìa canh', 'thìa canh');
--- 
 
-INSERT INTO recipe_categories (name,image_url) VALUES 
-('Bánh mì', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982204/y6rzp882g2mbwenmf0d5.jpg'),
-('Đồ xào','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982202/zkxpw4of4wmetodlctio.jpg'),
-('Rau củ quả','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982203/qxu7er5ydoapuj6hhbzk.jpg'),
-('Đồ chiên','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982200/p6cmtrni1upkl127hkqt.jpg'),
-('Bún, miến, phở','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/uqjnkcn6ozefkgajcys7.jpg'),
-('Cơm','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982202/rceoghw1xwgym8djjjhn.jpg'),
-('Salad','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982203/qxu7er5ydoapuj6hhbzk.jpg'),
-('Xôi', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106093/mozzocdyk7ispvkjdo0b.jpg'),
-('Bánh mặn', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106087/l0q7yomxljrv8mrjmyrf.jpg'), 
-('Đồ cuốn','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/ttqmhkfh3p3wokywiy1c.jpg');
-
- 
-INSERT INTO ingredient_categories (id, name, image_url) VALUES
-(1, 'Gia vị','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986443/bsjfc9whzwx9xoov54ui.jpg'),
-(2, 'Thịt','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986455/nempcrntncsaxpdjyj0l.jpg'),
-(3, 'Thuỷ hải sản','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986453/k4jzg5cadbuhlqspcbfy.jpg'),
-(4, 'Rau củ quả','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986452/ea7hvwv8h1kpl8inrx0p.jpg'),
-(5, 'Nấm','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986445/zxwn5gimrontdw4yi9mt.jpg'),
-(6, 'Trứng sữa','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986456/dlfyugdetheg9ooddoeb.jpg'),
-(7, 'Khác','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986444/u9obj9kcrfpqvhgrczmt.jpg');
-
+-- 2. ingredients
 INSERT INTO ingredients (id, name, image_url) VALUES
 ('550e8400-e29b-41d4-a716-446655440101', 'tiêu xanh','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986442/pcwup5rpkyverie1whc5.jpg'),
 ('550e8400-e29b-41d4-a716-446655440102', 'dầu ô liu','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986438/qnwei0cpqwuffpnrhduj.jpg'),
@@ -388,112 +366,292 @@ INSERT INTO ingredients (id, name, image_url) VALUES
 ('550e8400-e29b-41d4-a716-446655440209', 'gấc','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106088/gpn5yxlcx3gkpelvdkfy.jpg'),
 ('550e8400-e29b-41d4-a716-446655440210', 'lá dong','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106088/yrgaitxrhzjv4ggedejw.jpg'),
 ('550e8400-e29b-41d4-a716-446655440211', 'cơm','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106087/rsxt2bc3duxoighzdw1g.jpg'),
-('550e8400-e29b-41d4-a716-446655440212', 'đậu xanh','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106086/x4kbvln6syfaxxz9yiwk.jpg');
+('550e8400-e29b-41d4-a716-446655440212', 'đậu xanh','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106086/x4kbvln6syfaxxz9yiwk.jpg'),
+('550e8400-e29b-41d4-a716-446655440213', 'bồ câu', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747326958/wkkjj6mhtliejt9ghqem.jpg'),
+('550e8400-e29b-41d4-a716-446655440215', 'chuối', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747331503/jwfvp8kqff2fhpvxdg36.jpg'),
+('550e8400-e29b-41d4-a716-446655440217', 'dưa hấu', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747331517/sqrqybwfaezafw5w7tgg.jpg'),
+('550e8400-e29b-41d4-a716-446655440218', 'cam', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747331521/ijnlzamqq5vcnz4gzfvc.jpg'),
+('550e8400-e29b-41d4-a716-446655440219', 'bánh canh', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429088/qjq0drxwbed1phyhvt5q.jpg'),
+('550e8400-e29b-41d4-a716-446655440220', 'ngò rí', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429123/ipac51xlb4oqsdatdv4y.jpg'),
+('550e8400-e29b-41d4-a716-446655440221', 'bánh đa cua', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429160/tdlkngtupfn67uexsdxk.jpg'),
+('550e8400-e29b-41d4-a716-446655440222', 'men nở', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429181/i7fmv4uxxwhjzph6hwrh.jpg'),
+('550e8400-e29b-41d4-a716-446655440223', 'đậu nành', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429224/uk8bonf1r9hqghsh5nqi.jpg'),
+('550e8400-e29b-41d4-a716-446655440225', 'táo', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429241/b7a8mazeohmbrlwwkexh.jpg'),
+('550e8400-e29b-41d4-a716-446655440226', 'sầu riêng', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429265/jgfykfpmdsayioxa8yna.jpg'), 
+('550e8400-e29b-41d4-a716-446655440227', 'rượu trắng', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429312/k5c9ixwvv2ate2agl3cl.jpg'),
+('550e8400-e29b-41d4-a716-446655440228', 'rượu vang', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429358/ktfuwfmbqd0oj1h3bres.jpg'),
+('550e8400-e29b-41d4-a716-446655440229', 'bột năng', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429388/idnm4cfkqirkgfgvmx6b.jpg'),
+('550e8400-e29b-41d4-a716-446655440230', 'bột sắn', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429424/kyxkspxrwcmiyqofr3kd.jpg');
 
+-- 3. ingredient_categories
+INSERT INTO ingredient_categories (id, name, image_url) VALUES
+(1, 'Gia vị', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986443/bsjfc9whzwx9xoov54ui.jpg'),
+(2, 'Thịt', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986455/nempcrntncsaxpdjyj0l.jpg'),
+(3, 'Thuỷ hải sản', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986453/k4jzg5cadbuhlqspcbfy.jpg'),
+(4, 'Rau củ', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986452/ea7hvwv8h1kpl8inrx0p.jpg'),
+(5, 'Hoa quả', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747326352/g1vsvd8wbr9gxodld9rg.jpg'),
+(6, 'Đậu & nấm', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986445/zxwn5gimrontdw4yi9mt.jpg'),
+(7, 'Trứng sữa', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746986456/dlfyugdetheg9ooddoeb.jpg'),
+(8, 'Tinh bột', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747326352/u1bswzmulkvx68o293qt.jpg'),
+(9, 'Rượu giấm', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747326355/h8tr2ff8ap4xv3nnsfes.jpg'),
+(10, 'Chế biến sẵn', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747326350/m83zioqc3uyxzdeq9cgl.jpg'),
+(11, 'Khác', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106088/yrgaitxrhzjv4ggedejw.jpg');
+
+-- 4. ingredient_category_mappings
 INSERT INTO ingredient_category_mappings (ingredient_id, ingredient_category_id) VALUES
 -- Gia vị
-('550e8400-e29b-41d4-a716-446655440101', 1), ('550e8400-e29b-41d4-a716-446655440102', 1), ('550e8400-e29b-41d4-a716-446655440103', 1), ('550e8400-e29b-41d4-a716-446655440104', 1), ('550e8400-e29b-41d4-a716-446655440105', 1), ('550e8400-e29b-41d4-a716-446655440106', 1), ('550e8400-e29b-41d4-a716-446655440107', 1), ('550e8400-e29b-41d4-a716-446655440108', 1), ('550e8400-e29b-41d4-a716-446655440109', 1), ('550e8400-e29b-41d4-a716-446655440110', 1),
-('550e8400-e29b-41d4-a716-446655440111', 1), ('550e8400-e29b-41d4-a716-446655440112', 1), ('550e8400-e29b-41d4-a716-446655440113', 1), ('550e8400-e29b-41d4-a716-446655440114', 1), ('550e8400-e29b-41d4-a716-446655440115', 1), ('550e8400-e29b-41d4-a716-446655440116', 1), ('550e8400-e29b-41d4-a716-446655440117', 1), ('550e8400-e29b-41d4-a716-446655440118', 1), ('550e8400-e29b-41d4-a716-446655440119', 1), ('550e8400-e29b-41d4-a716-446655440120', 1),
-('550e8400-e29b-41d4-a716-446655440121', 1), ('550e8400-e29b-41d4-a716-446655440122', 1), ('550e8400-e29b-41d4-a716-446655440123', 1), ('550e8400-e29b-41d4-a716-446655440124', 1), ('550e8400-e29b-41d4-a716-446655440125', 1), ('550e8400-e29b-41d4-a716-446655440126', 1), ('550e8400-e29b-41d4-a716-446655440127', 1), ('550e8400-e29b-41d4-a716-446655440128', 1), ('550e8400-e29b-41d4-a716-446655440129', 1), ('550e8400-e29b-41d4-a716-446655440130', 1),
-
+('550e8400-e29b-41d4-a716-446655440101', 1), -- tiêu xanh
+('550e8400-e29b-41d4-a716-446655440102', 1), -- dầu ô liu
+('550e8400-e29b-41d4-a716-446655440103', 1), -- lá chanh
+('550e8400-e29b-41d4-a716-446655440104', 1), -- bột canh
+('550e8400-e29b-41d4-a716-446655440105', 1), -- đường phèn
+('550e8400-e29b-41d4-a716-446655440106', 1), -- chanh
+('550e8400-e29b-41d4-a716-446655440110', 1), -- sa tế 
+('550e8400-e29b-41d4-a716-446655440113', 1), -- xì dầu
+('550e8400-e29b-41d4-a716-446655440114', 1), -- muối
+('550e8400-e29b-41d4-a716-446655440115', 1), -- mì chính
+('550e8400-e29b-41d4-a716-446655440117', 1), -- đường
+('550e8400-e29b-41d4-a716-446655440119', 1), -- tương ớt
+('550e8400-e29b-41d4-a716-446655440120', 1), -- bột nghệ
+('550e8400-e29b-41d4-a716-446655440121', 1), -- mắm tôm  
+('550e8400-e29b-41d4-a716-446655440122', 1), -- mắm ruốc
+('550e8400-e29b-41d4-a716-446655440123', 1), -- mật ong
+('550e8400-e29b-41d4-a716-446655440124', 1), -- nước mắm
+('550e8400-e29b-41d4-a716-446655440125', 1), -- tiêu
+('550e8400-e29b-41d4-a716-446655440126', 1), -- hạt nêm
+('550e8400-e29b-41d4-a716-446655440127', 1), -- dầu ăn
+('550e8400-e29b-41d4-a716-446655440128', 1), -- sả
+('550e8400-e29b-41d4-a716-446655440129', 1), -- gừng
+('550e8400-e29b-41d4-a716-446655440130', 1), -- tỏi
+('550e8400-e29b-41d4-a716-446655440180', 1), -- ớt
+('550e8400-e29b-41d4-a716-446655440182', 1), -- hành tím
+('550e8400-e29b-41d4-a716-446655440205', 1), -- hành khô
 -- Thịt
-('550e8400-e29b-41d4-a716-446655440131', 2), ('550e8400-e29b-41d4-a716-446655440132', 2), ('550e8400-e29b-41d4-a716-446655440133', 2), ('550e8400-e29b-41d4-a716-446655440134', 2), ('550e8400-e29b-41d4-a716-446655440135', 2), ('550e8400-e29b-41d4-a716-446655440136', 2), ('550e8400-e29b-41d4-a716-446655440137', 2), ('550e8400-e29b-41d4-a716-446655440138', 2), ('550e8400-e29b-41d4-a716-446655440139', 2), ('550e8400-e29b-41d4-a716-446655440140', 2),
-
+('550e8400-e29b-41d4-a716-446655440131', 2), -- gà đùi
+('550e8400-e29b-41d4-a716-446655440132', 2), -- sườn non
+('550e8400-e29b-41d4-a716-446655440133', 2), -- thịt dê
+('550e8400-e29b-41d4-a716-446655440134', 2), -- thịt ba chỉ
+('550e8400-e29b-41d4-a716-446655440135', 2), -- thịt nguội
+('550e8400-e29b-41d4-a716-446655440136', 2), -- thịt bò
+('550e8400-e29b-41d4-a716-446655440137', 2), -- thịt gà
+('550e8400-e29b-41d4-a716-446655440138', 2), -- xương lợn
+('550e8400-e29b-41d4-a716-446655440139', 2), -- xương bò
+('550e8400-e29b-41d4-a716-446655440140', 2), -- sườn lợn
+('550e8400-e29b-41d4-a716-446655440213', 2), -- bồ câu
 -- Thuỷ hải sản
-('550e8400-e29b-41d4-a716-446655440141', 3), ('550e8400-e29b-41d4-a716-446655440142', 3), ('550e8400-e29b-41d4-a716-446655440143', 3), ('550e8400-e29b-41d4-a716-446655440144', 3), ('550e8400-e29b-41d4-a716-446655440145', 3), ('550e8400-e29b-41d4-a716-446655440146', 3), ('550e8400-e29b-41d4-a716-446655440147', 3), ('550e8400-e29b-41d4-a716-446655440148', 3), ('550e8400-e29b-41d4-a716-446655440149', 3), ('550e8400-e29b-41d4-a716-446655440150', 3), ('550e8400-e29b-41d4-a716-446655440151', 3),
-
--- Rau củ quả
-('550e8400-e29b-41d4-a716-446655440152', 4), ('550e8400-e29b-41d4-a716-446655440153', 4), ('550e8400-e29b-41d4-a716-446655440154', 4), ('550e8400-e29b-41d4-a716-446655440155', 4), ('550e8400-e29b-41d4-a716-446655440156', 4), ('550e8400-e29b-41d4-a716-446655440157', 4), ('550e8400-e29b-41d4-a716-446655440158', 4), ('550e8400-e29b-41d4-a716-446655440159', 4), ('550e8400-e29b-41d4-a716-446655440160', 4), ('550e8400-e29b-41d4-a716-446655440161', 4),
-('550e8400-e29b-41d4-a716-446655440162', 4), ('550e8400-e29b-41d4-a716-446655440163', 4), ('550e8400-e29b-41d4-a716-446655440164', 4), ('550e8400-e29b-41d4-a716-446655440165', 4), ('550e8400-e29b-41d4-a716-446655440166', 4), ('550e8400-e29b-41d4-a716-446655440167', 4), ('550e8400-e29b-41d4-a716-446655440168', 4), ('550e8400-e29b-41d4-a716-446655440169', 4), ('550e8400-e29b-41d4-a716-446655440170', 4), ('550e8400-e29b-41d4-a716-446655440171', 4),
-('550e8400-e29b-41d4-a716-446655440172', 4), ('550e8400-e29b-41d4-a716-446655440173', 4), ('550e8400-e29b-41d4-a716-446655440174', 4), ('550e8400-e29b-41d4-a716-446655440175', 4), ('550e8400-e29b-41d4-a716-446655440176', 4), ('550e8400-e29b-41d4-a716-446655440177', 4), ('550e8400-e29b-41d4-a716-446655440178', 4), ('550e8400-e29b-41d4-a716-446655440179', 4), ('550e8400-e29b-41d4-a716-446655440180', 4), ('550e8400-e29b-41d4-a716-446655440181', 4),
-('550e8400-e29b-41d4-a716-446655440182', 4), ('550e8400-e29b-41d4-a716-446655440183', 4), ('550e8400-e29b-41d4-a716-446655440184', 4), ('550e8400-e29b-41d4-a716-446655440185', 4), ('550e8400-e29b-41d4-a716-446655440186', 4), ('550e8400-e29b-41d4-a716-446655440187', 4),
-
--- Nấm
-('550e8400-e29b-41d4-a716-446655440188', 5), ('550e8400-e29b-41d4-a716-446655440189', 5), ('550e8400-e29b-41d4-a716-446655440190', 5), ('550e8400-e29b-41d4-a716-446655440191', 5),
-
+('550e8400-e29b-41d4-a716-446655440141', 3), -- lươn
+('550e8400-e29b-41d4-a716-446655440142', 3), -- ngao
+('550e8400-e29b-41d4-a716-446655440143', 3), -- cua đồng
+('550e8400-e29b-41d4-a716-446655440144', 3), -- sò điệp
+('550e8400-e29b-41d4-a716-446655440145', 3), -- cá điêu hồng
+('550e8400-e29b-41d4-a716-446655440146', 3), -- hàu
+('550e8400-e29b-41d4-a716-446655440147', 3), -- cá chép
+('550e8400-e29b-41d4-a716-446655440148', 3), -- cá ngừ
+('550e8400-e29b-41d4-a716-446655440149', 3), -- tôm
+('550e8400-e29b-41d4-a716-446655440150', 3), -- cá hồi
+('550e8400-e29b-41d4-a716-446655440151', 3), -- mực
+-- Rau củ
+('550e8400-e29b-41d4-a716-446655440152', 4), -- cần tây
+('550e8400-e29b-41d4-a716-446655440153', 4), -- rau đay
+('550e8400-e29b-41d4-a716-446655440155', 4), -- đậu côve
+('550e8400-e29b-41d4-a716-446655440156', 4), -- mướp
+('550e8400-e29b-41d4-a716-446655440157', 4), -- mồng tơi
+('550e8400-e29b-41d4-a716-446655440159', 4), -- bí đỏ
+('550e8400-e29b-41d4-a716-446655440160', 4), -- thì là
+('550e8400-e29b-41d4-a716-446655440161', 4), -- mướp đắng
+('550e8400-e29b-41d4-a716-446655440162', 4), -- húng quế
+('550e8400-e29b-41d4-a716-446655440163', 4), -- cải thìa
+('550e8400-e29b-41d4-a716-446655440164', 4), -- cải thảo
+('550e8400-e29b-41d4-a716-446655440165', 4), -- khoai sọ
+('550e8400-e29b-41d4-a716-446655440166', 4), -- khoai mỡ
+('550e8400-e29b-41d4-a716-446655440167', 4), -- khoai lang
+('550e8400-e29b-41d4-a716-446655440168', 4), -- khoai tây
+('550e8400-e29b-41d4-a716-446655440169', 4), -- củ cải trắng
+('550e8400-e29b-41d4-a716-446655440170', 4), -- củ sen
+('550e8400-e29b-41d4-a716-446655440171', 4), -- tía tô
+('550e8400-e29b-41d4-a716-446655440172', 4), -- rau sống
+('550e8400-e29b-41d4-a716-446655440173', 4), -- giá đỗ
+('550e8400-e29b-41d4-a716-446655440174', 4), -- cà rốt
+('550e8400-e29b-41d4-a716-446655440175', 4), -- rau ngót
+('550e8400-e29b-41d4-a716-446655440178', 4), -- hành tây
+('550e8400-e29b-41d4-a716-446655440179', 4), -- ớt chuông
+('550e8400-e29b-41d4-a716-446655440181', 4), -- rau thơm
+('550e8400-e29b-41d4-a716-446655440183', 4), -- cà tím
+('550e8400-e29b-41d4-a716-446655440184', 4), -- rau muống
+('550e8400-e29b-41d4-a716-446655440185', 4), -- rau cải
+('550e8400-e29b-41d4-a716-446655440186', 4), -- bắp cải
+('550e8400-e29b-41d4-a716-446655440187', 4), -- dưa chuột
+('550e8400-e29b-41d4-a716-446655440220', 4), -- ngò rí
+-- Hoa quả 
+('550e8400-e29b-41d4-a716-446655440106', 5), -- chanh  
+('550e8400-e29b-41d4-a716-446655440154', 5), -- xoài
+('550e8400-e29b-41d4-a716-446655440158', 5), -- ngô  
+('550e8400-e29b-41d4-a716-446655440215', 5), -- chuối
+('550e8400-e29b-41d4-a716-446655440217', 5), -- dưa hấu
+('550e8400-e29b-41d4-a716-446655440218', 5), -- cam
+('550e8400-e29b-41d4-a716-446655440225', 5), -- táo
+('550e8400-e29b-41d4-a716-446655440226', 5), -- sầu riêng
+-- Đậu & nấm
+('550e8400-e29b-41d4-a716-446655440188', 6), -- nấm rơm
+('550e8400-e29b-41d4-a716-446655440189', 6), -- nấm hương
+('550e8400-e29b-41d4-a716-446655440190', 6), -- nấm kim châm
+('550e8400-e29b-41d4-a716-446655440191', 6), -- nấm đùi gà
+('550e8400-e29b-41d4-a716-446655440206', 6), -- mộc nhĩ
+('550e8400-e29b-41d4-a716-446655440212', 6), -- đậu xanh
+('550e8400-e29b-41d4-a716-446655440223', 6), -- đậu nành
 -- Trứng sữa
-('550e8400-e29b-41d4-a716-446655440192', 6), ('550e8400-e29b-41d4-a716-446655440193', 6), ('550e8400-e29b-41d4-a716-446655440194', 6), ('550e8400-e29b-41d4-a716-446655440195', 6), ('550e8400-e29b-41d4-a716-446655440196', 6),
-
+('550e8400-e29b-41d4-a716-446655440192', 7), -- sữa đặc
+('550e8400-e29b-41d4-a716-446655440193', 7), -- trứng vịt
+('550e8400-e29b-41d4-a716-446655440194', 7), -- phô mai
+('550e8400-e29b-41d4-a716-446655440195', 7), -- trứng gà
+('550e8400-e29b-41d4-a716-446655440196', 7), -- sữa tươi
+-- Tinh bột
+('550e8400-e29b-41d4-a716-446655440108', 8), -- bột ngô
+('550e8400-e29b-41d4-a716-446655440109', 8), -- bột mì
+('550e8400-e29b-41d4-a716-446655440200', 8), -- phở tươi
+('550e8400-e29b-41d4-a716-446655440201', 8), -- bánh phở cuốn
+('550e8400-e29b-41d4-a716-446655440202', 8), -- bánh mì
+('550e8400-e29b-41d4-a716-446655440203', 8), -- bún tươi
+('550e8400-e29b-41d4-a716-446655440207', 8), -- gạo tẻ
+('550e8400-e29b-41d4-a716-446655440208', 8), -- gạo nếp
+('550e8400-e29b-41d4-a716-446655440211', 8), -- cơm
+('550e8400-e29b-41d4-a716-446655440198', 8), -- mỳ ý
+('550e8400-e29b-41d4-a716-446655440209', 8), -- gấc
+('550e8400-e29b-41d4-a716-446655440219', 8), -- bánh canh
+('550e8400-e29b-41d4-a716-446655440221', 8), -- bánh đa cua
+('550e8400-e29b-41d4-a716-446655440229', 8), -- bột năng
+('550e8400-e29b-41d4-a716-446655440230', 8), -- bột sắn
+-- Rượu giấm
+('550e8400-e29b-41d4-a716-446655440112', 9), -- giấm táo
+('550e8400-e29b-41d4-a716-446655440227', 9), -- rượu trắng
+('550e8400-e29b-41d4-a716-446655440228', 9), -- rượu vang
+-- Nguyên liệu chế biến sẵn
+('550e8400-e29b-41d4-a716-446655440204', 10), -- pate
+('550e8400-e29b-41d4-a716-446655440199', 10), -- đậu phụ
+('550e8400-e29b-41d4-a716-446655440197', 10), -- xúc xích
 -- Khác
-('550e8400-e29b-41d4-a716-446655440197', 7), ('550e8400-e29b-41d4-a716-446655440198', 7), ('550e8400-e29b-41d4-a716-446655440199', 7), ('550e8400-e29b-41d4-a716-446655440200', 7), ('550e8400-e29b-41d4-a716-446655440201', 7), ('550e8400-e29b-41d4-a716-446655440202', 7), ('550e8400-e29b-41d4-a716-446655440203', 7),
+('550e8400-e29b-41d4-a716-446655440210', 11), -- lá dong  
+('550e8400-e29b-41d4-a716-446655440222', 11); -- men nở
 
--- mới
-('550e8400-e29b-41d4-a716-446655440204', 7),
-('550e8400-e29b-41d4-a716-446655440205', 7),
-('550e8400-e29b-41d4-a716-446655440206', 5),
-('550e8400-e29b-41d4-a716-446655440207', 7),
-('550e8400-e29b-41d4-a716-446655440208', 7),
-('550e8400-e29b-41d4-a716-446655440209', 4),
-('550e8400-e29b-41d4-a716-446655440210', 4),
-('550e8400-e29b-41d4-a716-446655440211', 7),
-('550e8400-e29b-41d4-a716-446655440211', 4);
+-- 5. recipe_categories
+INSERT INTO recipe_categories (name,image_url) VALUES
+('Bánh mì', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982204/y6rzp882g2mbwenmf0d5.jpg'),
+('Đồ xào','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982202/zkxpw4of4wmetodlctio.jpg'),
+('Rau củ quả','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982203/qxu7er5ydoapuj6hhbzk.jpg'),
+('Đồ chiên','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982200/p6cmtrni1upkl127hkqt.jpg'),
+('Bún, miến, phở','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/uqjnkcn6ozefkgajcys7.jpg'),
+('Cơm','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982202/rceoghw1xwgym8djjjhn.jpg'),
+('Salad','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982203/qxu7er5ydoapuj6hhbzk.jpg'),
+('Xôi', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106093/mozzocdyk7ispvkjdo0b.jpg'),
+('Bánh mặn', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106087/l0q7yomxljrv8mrjmyrf.jpg'), 
+('Đồ cuốn','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/ttqmhkfh3p3wokywiy1c.jpg'),
+('Cháo', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327017/crf5jyughqed4v4nrotk.jpg'),
+('Súp', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327020/vi5kxzylt9alsopouhby.jpg'),
+('Bánh ngọt', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327018/afxcwrettamra7cdajme.jpg'),
+('Đồ uống', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327017/l8gm3kply8gyb3dr6plo.jpg'),
+('Bữa sáng', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327019/nhdpos67fdy27ccxtiqd.jpg'),
+('Bữa trưa', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982200/p6cmtrni1upkl127hkqt.jpg'),
+('Bữa tối', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327025/vu9ysuiazmc2rk4hnauo.jpg'),
+('Bữa xế', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327018/uthpagrjwixbgyz6kjoy.jpg'),
+('Ăn kiêng', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327019/vg6vgixu99enk4ucjask.jpg'),
+('Kem', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327193/hnf3o1qvttxrrqnw4o00.jpg');
 
-INSERT INTO accounts (id, username, password_hash, status, last_login_at, created_at, updated_at)
-VALUES
-('a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'user1', 'hash1', 'active', '2025-05-12 08:00:00', '2025-05-06 09:00:00', '2025-05-12 08:00:00'),
-('b2ca8ce7-33f5-4096-88e2-d7c8c0692fa2', 'user2', 'hash2', 'active', '2025-05-11 10:30:00', '2025-05-07 10:00:00', '2025-05-11 10:30:00'),
-('c3ca8ce7-33f5-4096-88e2-d7c8c0692fa3', 'user3', 'hash3', 'active', '2025-05-10 12:15:00', '2025-05-08 11:00:00', '2025-05-10 12:15:00');
-
--- Insert more recipes
+-- 6. recipes
 INSERT INTO recipes (id,account_id, name, description, protein, fat, calories, carbohydrates, preparation_time_minutes, status, image_url,video_url) VALUES
 -- Phở bò
-('550e8400-e29b-41d4-a716-446655440003','a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Phở bò', 'Phở Bò là biểu tượng của ẩm thực Việt Nam với nước dùng ngọt thanh từ xương bò, kết hợp cùng bánh phở mềm và thịt bò thái mỏng, thơm ngon đậm đà',
-  120, 200, 500, 50, 120, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/uqjnkcn6ozefkgajcys7.jpg','https://www.youtube.com/watch?v=6YlPZWMjQCE'),
+('550e8400-e29b-41d4-a716-446655440003','f23b8d08-d085-4155-9146-e803b1a89a75', 'Phở bò', 'Phở Bò là biểu tượng của ẩm thực Việt Nam với nước dùng ngọt thanh từ xương bò, kết hợp cùng bánh phở mềm và thịt bò thái mỏng, thơm ngon đậm đà',  120, 200, 500, 50, 120, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/uqjnkcn6ozefkgajcys7.jpg','https://www.youtube.com/watch?v=6YlPZWMjQCE'),
 -- Phở cuốn
-('550e8400-e29b-41d4-a716-446655440004','a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Phở cuốn', 'Phở cuốn là món ăn đặc trưng Hà Nội, sử dụng bánh phở tươi để cuộn thịt bò xào thơm lừng cùng rau sống, tạo nên món ăn nhẹ nhàng nhưng đầy đủ dinh dưỡng. Thường được ăn kèm nước mắm chua ngọt, phở cuốn là lựa chọn lý tưởng cho ngày hè oi bức hoặc bữa ăn nhanh.', 
- 60, 80, 350, 20, 45, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/ttqmhkfh3p3wokywiy1c.jpg','https://www.youtube.com/watch?v=VfiAZfNm-MI'),
+('550e8400-e29b-41d4-a716-446655440004','f23b8d08-d085-4155-9146-e803b1a89a75', 'Phở cuốn', 'Phở cuốn là món ăn đặc trưng Hà Nội, sử dụng bánh phở tươi để cuộn thịt bò xào thơm lừng cùng rau sống, tạo nên món ăn nhẹ nhàng nhưng đầy đủ dinh dưỡng. Thường được ăn kèm nước mắm chua ngọt, phở cuốn là lựa chọn lý tưởng cho ngày hè oi bức hoặc bữa ăn nhanh.', 60, 80, 350, 20, 45, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/ttqmhkfh3p3wokywiy1c.jpg','https://www.youtube.com/watch?v=VfiAZfNm-MI'),
 -- Bún đậu
-('550e8400-e29b-41d4-a716-446655440005','a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Bún đậu mắm tôm', 'Bún đậu mắm tôm là món ăn dân dã nổi bật của ẩm thực miền Bắc Việt Nam. Món ăn được phục vụ với bún tươi, đậu hũ chiên giòn, thịt ba chỉ luộc và rau sống, chấm cùng mắm tôm pha chanh, ớt, đường, mang hương vị đặc trưng khó quên. Thích hợp làm món chính hoặc món ăn chơi, đặc biệt trong những buổi tụ họp bạn bè.', 
- 90, 100, 600, 50, 60, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/nynutd2bucjn4e8xjl9v.jpg','https://www.youtube.com/watch?v=wiy_GKcrkxk'),
+('550e8400-e29b-41d4-a716-446655440005','f23b8d08-d085-4155-9146-e803b1a89a75', 'Bún đậu mắm tôm', 'Bún đậu mắm tôm là món ăn dân dã nổi bật của ẩm thực miền Bắc Việt Nam. Món ăn được phục vụ với bún tươi, đậu hũ chiên giòn, thịt ba chỉ luộc và rau sống, chấm cùng mắm tôm pha chanh, ớt, đường, mang hương vị đặc trưng khó quên. Thích hợp làm món chính hoặc món ăn chơi, đặc biệt trong những buổi tụ họp bạn bè.', 90, 100, 600, 50, 60, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982201/nynutd2bucjn4e8xjl9v.jpg','https://www.youtube.com/watch?v=wiy_GKcrkxk'),
 -- Bún bò
-('550e8400-e29b-41d4-a716-446655440006','a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Bún bò Huế', 'Bún bò Huế là món đặc sản nổi tiếng của miền Trung Việt Nam, mang hương vị đậm đà với nước dùng cay nồng từ sả, mắm ruốc và ớt, kết hợp cùng sợi bún to, thịt bò mềm và các loại rau sống. Đây là món ăn thường xuất hiện trong các bữa sáng hoặc dịp đặc biệt, gây thương nhớ với vị ngon đặc trưng.', 
- 100, 180, 600, 60, 90, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982200/flj6ia0wcsfdwwexyetc.jpg','https://www.youtube.com/watch?v=uLfYjk33Al4'),
+('550e8400-e29b-41d4-a716-446655440006','f23b8d08-d085-4155-9146-e803b1a89a75', 'Bún bò Huế', 'Bún bò Huế là món đặc sản nổi tiếng của miền Trung Việt Nam, mang hương vị đậm đà với nước dùng cay nồng từ sả, mắm ruốc và ớt, kết hợp cùng sợi bún to, thịt bò mềm và các loại rau sống. Đây là món ăn thường xuất hiện trong các bữa sáng hoặc dịp đặc biệt, gây thương nhớ với vị ngon đặc trưng.', 100, 180, 600, 60, 90, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982200/flj6ia0wcsfdwwexyetc.jpg','https://www.youtube.com/watch?v=uLfYjk33Al4'),
 -- Phở gà
-('550e8400-e29b-41d4-a716-446655440007','a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Phở gà', 'Phở Gà là một phiên bản nhẹ nhàng, thanh đạm của món phở truyền thống. Với nước dùng được ninh từ gà ta và các gia vị tự nhiên như hành nướng, gừng nướng, phở gà mang đến hương vị ngọt thanh, dễ ăn, đặc biệt thích hợp cho những bữa sáng hoặc khi cơ thể cần một món ăn nhẹ nhàng, bổ dưỡng.', 
- 90, 110, 480, 30, 90, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982204/im5xyc0jncko8epdlawl.jpg','https://www.youtube.com/watch?v=U_vMOEaJBbo'),
- 
+('550e8400-e29b-41d4-a716-446655440007','f23b8d08-d085-4155-9146-e803b1a89a75', 'Phở gà', 'Phở Gà là một phiên bản nhẹ nhàng, thanh đạm của món phở truyền thống. Với nước dùng được ninh từ gà ta và các gia vị tự nhiên như hành nướng, gừng nướng, phở gà mang đến hương vị ngọt thanh, dễ ăn, đặc biệt thích hợp cho những bữa sáng hoặc khi cơ thể cần một món ăn nhẹ nhàng, bổ dưỡng.', 90, 110, 480, 30, 90, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982204/im5xyc0jncko8epdlawl.jpg','https://www.youtube.com/watch?v=U_vMOEaJBbo'),
 -- Nấm đùi gà kho xì dầu
-('550e8400-e29b-41d4-a716-446655440009','a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Nấm đùi gà kho xì dầu', 'Nấm đùi gà kho xì dầu là món ăn chay thanh đạm, dễ làm nhưng đậm đà hương vị. Nấm được kho mềm với nước tương (xì dầu), tỏi, tiêu và một chút đường tạo nên hương vị mặn ngọt vừa miệng, thích hợp dùng với cơm trắng nóng hổi trong bữa cơm gia đình.',
-  15, 8, 120, 5, 30, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982205/dvl3pymfjyvdgl64l7uq.jpg','https://www.youtube.com/watch?v=C5dp4nIU2wc'),
+('550e8400-e29b-41d4-a716-446655440009','f23b8d08-d085-4155-9146-e803b1a89a75', 'Nấm đùi gà kho xì dầu', 'Nấm đùi gà kho xì dầu là món ăn chay thanh đạm, dễ làm nhưng đậm đà hương vị. Nấm được kho mềm với nước tương (xì dầu), tỏi, tiêu và một chút đường tạo nên hương vị mặn ngọt vừa miệng, thích hợp dùng với cơm trắng nóng hổi trong bữa cơm gia đình.', 15, 8, 120, 5, 30, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982205/dvl3pymfjyvdgl64l7uq.jpg','https://www.youtube.com/watch?v=C5dp4nIU2wc'),
 -- Salad nấm kim châm
-('550e8400-e29b-41d4-a716-446655440010', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1','Salad nấm kim châm', 'Salad nấm kim châm là món ăn thanh mát, dễ làm, kết hợp giữa nấm kim châm luộc chín và các loại rau củ tươi như cà rốt, dưa leo cùng nước sốt chua ngọt kiểu Hàn. Món này phù hợp với người ăn chay, thực dưỡng hoặc đang giảm cân nhờ giàu chất xơ, ít calo mà vẫn đậm đà, ngon miệng.',  
-20,5,120,4, 20, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982203/qxu7er5ydoapuj6hhbzk.jpg','https://www.youtube.com/watch?v=jluhzWM7HIU'),
+('550e8400-e29b-41d4-a716-446655440010', 'f23b8d08-d085-4155-9146-e803b1a89a75','Salad nấm kim châm', 'Salad nấm kim châm là món ăn thanh mát, dễ làm, kết hợp giữa nấm kim châm luộc chín và các loại rau củ tươi như cà rốt, dưa leo cùng nước sốt chua ngọt kiểu Hàn. Món này phù hợp với người ăn chay, thực dưỡng hoặc đang giảm cân nhờ giàu chất xơ, ít calo mà vẫn đậm đà, ngon miệng.', 20,5,120,4, 20, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982203/qxu7er5ydoapuj6hhbzk.jpg','https://www.youtube.com/watch?v=jluhzWM7HIU'),
 -- Bò xào ớt chuông
-('550e8400-e29b-41d4-a716-446655440011','a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Bò xào ớt chuông', 'Bò xào ớt chuông là món ăn giàu dinh dưỡng, đầy màu sắc và thơm ngon, được chế biến từ thịt bò mềm ngọt kết hợp với ớt chuông giòn ngọt. Hương thơm của tỏi và vị cay nhẹ từ tiêu làm tăng thêm độ hấp dẫn cho món ăn, rất phù hợp cho bữa cơm gia đình hoặc thực đơn giảm tinh bột.',
-  20,40,350,20, 25, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982202/zkxpw4of4wmetodlctio.jpg','https://www.youtube.com/watch?v=3bg8Jxw98qw'),
+('550e8400-e29b-41d4-a716-446655440011','f23b8d08-d085-4155-9146-e803b1a89a75', 'Bò xào ớt chuông', 'Bò xào ớt chuông là món ăn giàu dinh dưỡng, đầy màu sắc và thơm ngon, được chế biến từ thịt bò mềm ngọt kết hợp với ớt chuông giòn ngọt. Hương thơm của tỏi và vị cay nhẹ từ tiêu làm tăng thêm độ hấp dẫn cho món ăn, rất phù hợp cho bữa cơm gia đình hoặc thực đơn giảm tinh bột.', 20,40,350,20, 25, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982202/zkxpw4of4wmetodlctio.jpg','https://www.youtube.com/watch?v=3bg8Jxw98qw'),
 -- Thịt kho trứng
-('550e8400-e29b-41d4-a716-446655440012', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1','Thịt kho trứng', 'Thịt kho trứng là món ăn đậm đà, thơm ngon, thường xuất hiện trong mâm cơm ngày Tết và cả bữa cơm hằng ngày. Thịt ba chỉ mềm béo quyện trong nước kho màu cánh gián, trứng luộc thấm vị mặn ngọt từ nước dừa và nước mắm. Món ăn không chỉ ngon mà còn mang đậm dấu ấn văn hóa gia đình Việt.',
-  20,35,500,35, 60, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982205/vk2lbtqxwvrqdhjkukpu.jpg','https://www.youtube.com/watch?v=jjgnyvnsmCo'),
+('550e8400-e29b-41d4-a716-446655440012', 'f23b8d08-d085-4155-9146-e803b1a89a75','Thịt kho trứng', 'Thịt kho trứng là món ăn đậm đà, thơm ngon, thường xuất hiện trong mâm cơm ngày Tết và cả bữa cơm hằng ngày. Thịt ba chỉ mềm béo quyện trong nước kho màu cánh gián, trứng luộc thấm vị mặn ngọt từ nước dừa và nước mắm. Món ăn không chỉ ngon mà còn mang đậm dấu ấn văn hóa gia đình Việt.', 20,35,500,35, 60, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982205/vk2lbtqxwvrqdhjkukpu.jpg','https://www.youtube.com/watch?v=jjgnyvnsmCo'),
 -- Gà kho gừng
-('550e8400-e29b-41d4-a716-446655440013','a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Gà kho gừng', 'Gà kho gừng là món ăn đậm đà, thơm nồng vị gừng, thích hợp cho những ngày trời se lạnh hoặc khi cần bữa cơm ấm bụng, bổ dưỡng. Gà được kho mềm cùng gừng, nước mắm và tiêu, mang đến hương vị mặn ngọt cay cay hài hòa, rất đưa cơm.',
- 10,40,350,20, 45, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982203/bee3cno9s3ofemnuxoib.jpg','https://www.youtube.com/watch?v=xFzQdCIrgko'),
+('550e8400-e29b-41d4-a716-446655440013','f23b8d08-d085-4155-9146-e803b1a89a75', 'Gà kho gừng', 'Gà kho gừng là món ăn đậm đà, thơm nồng vị gừng, thích hợp cho những ngày trời se lạnh hoặc khi cần bữa cơm ấm bụng, bổ dưỡng. Gà được kho mềm cùng gừng, nước mắm và tiêu, mang đến hương vị mặn ngọt cay cay hài hòa, rất đưa cơm.', 10,40,350,20, 45, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982203/bee3cno9s3ofemnuxoib.jpg','https://www.youtube.com/watch?v=xFzQdCIrgko'),
 -- Cá ngừ kho dứa
-('550e8400-e29b-41d4-a716-446655440014', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1','Cá ngừ kho dứa', 'Cá ngừ kho dứa là món ăn mang hương vị chua ngọt hài hòa. Thịt cá ngừ săn chắc được kho mềm với thơm (dứa) chín và nước mắm, tạo nên nước sốt đậm đà, thơm mùi gừng, tỏi và tiêu. Đây là món ăn thích hợp cho bữa cơm gia đình, đặc biệt những ngày mưa lạnh hoặc cần món kho lạ miệng.',
-  15,45,350,12, 40, 'public','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982206/pyeb8dtflcmphg9folf4.jpg','https://www.youtube.com/watch?v=EatPmWFgm3k'),
-
-
+('550e8400-e29b-41d4-a716-446655440014', 'f23b8d08-d085-4155-9146-e803b1a89a75','Cá ngừ kho dứa', 'Cá ngừ kho dứa là món ăn mang hương vị chua ngọt hài hòa. Thịt cá ngừ săn chắc được kho mềm với thơm (dứa) chín và nước mắm, tạo nên nước sốt đậm đà, thơm mùi gừng, tỏi và tiêu. Đây là món ăn thích hợp cho bữa cơm gia đình, đặc biệt những ngày mưa lạnh hoặc cần món kho lạ miệng.', 15,45,350,12, 40, 'draft','https://res.cloudinary.com/dq3fcbnk6/image/upload/v1746982206/pyeb8dtflcmphg9folf4.jpg','https://www.youtube.com/watch?v=EatPmWFgm3k'),
 -- nem rán
-('550e8400-e29b-41d4-a716-446655440301', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Nem rán', 'Nem rán là món ăn truyền thống Việt Nam với lớp vỏ giòn rụm, nhân thịt, mộc nhĩ, miến, rau củ thơm ngon, thường ăn kèm nước mắm chua ngọt.', 30, 20, 350, 40, 60, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106093/ienv0qbihkvfwlzz4j2e.jpg', 'https://www.youtube.com/watch?v=nijoz7gpVRM'),
+('550e8400-e29b-41d4-a716-446655440301', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Nem rán', 'Nem rán là món ăn truyền thống Việt Nam với lớp vỏ giòn rụm, nhân thịt, mộc nhĩ, miến, rau củ thơm ngon, thường ăn kèm nước mắm chua ngọt.', 30, 20, 350, 40, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106093/ienv0qbihkvfwlzz4j2e.jpg', 'https://www.youtube.com/watch?v=nijoz7gpVRM'),
 -- xôi đậu xanh
-('550e8400-e29b-41d4-a716-446655440302', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Xôi đậu xanh', 'Xôi đậu xanh là món ăn sáng phổ biến, dẻo thơm từ gạo nếp và đậu xanh, thường ăn kèm muối vừng hoặc ruốc.', 10, 5, 250, 50, 60, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106093/j6jtbncyqhwxrj1zw0zp.jpg', 'https://www.youtube.com/watch?v=d-GdK-gpyKk'),
+('550e8400-e29b-41d4-a716-446655440302', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Xôi đậu xanh', 'Xôi đậu xanh là món ăn sáng phổ biến, dẻo thơm từ gạo nếp và đậu xanh, thường ăn kèm muối vừng hoặc ruốc.', 10, 5, 250, 50, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106093/j6jtbncyqhwxrj1zw0zp.jpg', 'https://www.youtube.com/watch?v=d-GdK-gpyKk'),
 -- xôi gấc
-('550e8400-e29b-41d4-a716-446655440303', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Xôi gấc', 'Xôi gấc có màu đỏ đẹp mắt, dẻo thơm, thường xuất hiện trong dịp lễ Tết, cưới hỏi.', 10, 6, 260, 52, 60, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106093/pyr1hcutj42at5vkj2ga.jpg', 'https://www.youtube.com/watch?v=39EEKGtz9IQ'),
+('550e8400-e29b-41d4-a716-446655440303', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Xôi gấc', 'Xôi gấc có màu đỏ đẹp mắt, dẻo thơm, thường xuất hiện trong dịp lễ Tết, cưới hỏi.', 10, 6, 260, 52, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106093/pyr1hcutj42at5vkj2ga.jpg', 'https://www.youtube.com/watch?v=39EEKGtz9IQ'),
 -- bánh tẻ
-('550e8400-e29b-41d4-a716-446655440304', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Bánh tẻ', 'Bánh tẻ là món bánh truyền thống miền Bắc, nhân thịt, mộc nhĩ, gói lá dong, hấp chín.', 8, 5, 200, 40, 90, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106086/ar2pzznhtnmzsvcygj7l.jpg', 'https://www.youtube.com/watch?v=3F_rpIrYGb8'),
+('550e8400-e29b-41d4-a716-446655440304', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh tẻ', 'Bánh tẻ là món bánh truyền thống miền Bắc, nhân thịt, mộc nhĩ, gói lá dong, hấp chín.', 8, 5, 200, 40, 90, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106086/ar2pzznhtnmzsvcygj7l.jpg', 'https://www.youtube.com/watch?v=3F_rpIrYGb8'),
 -- bánh bột lọc
-('550e8400-e29b-41d4-a716-446655440305', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Bánh bột lọc', 'Bánh bột lọc là đặc sản Huế với lớp vỏ trong suốt, nhân tôm thịt đậm đà, ăn kèm nước mắm chua ngọt.', 7, 4, 180, 38, 90, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106089/wlpqjfxdljuvmh1pphsp.jpg', 'https://www.youtube.com/watch?v=8snB5Is-8Lk'),
+('550e8400-e29b-41d4-a716-446655440305', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh bột lọc', 'Bánh bột lọc là đặc sản Huế với lớp vỏ trong suốt, nhân tôm thịt đậm đà, ăn kèm nước mắm chua ngọt.', 7, 4, 180, 38, 90, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106089/wlpqjfxdljuvmh1pphsp.jpg', 'https://www.youtube.com/watch?v=8snB5Is-8Lk'),
 -- cơm tấm
-('550e8400-e29b-41d4-a716-446655440306', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Cơm tấm', 'Cơm tấm là món ăn đặc trưng Sài Gòn với sườn nướng, bì, chả trứng, ăn kèm nước mắm chua ngọt.', 25, 18, 500, 60, 60, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106088/wmeem0gej3rvwncrfxqq.jpg', 'https://www.youtube.com/watch?v=cJu6tFJe_Gc'),
+('550e8400-e29b-41d4-a716-446655440306', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Cơm tấm', 'Cơm tấm là món ăn đặc trưng Sài Gòn với sườn nướng, bì, chả trứng, ăn kèm nước mắm chua ngọt.', 25, 18, 500, 60, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106088/wmeem0gej3rvwncrfxqq.jpg', 'https://www.youtube.com/watch?v=cJu6tFJe_Gc'),
 -- cơm gà
-('550e8400-e29b-41d4-a716-446655440307', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Cơm gà', 'Cơm gà là món ăn phổ biến với cơm vàng ươm, thịt gà mềm ngọt, ăn kèm nước mắm gừng.', 20, 10, 400, 55, 60, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106087/buublvie6zb1kh8p2z1q.jpg', 'https://www.youtube.com/watch?v=pUWzJyu2_80'),
+('550e8400-e29b-41d4-a716-446655440307', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Cơm gà', 'Cơm gà là món ăn phổ biến với cơm vàng ươm, thịt gà mềm ngọt, ăn kèm nước mắm gừng.', 20, 10, 400, 55, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106087/buublvie6zb1kh8p2z1q.jpg', 'https://www.youtube.com/watch?v=pUWzJyu2_80'),
 -- bánh mì pate
-('550e8400-e29b-41d4-a716-446655440308', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Bánh mì pate', 'Bánh mì pate là món ăn sáng tiện lợi với lớp pate béo ngậy, thơm ngon, ăn kèm dưa chuột, rau thơm.', 12, 8, 350, 45, 20, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106084/p1vytj7mr2ehmq9mpftf.jpg', 'https://www.youtube.com/watch?v=qDgMARnOtYo'),
+('550e8400-e29b-41d4-a716-446655440308', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh mì pate', 'Bánh mì pate là món ăn sáng tiện lợi với lớp pate béo ngậy, thơm ngon, ăn kèm dưa chuột, rau thơm.', 12, 8, 350, 45, 20, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106084/p1vytj7mr2ehmq9mpftf.jpg', 'https://www.youtube.com/watch?v=qDgMARnOtYo'),
 -- bánh mì thịt
-('550e8400-e29b-41d4-a716-446655440309', 'a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', 'Bánh mì thịt', 'Bánh mì thịt là món ăn đường phố nổi tiếng với thịt nguội, rau thơm, dưa chuột, nước sốt đặc trưng.', 15, 10, 400, 50, 20, 'public', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106084/hogm7elxmcpx2ge035gu.jpg', 'https://www.youtube.com/shorts/kZBRpRAb6Nw');
-
-
-
--- Insert recipe ingredients
+('550e8400-e29b-41d4-a716-446655440309', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh mì thịt', 'Bánh mì thịt là món ăn đường phố nổi tiếng với thịt nguội, rau thơm, dưa chuột, nước sốt đặc trưng.', 15, 10, 400, 50, 20, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747106084/hogm7elxmcpx2ge035gu.jpg', 'https://www.youtube.com/shorts/kZBRpRAb6Nw'),
+-- Thêm công thức Cháo bồ câu
+('550e8400-e29b-41d4-a716-446655440400', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Cháo bồ câu', 'Cháo bồ câu là món ăn bổ dưỡng, thơm ngon, thích hợp cho trẻ nhỏ, người già hoặc người mới ốm dậy. Thịt bồ câu mềm, ngọt kết hợp cùng gạo tẻ, gạo nếp, cà rốt, hành lá tạo nên món cháo giàu dinh dưỡng, dễ ăn.', 25, 8, 250, 35, 90, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327242/te4azjphlfxbruzde9db.jpg', 'https://www.youtube.com/watch?v=TOYmYUZ9Z6o'),
+-- Thêm món Súp gà
+('550e8400-e29b-41d4-a716-446655440401', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Súp gà', 'Súp gà là món khai vị nhẹ nhàng, bổ dưỡng với thịt gà xé, ngô, nấm hương, trứng và nước dùng gà. Món ăn thơm ngon, dễ tiêu hóa, thích hợp cho cả trẻ nhỏ và người lớn.', 18, 6, 150, 12, 40, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327313/ssk7xlhfqbxwv1p5asss.jpg', 'https://www.youtube.com/watch?v=A4InI8YnpeY'),
+-- Thêm món Bánh chuối
+('550e8400-e29b-41d4-a716-446655440402', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh chuối', 'Bánh chuối là món bánh ngọt truyền thống Việt Nam, thơm ngon từ chuối chín, nước cốt dừa, bột mì, đường và trứng. Có thể hấp hoặc nướng, thích hợp cho bữa sáng hoặc món tráng miệng.', 6, 8, 250, 45, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327414/a3wulvyeqdlc4hupvsou.jpg', 'https://www.youtube.com/watch?v=A4InI8YnpeY'),
+-- Thêm món Bánh bông lan
+('550e8400-e29b-41d4-a716-446655440403', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh bông lan', 'Bánh bông lan là món bánh ngọt mềm xốp, thơm ngon, được làm từ trứng, bột mì, bột ngô, đường và sữa. Thích hợp cho bữa sáng, bữa xế hoặc món tráng miệng.', 7, 8, 220, 40, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327521/imtr5apdvvpogozlj6zf.jpg', 'https://www.youtube.com/watch?v=gnQYO1INOQ0'),
+-- Thêm món Nước ép dưa hấu
+('550e8400-e29b-41d4-a716-446655440404', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Nước ép dưa hấu', 'Nước ép dưa hấu là thức uống giải khát tự nhiên, giàu vitamin, vị ngọt thanh mát, thích hợp cho mùa hè.', 1, 0, 50, 12, 10, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327583/qiijn9sg2q8qaavrnr1j.jpg', 'https://www.youtube.com/watch?v=2m00FijZc6Q'),
+-- Thêm món Nước ép cam
+('550e8400-e29b-41d4-a716-446655440405', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Nước ép cam', 'Nước ép cam là thức uống giải khát tự nhiên, giàu vitamin C, vị chua ngọt thanh mát, tốt cho sức khỏe.', 1, 0, 60, 14, 10, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327670/snx2ftq9qkwranuulnbb.jpg', 'https://www.youtube.com/watch?v=Nog0RKvxZC4'),
+-- Thêm món Kem xoài
+('550e8400-e29b-41d4-a716-446655440406', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Kem xoài', 'Kem xoài là món tráng miệng mát lạnh, thơm ngon từ xoài chín, sữa tươi, sữa đặc và kem tươi. Thích hợp cho mùa hè.', 3, 8, 180, 30, 30, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327749/s8s5knh1fvwthbosyexp.jpg', 'https://www.youtube.com/watch?v=A9BzM2-VPto'),
+-- Thêm món Kem chuối
+('550e8400-e29b-41d4-a716-446655440407', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Kem chuối', 'Kem chuối là món tráng miệng mát lạnh, thơm ngon từ chuối chín, nước cốt dừa, sữa đặc, đậu phộng và dừa nạo. Thích hợp cho mùa hè.', 4, 10, 200, 30, 30, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327800/nmtyhwmhvcybxif8ulzp.jpg', 'https://www.youtube.com/watch?v=PkAGmeneDeI'),
+-- Thêm món Kem dừa
+('550e8400-e29b-41d4-a716-446655440408', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Kem dừa', 'Kem dừa là món tráng miệng mát lạnh, thơm ngon từ nước dừa, sữa đặc, kem tươi và dừa nạo. Thích hợp cho mùa hè.', 3, 12, 220, 25, 30, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327862/appnldjsinkn4yvipic2.jpg', 'https://www.youtube.com/watch?v=fCxJfCXgoYw'),
+-- Thêm món Cháo gà
+('550e8400-e29b-41d4-a716-446655440409', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Cháo gà', 'Cháo gà là món ăn truyền thống, bổ dưỡng, dễ tiêu hóa, thích hợp cho trẻ nhỏ, người già hoặc người mới ốm dậy. Thịt gà mềm, ngọt kết hợp cùng gạo tẻ, gạo nếp và hành lá tạo nên món cháo thơm ngon, giàu dinh dưỡng.', 18, 6, 180, 28, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747327940/lmxlx5oei2n9sqgssl0g.jpg', 'https://www.youtube.com/watch?v=psgNUnq_U_k'),
+-- Thêm món Bánh canh cua vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440410', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh canh cua', 'Bánh canh cua là món ăn đặc sản miền Nam với sợi bánh canh dai mềm, nước dùng ngọt thanh từ cua đồng, thịt cua chắc ngọt, ăn kèm hành lá phi, ngò rí và tiêu. Món này thích hợp cho bữa sáng hoặc bữa trưa, bổ dưỡng và thơm ngon.', 20, 8, 350, 60, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428197/k6kejjuzw3xadl496w2s.jpg', 'https://www.youtube.com/watch?v=siHcdfd6KXk'),
+-- Thêm món Bánh đa cua
+('550e8400-e29b-41d4-a716-446655440411', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh đa cua', 'Bánh đa cua là đặc sản Hải Phòng với nước dùng ngọt thanh từ cua đồng, bánh đa đỏ dai mềm, ăn kèm rau muống, giá đỗ, hành phi và các loại topping như chả cá, tôm, thịt bò. Món ăn hấp dẫn bởi hương vị đậm đà, thích hợp cho bữa sáng hoặc bữa trưa.', 20, 8, 350, 60, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428250/d2uhgzxd5hkatjk0jb5k.jpg', 'https://www.youtube.com/watch?v=55tg6kFdngk'),
+-- Thêm món Bún chả vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440412', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bún chả', 'Bún chả là món ăn đặc trưng của Hà Nội với thịt ba chỉ nướng thơm lừng, ăn kèm bún tươi, rau sống và nước mắm chua ngọt. Món ăn hấp dẫn bởi vị đậm đà, thơm ngon, thích hợp cho bữa trưa hoặc bữa tối.', 25, 20, 500, 60, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428288/buczawxmkicdhlze8zjs.jpg', 'https://www.youtube.com/watch?v=ulZDZEo02qE'),
+-- Thêm món Bún thịt nướng vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440413', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bún thịt nướng', 'Bún thịt nướng là món ăn đặc trưng miền Nam với thịt heo ướp sả nướng thơm lừng, ăn kèm bún tươi, rau sống, đồ chua, đậu phộng rang và nước mắm chua ngọt. Món ăn hấp dẫn bởi vị đậm đà, hài hòa, thích hợp cho bữa trưa hoặc bữa tối.', 25, 20, 520, 65, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428343/husynm2hfsxpbqdlkham.jpg', 'https://www.youtube.com/watch?v=DWAdlGKcTG0'),
+-- Thêm món Rau muống xào tỏi vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440414', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Rau muống xào tỏi', 'Rau muống xào tỏi là món ăn dân dã, phổ biến trong bữa cơm Việt với rau muống xanh giòn, tỏi thơm lừng, vị đậm đà, dễ làm và rất đưa cơm.', 3, 5, 60, 8, 15, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428439/ayaqdolyvhya40cdc0lg.jpg', 'https://www.youtube.com/watch?v=Fvzz4bZTjRc'),
+-- Thêm món Thịt kho vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440415', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Thịt kho', 'Thịt kho là món ăn truyền thống của người Việt với thịt ba chỉ mềm béo, kho cùng nước mắm, nước dừa, đường và gia vị, đậm đà, thơm ngon, rất đưa cơm.', 20, 35, 480, 10, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428475/tbdmz284e8g9byvcixul.jpg', 'https://www.youtube.com/watch?v=3Y1yxB_k3Es'),
+-- Thêm món Mướp đắng nhồi thịt vào bảng recipes 
+('550e8400-e29b-41d4-a716-446655440416', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Mướp đắng nhồi thịt', 'Mướp đắng nhồi thịt là món canh thanh mát, bổ dưỡng với mướp đắng nhồi thịt xay, nấm hương, hành lá, đem hấp hoặc nấu canh, thích hợp cho bữa cơm gia đình.', 15, 8, 120, 6, 40, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428535/ypvsgqrrqhwxd74kagmh.jpg', 'https://www.youtube.com/watch?v=ZkXDqvoct0E'),
+-- Thêm món Bánh cuốn vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440417', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh cuốn', 'Bánh cuốn là món ăn truyền thống Việt Nam với lớp bánh mỏng mềm, nhân thịt băm, mộc nhĩ, hành phi, ăn kèm nước mắm chua ngọt và chả quế.', 12, 8, 250, 45, 60, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428602/pbj7hmb0kgwuzwctyew6.jpg', 'https://www.youtube.com/watch?v=c1niOTHbG6g'),
+-- Thêm món Bánh bao vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440418', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh bao', 'Bánh bao là món bánh hấp truyền thống với lớp vỏ mềm xốp, nhân thịt băm, trứng, mộc nhĩ, hành thơm ngon, thích hợp cho bữa sáng hoặc ăn nhẹ.', 14, 8, 300, 50, 90, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428700/jvpzdsvcg7ljaybogq1g.jpg', 'https://www.youtube.com/watch?v=q8bgs0NaO7Q'),
+-- Thêm món Bánh tiêu vào bảng recipes 
+('550e8400-e29b-41d4-a716-446655440419', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh tiêu', 'Bánh tiêu là món bánh chiên truyền thống với lớp vỏ phồng xốp, thơm mùi mè, vị ngọt nhẹ, thích hợp cho bữa sáng hoặc ăn vặt.', 6, 10, 250, 45, 90, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428740/cwkzdawobpeddyhydsdq.jpg', 'https://www.youtube.com/watch?v=eDUS91I-jJo'),
+-- Thêm món Bánh chưng vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440420', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Bánh chưng', 'Bánh chưng là món bánh truyền thống ngày Tết của người Việt, với lớp vỏ gạo nếp dẻo thơm, nhân đậu xanh, thịt ba chỉ, gói trong lá dong và luộc chín.', 12, 10, 350, 60, 600, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428778/n2qhqhzlsse3xdpkfd55.jpg', 'https://www.youtube.com/watch?v=YNx-ZJHQwn4'),
+-- Thêm món Sữa đậu nành vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440421', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Sữa đậu nành', 'Sữa đậu nành là thức uống bổ dưỡng, giàu protein thực vật, thơm ngon, dễ làm từ đậu nành xay nhuyễn, lọc lấy nước và nấu chín. Có thể thêm lá dứa cho thơm và đường cho vị ngọt dịu.', 6, 4, 120, 12, 40, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428841/u9lfmb42cyldk04bitda.jpg', 'https://www.youtube.com/watch?v=Jy6EBSVzUQI'),
+-- Thêm món Nước ép táo vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440422', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Nước ép táo', 'Nước ép táo là thức uống giải khát tự nhiên, giàu vitamin, vị ngọt thanh mát, thích hợp cho mùa hè.', 0, 0, 60, 15, 10, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428875/wcwcnlrlcztyqyhqlj2u.jpg', 'https://www.youtube.com/watch?v=et5ez0hkPt0'),
+-- Thêm món Xôi gà vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440423', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Xôi gà', 'Xôi gà là món ăn sáng phổ biến với xôi dẻo thơm từ gạo nếp, thịt gà xé, hành phi vàng ruộm, thích hợp cho bữa sáng hoặc bữa xế.', 18, 8, 350, 60, 90, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428935/pfjivuqtjbwfladq4tkm.jpg', 'https://www.youtube.com/watch?v=gZt9CsZCpDM'),
+-- Thêm món Chanh tuyết vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440424', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Chanh tuyết', 'Chanh tuyết là thức uống giải khát mát lạnh, chua ngọt, được làm từ chanh tươi, đường và đá xay nhuyễn, thích hợp cho mùa hè.', 0, 0, 80, 20, 10, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747428975/hqpv0rlrvfih4newf8ue.jpg', 'https://www.youtube.com/watch?v=PZYrG6RhdsA'),
+-- Thêm món Kem sầu riêng vào bảng recipes
+('550e8400-e29b-41d4-a716-446655440425', 'f23b8d08-d085-4155-9146-e803b1a89a75', 'Kem sầu riêng', 'Kem sầu riêng là món tráng miệng mát lạnh, thơm ngậy vị sầu riêng, kết hợp sữa tươi, sữa đặc và kem tươi, thích hợp cho mùa hè.', 4, 12, 220, 30, 30, 'draft', 'https://res.cloudinary.com/dq3fcbnk6/image/upload/v1747429024/wc2mqvljanlz73jf51p1.jpg', 'https://www.youtube.com/watch?v=9rRIxrJSXrQ');
+-- jump
+-- 7. recipe_ingredients
 INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_id) VALUES
 -- Phở bò
 ('550e8400-e29b-41d4-a716-446655440003', '550e8400-e29b-41d4-a716-446655440136', 200,1), -- thịt bò
@@ -579,7 +737,7 @@ INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_id) VAL
 ('550e8400-e29b-41d4-a716-446655440301', '550e8400-e29b-41d4-a716-446655440174', 30, 1), -- cà rốt
 ('550e8400-e29b-41d4-a716-446655440301', '550e8400-e29b-41d4-a716-446655440126', 2, 6), -- hạt nêm
 
--- Xôi đậu xanh
+-- xôi đậu xanh 
 ('550e8400-e29b-41d4-a716-446655440302', '550e8400-e29b-41d4-a716-446655440208', 200, 1), -- gạo nếp
 ('550e8400-e29b-41d4-a716-446655440302', '550e8400-e29b-41d4-a716-446655440212', 100, 1), -- đậu xanh
 ('550e8400-e29b-41d4-a716-446655440302', '550e8400-e29b-41d4-a716-446655440114', 1, 6), -- muối
@@ -618,9 +776,229 @@ INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_id) VAL
 -- Bánh mì thịt
 ('550e8400-e29b-41d4-a716-446655440309', '550e8400-e29b-41d4-a716-446655440202', 1, 5), -- bánh mì
 ('550e8400-e29b-41d4-a716-446655440309', '550e8400-e29b-41d4-a716-446655440135', 30, 1), -- thịt nguội
-('550e8400-e29b-41d4-a716-446655440309', '550e8400-e29b-41d4-a716-446655440187', 20, 1); -- dưa chuột 
+('550e8400-e29b-41d4-a716-446655440309', '550e8400-e29b-41d4-a716-446655440187', 20, 1), -- dưa chuột 
 
--- Insert cooking steps
+-- Thêm nguyên liệu cho Cháo bồ câu vào recipe_ingredients
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440213', 1, 5), -- 1 con bồ câu
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440207', 50, 1), -- 50g gạo tẻ
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440208', 20, 1), -- 20g gạo nếp
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440174', 30, 1), -- 30g cà rốt
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440118', 10, 1), -- 10g hành lá
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440124', 1, 7), -- 1 thìa nước mắm
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440114', 0.5, 6), -- 0.5 thìa muối
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440125', 0.25, 6), -- 0.25 thìa tiêu
+('550e8400-e29b-41d4-a716-446655440400', '550e8400-e29b-41d4-a716-446655440127', 1, 7), -- 1 thìa dầu ăn
+
+-- Thêm nguyên liệu cho Súp gà
+('550e8400-e29b-41d4-a716-446655440401', '550e8400-e29b-41d4-a716-446655440137', 100, 1), -- thịt gà
+('550e8400-e29b-41d4-a716-446655440401', '550e8400-e29b-41d4-a716-446655440158', 50, 1), -- ngô
+('550e8400-e29b-41d4-a716-446655440401', '550e8400-e29b-41d4-a716-446655440189', 5, 1), -- nấm hương
+('550e8400-e29b-41d4-a716-446655440401', '550e8400-e29b-41d4-a716-446655440195', 1, 5), -- trứng gà
+('550e8400-e29b-41d4-a716-446655440401', '550e8400-e29b-41d4-a716-446655440118', 5, 1), -- hành lá
+('550e8400-e29b-41d4-a716-446655440401', '550e8400-e29b-41d4-a716-446655440108', 1, 7), -- bột ngô
+('550e8400-e29b-41d4-a716-446655440401', '550e8400-e29b-41d4-a716-446655440114', 0.5, 6), -- muối
+('550e8400-e29b-41d4-a716-446655440401', '550e8400-e29b-41d4-a716-446655440125', 0.25, 6), -- tiêu
+
+-- Thêm nguyên liệu cho Bánh chuối
+('550e8400-e29b-41d4-a716-446655440402', '550e8400-e29b-41d4-a716-446655440215', 2, 5), -- 2 quả chuối
+('550e8400-e29b-41d4-a716-446655440402', '550e8400-e29b-41d4-a716-446655440109', 100, 1), -- 100g bột mì
+('550e8400-e29b-41d4-a716-446655440402', '550e8400-e29b-41d4-a716-446655440117', 50, 1), -- 50g đường
+('550e8400-e29b-41d4-a716-446655440402', '550e8400-e29b-41d4-a716-446655440195', 1, 5), -- 1 quả trứng gà
+('550e8400-e29b-41d4-a716-446655440402', '550e8400-e29b-41d4-a716-446655440196', 100, 3), -- 100ml sữa tươi
+
+-- bánh bông lan
+('550e8400-e29b-41d4-a716-446655440403', '550e8400-e29b-41d4-a716-446655440109', 80, 1), -- 80g bột mì
+('550e8400-e29b-41d4-a716-446655440403', '550e8400-e29b-41d4-a716-446655440108', 20, 1), -- 20g bột ngô
+('550e8400-e29b-41d4-a716-446655440403', '550e8400-e29b-41d4-a716-446655440117', 60, 1), -- 60g đường
+('550e8400-e29b-41d4-a716-446655440403', '550e8400-e29b-41d4-a716-446655440195', 3, 5), -- 3 quả trứng gà
+('550e8400-e29b-41d4-a716-446655440403', '550e8400-e29b-41d4-a716-446655440196', 30, 3), -- 30ml sữa tươi
+
+-- Thêm nguyên liệu cho Nước ép dưa hấu 
+('550e8400-e29b-41d4-a716-446655440404', '550e8400-e29b-41d4-a716-446655440217', 300, 1), -- 300g dưa hấu
+('550e8400-e29b-41d4-a716-446655440404', '550e8400-e29b-41d4-a716-446655440117', 10, 1), -- 10g đường (tùy chọn)
+
+-- Thêm nguyên liệu cho Nước ép cam 
+('550e8400-e29b-41d4-a716-446655440405', '550e8400-e29b-41d4-a716-446655440218', 300, 1), -- 300g cam
+('550e8400-e29b-41d4-a716-446655440405', '550e8400-e29b-41d4-a716-446655440117', 10, 1), -- 10g đường (tùy chọn)
+
+-- Thêm nguyên liệu cho Kem xoài 
+('550e8400-e29b-41d4-a716-446655440406', '550e8400-e29b-41d4-a716-446655440154', 200, 1), -- 200g xoài
+('550e8400-e29b-41d4-a716-446655440406', '550e8400-e29b-41d4-a716-446655440196', 100, 3), -- 100ml sữa tươi
+('550e8400-e29b-41d4-a716-446655440406', '550e8400-e29b-41d4-a716-446655440192', 50, 3), -- 50ml sữa đặc
+('550e8400-e29b-41d4-a716-446655440406', '550e8400-e29b-41d4-a716-446655440194', 100, 1), -- 100g kem tươi (whipping cream)
+
+-- Thêm nguyên liệu cho Kem chuối
+('550e8400-e29b-41d4-a716-446655440407', '550e8400-e29b-41d4-a716-446655440215', 2, 5), -- 2 quả chuối
+('550e8400-e29b-41d4-a716-446655440407', '550e8400-e29b-41d4-a716-446655440192', 50, 3), -- 50ml sữa đặc
+('550e8400-e29b-41d4-a716-446655440407', '550e8400-e29b-41d4-a716-446655440116', 50, 3), -- 50ml nước dừa
+('550e8400-e29b-41d4-a716-446655440407', '550e8400-e29b-41d4-a716-446655440111', 20, 1), -- 20g đậu phộng
+('550e8400-e29b-41d4-a716-446655440407', '550e8400-e29b-41d4-a716-446655440186', 20, 1), -- 20g dừa nạo (bắp cải tạm thay dừa nạo nếu chưa có)
+
+-- Thêm nguyên liệu cho Kem dừa 
+('550e8400-e29b-41d4-a716-446655440408', '550e8400-e29b-41d4-a716-446655440116', 100, 3), -- 100ml nước dừa
+('550e8400-e29b-41d4-a716-446655440408', '550e8400-e29b-41d4-a716-446655440192', 50, 3), -- 50ml sữa đặc
+('550e8400-e29b-41d4-a716-446655440408', '550e8400-e29b-41d4-a716-446655440194', 100, 1), -- 100g kem tươi (whipping cream)
+('550e8400-e29b-41d4-a716-446655440408', '550e8400-e29b-41d4-a716-446655440186', 20, 1), -- 20g dừa nạo (bắp cải tạm thay dừa nạo nếu chưa có)
+
+-- Thêm nguyên liệu cho Cháo gà 
+('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440137', 100, 1), -- 100g thịt gà
+('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440207', 50, 1), -- 50g gạo tẻ
+('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440208', 20, 1), -- 20g gạo nếp
+('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440118', 10, 1), -- 10g hành lá
+('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440114', 0.5, 6), -- 0.5 thìa muối
+('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440125', 0.25, 6), -- 0.25 thìa tiêu
+
+-- Thêm nguyên liệu cho Bánh canh cua vào recipe_ingredients
+('550e8400-e29b-41d4-a716-446655440410', '550e8400-e29b-41d4-a716-446655440220', 200, 1), -- bánh canh
+('550e8400-e29b-41d4-a716-446655440410', '550e8400-e29b-41d4-a716-446655440219', 200, 1), -- cua đồng 
+('550e8400-e29b-41d4-a716-446655440410', '550e8400-e29b-41d4-a716-446655440118', 10, 1), -- hành lá  
+('550e8400-e29b-41d4-a716-446655440410', '550e8400-e29b-41d4-a716-446655440222', 5, 1), -- ngò rí
+('550e8400-e29b-41d4-a716-446655440410', '550e8400-e29b-41d4-a716-446655440114', 1, 6), -- muối
+('550e8400-e29b-41d4-a716-446655440410', '550e8400-e29b-41d4-a716-446655440125', 0.5, 6), -- tiêu
+
+-- Thêm nguyên liệu cho Bánh đa cua vào recipe_ingredients
+('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-446655440221', 100, 1), -- bánh đa cua
+('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-446655440219', 200, 1), -- cua đồng
+('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-446655440184', 50, 1), -- rau muống
+('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-446655440173', 50, 1), -- giá đỗ
+('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-446655440205', 10, 1), -- hành khô
+('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-446655440127', 1, 7), -- dầu ăn
+('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-446655440114', 1, 6), -- muối
+('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-446655440125', 0.5, 6), -- tiêu
+
+-- Thêm nguyên liệu cho Bún chả vào recipe_ingredients
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440203', 200, 1), -- bún tươi
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440134', 150, 1), -- thịt ba chỉ
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440124', 2, 7), -- nước mắm
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440117', 20, 1), -- đường
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440130', 5, 1), -- tỏi
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440180', 2, 1), -- ớt
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440112', 1, 7), -- giấm táo
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440182', 5, 1), -- hành tím
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440172', 50, 1), -- rau sống
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440173', 30, 1), -- giá đỗ
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440125', 0.5, 6), -- tiêu
+('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-446655440127', 1, 7), -- dầu ăn
+
+-- Thêm nguyên liệu cho Bún thịt nướng vào recipe_ingredients
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440203', 200, 1), -- bún tươi
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440134', 150, 1), -- thịt ba chỉ
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440124', 2, 7), -- nước mắm
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440117', 20, 1), -- đường
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440130', 5, 1), -- tỏi
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440180', 2, 1), -- ớt
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440112', 1, 7), -- giấm táo
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440182', 5, 1), -- hành tím
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440172', 50, 1), -- rau sống
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440173', 30, 1), -- giá đỗ
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440125', 0.5, 6), -- tiêu
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440127', 1, 7), -- dầu ăn
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440111', 10, 1), -- đậu phộng rang
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440205', 5, 1), -- hành phi
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440187', 20, 1), -- dưa chuột
+('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-446655440174', 20, 1), -- cà rốt
+
+-- Thêm nguyên liệu cho Rau muống xào tỏi vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440414', '550e8400-e29b-41d4-a716-446655440184', 300, 1), -- rau muống
+('550e8400-e29b-41d4-a716-446655440414', '550e8400-e29b-41d4-a716-446655440130', 10, 1), -- tỏi
+('550e8400-e29b-41d4-a716-446655440414', '550e8400-e29b-41d4-a716-446655440127', 1, 7), -- dầu ăn
+('550e8400-e29b-41d4-a716-446655440414', '550e8400-e29b-41d4-a716-446655440114', 0.5, 6), -- muối
+('550e8400-e29b-41d4-a716-446655440414', '550e8400-e29b-41d4-a716-446655440124', 1, 7), -- nước mắm
+('550e8400-e29b-41d4-a716-446655440414', '550e8400-e29b-41d4-a716-446655440117', 1, 6), -- đường
+('550e8400-e29b-41d4-a716-446655440414', '550e8400-e29b-41d4-a716-446655440125', 0.25, 6), -- tiêu
+
+-- Thêm nguyên liệu cho Thịt kho vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440134', 400, 1), -- thịt ba chỉ
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440124', 3, 7), -- nước mắm
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440117', 2, 6), -- đường
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440130', 5, 1), -- tỏi
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440182', 5, 1), -- hành tím
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440125', 0.5, 6), -- tiêu
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440127', 1, 7), -- dầu ăn
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440116', 200, 3), -- nước dừa
+('550e8400-e29b-41d4-a716-446655440415', '550e8400-e29b-41d4-a716-446655440114', 0.5, 6), -- muối
+
+-- Thêm nguyên liệu cho Mướp đắng nhồi thịt vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440161', 2, 5), -- mướp đắng
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440134', 100, 1), -- thịt ba chỉ
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440189', 2, 1), -- nấm hương
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440130', 2, 1), -- tỏi
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440182', 2, 1), -- hành tím
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440118', 2, 1), -- hành lá
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440114', 0.5, 6), -- muối
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440125', 0.25, 6), -- tiêu
+('550e8400-e29b-41d4-a716-446655440416', '550e8400-e29b-41d4-a716-446655440127', 1, 7), -- dầu ăn
+
+-- Thêm nguyên liệu cho Bánh cuốn vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440207', 100, 1), -- gạo tẻ (bột gạo)
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440134', 100, 1), -- thịt ba chỉ băm
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440206', 5, 1),   -- mộc nhĩ
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440182', 10, 1),  -- hành tím
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440118', 5, 1),   -- hành lá
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440127', 1, 7),   -- dầu ăn
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440124', 2, 7),   -- nước mắm
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440117', 1, 6),   -- đường
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440125', 0.25, 6),-- tiêu
+('550e8400-e29b-41d4-a716-446655440417', '550e8400-e29b-41d4-a716-446655440114', 0.5, 6), -- muối
+
+-- Thêm nguyên liệu cho Bánh bao vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440109', 200, 1), -- bột mì
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440222', 5, 1),   -- men nở
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440134', 100, 1), -- thịt ba chỉ băm
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440195', 2, 5),   -- trứng gà
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440206', 5, 1),   -- mộc nhĩ
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440182', 10, 1),  -- hành tím
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440118', 5, 1),   -- hành lá
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440127', 1, 7),   -- dầu ăn
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440117', 20, 1),  -- đường
+('550e8400-e29b-41d4-a716-446655440418', '550e8400-e29b-41d4-a716-446655440114', 1, 6),   -- muối
+
+-- Thêm nguyên liệu cho Bánh tiêu vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440419', '550e8400-e29b-41d4-a716-446655440109', 200, 1), -- bột mì
+('550e8400-e29b-41d4-a716-446655440419', '550e8400-e29b-41d4-a716-446655440222', 5, 1),   -- men nở
+('550e8400-e29b-41d4-a716-446655440419', '550e8400-e29b-41d4-a716-446655440117', 50, 1),  -- đường
+('550e8400-e29b-41d4-a716-446655440419', '550e8400-e29b-41d4-a716-446655440196', 100, 3), -- sữa tươi (hoặc nước)
+('550e8400-e29b-41d4-a716-446655440419', '550e8400-e29b-41d4-a716-446655440127', 1, 7),   -- dầu ăn
+('550e8400-e29b-41d4-a716-446655440419', '550e8400-e29b-41d4-a716-446655440114', 1, 6),   -- muối
+('550e8400-e29b-41d4-a716-446655440419', '550e8400-e29b-41d4-a716-446655440111', 20, 1),  -- mè (vừng)
+ 
+-- Thêm nguyên liệu cho Bánh chưng vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440420', '550e8400-e29b-41d4-a716-446655440208', 300, 1), -- gạo nếp
+('550e8400-e29b-41d4-a716-446655440420', '550e8400-e29b-41d4-a716-446655440212', 100, 1), -- đậu xanh
+('550e8400-e29b-41d4-a716-446655440420', '550e8400-e29b-41d4-a716-446655440134', 100, 1), -- thịt ba chỉ
+('550e8400-e29b-41d4-a716-446655440420', '550e8400-e29b-41d4-a716-446655440210', 2, 5),   -- lá dong
+('550e8400-e29b-41d4-a716-446655440420', '550e8400-e29b-41d4-a716-446655440125', 0.5, 6), -- tiêu
+('550e8400-e29b-41d4-a716-446655440420', '550e8400-e29b-41d4-a716-446655440114', 1, 6),   -- muối
+
+-- Thêm nguyên liệu cho Sữa đậu nành vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440421', '550e8400-e29b-41d4-a716-446655440223', 100, 1), -- đậu nành
+('550e8400-e29b-41d4-a716-446655440421', '550e8400-e29b-41d4-a716-446655440117', 30, 1),  -- đường
+('550e8400-e29b-41d4-a716-446655440421', '550e8400-e29b-41d4-a716-446655440114', 0.5, 6), -- muối  
+
+-- Thêm nguyên liệu cho Nước ép táo vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440422', '550e8400-e29b-41d4-a716-446655440225', 300, 1), -- táo
+('550e8400-e29b-41d4-a716-446655440422', '550e8400-e29b-41d4-a716-446655440117', 10, 1), -- đường  
+
+-- Thêm nguyên liệu cho Xôi gà vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440423', '550e8400-e29b-41d4-a716-446655440208', 200, 1), -- gạo nếp
+('550e8400-e29b-41d4-a716-446655440423', '550e8400-e29b-41d4-a716-446655440137', 100, 1), -- thịt gà
+('550e8400-e29b-41d4-a716-446655440423', '550e8400-e29b-41d4-a716-446655440205', 10, 1),  -- hành khô
+('550e8400-e29b-41d4-a716-446655440423', '550e8400-e29b-41d4-a716-446655440114', 1, 6),   -- muối
+('550e8400-e29b-41d4-a716-446655440423', '550e8400-e29b-41d4-a716-446655440127', 1, 7),  -- dầu ăn 
+
+-- Thêm nguyên liệu cho Chanh tuyết vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440424', '550e8400-e29b-41d4-a716-446655440106', 1, 5),  -- 1 quả chanh
+('550e8400-e29b-41d4-a716-446655440424', '550e8400-e29b-41d4-a716-446655440117', 30, 1), -- 30g đường 
+
+-- Thêm nguyên liệu cho Kem sầu riêng vào recipe_ingredients 
+('550e8400-e29b-41d4-a716-446655440425', '550e8400-e29b-41d4-a716-446655440226', 200, 1), -- sầu riêng
+('550e8400-e29b-41d4-a716-446655440425', '550e8400-e29b-41d4-a716-446655440196', 100, 3), -- sữa tươi
+('550e8400-e29b-41d4-a716-446655440425', '550e8400-e29b-41d4-a716-446655440192', 50, 3),  -- sữa đặc 
+('550e8400-e29b-41d4-a716-446655440425', '550e8400-e29b-41d4-a716-446655440117', 30, 1);  -- đường
+-- jump
+
+
+-- 8. cooking_steps
 INSERT INTO cooking_steps (recipe_id, step_order, instruction) VALUES
 -- Phở bò
 ('550e8400-e29b-41d4-a716-446655440003', 1, 'Rửa sạch xương bò, đem luộc sơ qua nước sôi'),
@@ -752,10 +1130,202 @@ INSERT INTO cooking_steps (recipe_id, step_order, instruction) VALUES
 
 -- bánh mì thịt 
 ('550e8400-e29b-41d4-a716-446655440309', 1, 'Cắt bánh mì, cho thịt nguội vào.'),
-('550e8400-e29b-41d4-a716-446655440309', 2, 'Thêm dưa chuột, rau thơm, nước sốt.');
+('550e8400-e29b-41d4-a716-446655440309', 2, 'Thêm dưa chuột, rau thơm, nước sốt.'),
 
+-- Cháo bồ câu
+('550e8400-e29b-41d4-a716-446655440400', 1, 'Làm sạch bồ câu, chặt miếng vừa ăn.'),
+('550e8400-e29b-41d4-a716-446655440400', 2, 'Vo sạch gạo tẻ, gạo nếp, ngâm nước 30 phút.'),
+('550e8400-e29b-41d4-a716-446655440400', 3, 'Cà rốt gọt vỏ, thái hạt lựu. Hành lá rửa sạch, thái nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440400', 4, 'Phi thơm hành lá với dầu ăn, cho bồ câu vào xào săn.'),
+('550e8400-e29b-41d4-a716-446655440400', 5, 'Thêm gạo, cà rốt, nước vào nồi, nấu sôi rồi hạ nhỏ lửa.'),
+('550e8400-e29b-41d4-a716-446655440400', 6, 'Ninh cháo 60-90 phút đến khi nhừ.'),
+('550e8400-e29b-41d4-a716-446655440400', 7, 'Nêm nước mắm, muối, tiêu vừa ăn, rắc hành lá lên trên khi dùng.'),
+
+-- Súp gà
+('550e8400-e29b-41d4-a716-446655440401', 1, 'Luộc thịt gà chín, xé nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440401', 2, 'Ngâm nấm hương cho nở, thái nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440401', 3, 'Đun sôi nước dùng gà, cho ngô ngọt và nấm hương vào nấu 5 phút.'),
+('550e8400-e29b-41d4-a716-446655440401', 4, 'Thêm thịt gà xé vào nồi, nêm muối, tiêu.'),
+('550e8400-e29b-41d4-a716-446655440401', 5, 'Hoà tan bột ngô với nước, đổ từ từ vào nồi, khuấy đều cho súp sánh.'),
+('550e8400-e29b-41d4-a716-446655440401', 6, 'Đánh tan trứng, rưới từ từ vào nồi, khuấy nhẹ tạo vân.'),
+('550e8400-e29b-41d4-a716-446655440401', 7, 'Thêm hành lá, nêm lại vừa ăn, múc ra bát và thưởng thức.'),
+
+-- Bánh chuối
+('550e8400-e29b-41d4-a716-446655440402', 1, 'Chuối bóc vỏ, cắt lát mỏng.'),
+('550e8400-e29b-41d4-a716-446655440402', 2, 'Trộn bột mì, đường, trứng, sữa tươi thành hỗn hợp mịn.'),
+('550e8400-e29b-41d4-a716-446655440402', 3, 'Thêm chuối vào hỗn hợp, trộn đều.'),
+('550e8400-e29b-41d4-a716-446655440402', 4, 'Đổ hỗn hợp vào khuôn, hấp hoặc nướng 45-60 phút.'),
+('550e8400-e29b-41d4-a716-446655440402', 5, 'Bánh chín để nguội, cắt miếng thưởng thức.'),
+
+-- Thêm hướng dẫn nấu Bánh bông lan 
+('550e8400-e29b-41d4-a716-446655440403', 1, 'Tách lòng đỏ và lòng trắng trứng. Đánh bông lòng trắng với đường.'),
+('550e8400-e29b-41d4-a716-446655440403', 2, 'Thêm lòng đỏ, bột mì, bột ngô, sữa vào, trộn đều nhẹ tay.'),
+('550e8400-e29b-41d4-a716-446655440403', 3, 'Đổ bột vào khuôn, vỗ nhẹ cho bột dàn đều.'),
+('550e8400-e29b-41d4-a716-446655440403', 4, 'Nướng ở 170°C trong 30-40 phút đến khi bánh chín vàng.'),
+('550e8400-e29b-41d4-a716-446655440403', 5, 'Lấy bánh ra để nguội, cắt miếng thưởng thức.'),
+
+-- Thêm hướng dẫn làm Nước ép dưa hấu 
+('550e8400-e29b-41d4-a716-446655440404', 1, 'Dưa hấu gọt vỏ, bỏ hạt, cắt miếng nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440404', 2, 'Cho dưa hấu vào máy ép lấy nước.'),
+('550e8400-e29b-41d4-a716-446655440404', 3, 'Thêm đường nếu thích, khuấy đều.'),
+('550e8400-e29b-41d4-a716-446655440404', 4, 'Rót ra ly, thêm đá và thưởng thức.'),
+
+-- Thêm hướng dẫn làm Nước ép cam 
+('550e8400-e29b-41d4-a716-446655440405', 1, 'Cam gọt vỏ, bỏ hạt, tách múi.'),
+('550e8400-e29b-41d4-a716-446655440405', 2, 'Cho cam vào máy ép lấy nước.'),
+('550e8400-e29b-41d4-a716-446655440405', 3, 'Thêm đường nếu thích, khuấy đều.'),
+('550e8400-e29b-41d4-a716-446655440405', 4, 'Rót ra ly, thêm đá và thưởng thức.'),
+
+-- Thêm hướng dẫn làm Kem xoài 
+('550e8400-e29b-41d4-a716-446655440406', 1, 'Xoài gọt vỏ, cắt miếng nhỏ, xay nhuyễn.'),
+('550e8400-e29b-41d4-a716-446655440406', 2, 'Trộn xoài xay với sữa tươi, sữa đặc, kem tươi.'),
+('550e8400-e29b-41d4-a716-446655440406', 3, 'Đổ hỗn hợp vào khuôn, để ngăn đá 6-8 tiếng.'),
+('550e8400-e29b-41d4-a716-446655440406', 4, 'Khi ăn lấy ra để mềm bớt, múc ra ly thưởng thức.'),
+
+-- Thêm hướng dẫn làm Kem chuối
+('550e8400-e29b-41d4-a716-446655440407', 1, 'Chuối bóc vỏ, cắt lát dọc.'),
+('550e8400-e29b-41d4-a716-446655440407', 2, 'Trộn sữa đặc với nước dừa.'),
+('550e8400-e29b-41d4-a716-446655440407', 3, 'Xếp chuối vào khuôn, rưới hỗn hợp sữa dừa lên.'),
+('550e8400-e29b-41d4-a716-446655440407', 4, 'Rắc đậu phộng rang giã nhỏ và dừa nạo lên trên.'),
+('550e8400-e29b-41d4-a716-446655440407', 5, 'Để ngăn đá 6-8 tiếng, lấy ra thưởng thức.'),
+
+-- Thêm hướng dẫn làm Kem dừa 
+('550e8400-e29b-41d4-a716-446655440408', 1, 'Trộn nước dừa, sữa đặc, kem tươi với nhau.'),
+('550e8400-e29b-41d4-a716-446655440408', 2, 'Đổ hỗn hợp vào khuôn, rắc dừa nạo lên trên.'),
+('550e8400-e29b-41d4-a716-446655440408', 3, 'Để ngăn đá 6-8 tiếng, lấy ra thưởng thức.'),
+
+-- Thêm hướng dẫn nấu Cháo gà 
+('550e8400-e29b-41d4-a716-446655440409', 1, 'Rửa sạch thịt gà, chặt miếng vừa ăn.'),
+('550e8400-e29b-41d4-a716-446655440409', 2, 'Vo sạch gạo tẻ, gạo nếp, ngâm nước 30 phút.'),
+('550e8400-e29b-41d4-a716-446655440409', 3, 'Hành lá rửa sạch, thái nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440409', 4, 'Cho thịt gà, gạo, nước vào nồi, nấu sôi rồi hạ nhỏ lửa.'),
+('550e8400-e29b-41d4-a716-446655440409', 5, 'Ninh cháo 45-60 phút đến khi nhừ.'),
+('550e8400-e29b-41d4-a716-446655440409', 6, 'Nêm muối, tiêu vừa ăn, rắc hành lá lên trên khi dùng.'),
+
+-- Thêm hướng dẫn nấu Bánh canh cua
+('550e8400-e29b-41d4-a716-446655440410', 1, 'Cua đồng rửa sạch, tách mai, lấy gạch cua để riêng.'),
+('550e8400-e29b-41d4-a716-446655440410', 2, 'Xay nhuyễn cua, lọc lấy nước, nấu sôi, vớt thịt cua nổi lên.'),
+('550e8400-e29b-41d4-a716-446655440410', 3, 'Phi hành với gạch cua cho thơm, cho vào nồi nước dùng.'),
+('550e8400-e29b-41d4-a716-446655440410', 4, 'Nêm muối, tiêu vừa ăn.'),
+('550e8400-e29b-41d4-a716-446655440410', 5, 'Luộc bánh canh, cho vào bát.'),
+('550e8400-e29b-41d4-a716-446655440410', 6, 'Chan nước dùng cua lên bánh canh, thêm hành lá phi, ngò rí.'),
+('550e8400-e29b-41d4-a716-446655440410', 7, 'Dùng nóng.'),
+
+-- Thêm hướng dẫn nấu Bánh đa cua
+('550e8400-e29b-41d4-a716-446655440411', 1, 'Cua đồng rửa sạch, tách mai, lấy gạch cua để riêng.'),
+('550e8400-e29b-41d4-a716-446655440411', 2, 'Xay nhuyễn cua, lọc lấy nước, nấu sôi, vớt thịt cua nổi lên.'),
+('550e8400-e29b-41d4-a716-446655440411', 3, 'Phi hành khô với dầu ăn, cho gạch cua vào xào thơm.'),
+('550e8400-e29b-41d4-a716-446655440411', 4, 'Nêm nước dùng với muối, nước mắm, mì chính, tiêu.'),
+('550e8400-e29b-41d4-a716-446655440411', 5, 'Luộc bánh đa cua, rau muống, giá đỗ chần sơ.'),
+('550e8400-e29b-41d4-a716-446655440411', 6, 'Xếp bánh đa, rau muống, giá đỗ ra bát, chan nước dùng cua, rắc hành phi.'),
+('550e8400-e29b-41d4-a716-446655440411', 7, 'Ăn nóng, có thể thêm chả cá, tôm, thịt bò tuỳ thích.'),
+
+-- bún chả
+('550e8400-e29b-41d4-a716-446655440412', 1, 'Thịt ba chỉ rửa sạch, thái lát mỏng, ướp với nước mắm, đường, tỏi băm, tiêu, hành tím, dầu ăn, để 30 phút cho ngấm.'),
+('550e8400-e29b-41d4-a716-446655440412', 2, 'Nướng thịt trên bếp than hoặc nồi chiên không dầu đến khi vàng thơm.'),
+('550e8400-e29b-41d4-a716-446655440412', 3, 'Pha nước mắm chua ngọt: hoà nước mắm, đường, giấm táo, tỏi băm, ớt băm, nước lọc, khuấy đều.'),
+('550e8400-e29b-41d4-a716-446655440412', 4, 'Rửa sạch rau sống, giá đỗ, để ráo nước.'),
+('550e8400-e29b-41d4-a716-446655440412', 5, 'Luộc bún tươi, để ráo.'),
+('550e8400-e29b-41d4-a716-446655440412', 6, 'Bày bún, thịt nướng, rau sống, giá đỗ ra đĩa, ăn kèm nước mắm chua ngọt.'),
+
+-- bún thịt nướng
+('550e8400-e29b-41d4-a716-446655440413', 1, 'Thịt ba chỉ rửa sạch, thái lát mỏng, ướp với nước mắm, đường, tỏi băm, sả băm, tiêu, hành tím, dầu ăn, để 30 phút cho ngấm.'),
+('550e8400-e29b-41d4-a716-446655440413', 2, 'Nướng thịt trên bếp than hoặc nồi chiên không dầu đến khi vàng thơm.'),
+('550e8400-e29b-41d4-a716-446655440413', 3, 'Pha nước mắm chua ngọt: hoà nước mắm, đường, giấm táo, tỏi băm, ớt băm, nước lọc, khuấy đều.'),
+('550e8400-e29b-41d4-a716-446655440413', 4, 'Rửa sạch rau sống, giá đỗ, dưa chuột, cà rốt, thái sợi, để ráo nước.'),
+('550e8400-e29b-41d4-a716-446655440413', 5, 'Luộc bún tươi, để ráo.'),
+('550e8400-e29b-41d4-a716-446655440413', 6, 'Bày bún, thịt nướng, rau sống, đồ chua, đậu phộng rang, hành phi ra đĩa, ăn kèm nước mắm chua ngọt.'),
+
+-- Thêm hướng dẫn nấu Rau muống xào tỏi vào cooking_steps
+('550e8400-e29b-41d4-a716-446655440414', 1, 'Rau muống nhặt bỏ lá già, rửa sạch, cắt khúc.'),
+('550e8400-e29b-41d4-a716-446655440414', 2, 'Tỏi bóc vỏ, đập dập, băm nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440414', 3, 'Đun nóng dầu ăn, phi thơm tỏi.'),
+('550e8400-e29b-41d4-a716-446655440414', 4, 'Cho rau muống vào xào lửa lớn, đảo nhanh tay.'),
+('550e8400-e29b-41d4-a716-446655440414', 5, 'Nêm muối, nước mắm, đường, tiêu cho vừa ăn.'),
+('550e8400-e29b-41d4-a716-446655440414', 6, 'Xào đến khi rau chín tới, giữ màu xanh, tắt bếp, bày ra đĩa.'),
+
+-- Thêm hướng dẫn nấu Thịt kho vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440415', 1, 'Thịt ba chỉ rửa sạch, cắt miếng vừa ăn.'),
+('550e8400-e29b-41d4-a716-446655440415', 2, 'Ướp thịt với nước mắm, đường, tỏi, hành tím, tiêu, muối trong 20 phút.'),
+('550e8400-e29b-41d4-a716-446655440415', 3, 'Đun nóng dầu ăn, cho thịt vào đảo săn.'),
+('550e8400-e29b-41d4-a716-446655440415', 4, 'Thêm nước dừa, đun sôi, hạ nhỏ lửa, kho liu riu 45-60 phút.'),
+('550e8400-e29b-41d4-a716-446655440415', 5, 'Nêm lại gia vị cho vừa ăn, kho đến khi thịt mềm, nước sánh lại.'),
+('550e8400-e29b-41d4-a716-446655440415', 6, 'Tắt bếp, rắc thêm tiêu, dùng nóng với cơm trắng.'),
+
+-- Thêm hướng dẫn nấu Mướp đắng nhồi thịt vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440416', 1, 'Mướp đắng rửa sạch, cắt khúc, bỏ ruột.'),
+('550e8400-e29b-41d4-a716-446655440416', 2, 'Thịt ba chỉ xay nhuyễn, trộn với nấm hương băm nhỏ, hành tím, tỏi, hành lá, muối, tiêu.'),
+('550e8400-e29b-41d4-a716-446655440416', 3, 'Nhồi hỗn hợp thịt vào từng khúc mướp đắng.'),
+('550e8400-e29b-41d4-a716-446655440416', 4, 'Đun nước sôi, cho mướp đắng nhồi thịt vào nấu 20-25 phút.'),
+('550e8400-e29b-41d4-a716-446655440416', 5, 'Nêm lại gia vị cho vừa ăn, rắc hành lá lên trên khi dùng.'),
+
+-- Thêm hướng dẫn nấu Bánh cuốn vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440417', 1, 'Ngâm gạo tẻ 6-8 tiếng, xay nhuyễn thành bột, pha loãng với nước và chút muối.'),
+('550e8400-e29b-41d4-a716-446655440417', 2, 'Mộc nhĩ ngâm nở, băm nhỏ. Hành tím, hành lá thái nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440417', 3, 'Phi thơm hành tím với dầu ăn, cho thịt băm vào xào chín, thêm mộc nhĩ, nêm nước mắm, tiêu, đường.'),
+('550e8400-e29b-41d4-a716-446655440417', 4, 'Tráng bột thành lớp mỏng trên chảo hoặc nồi hấp, cho nhân vào, cuộn lại.'),
+('550e8400-e29b-41d4-a716-446655440417', 5, 'Phi thơm hành lá với dầu ăn, rưới lên bánh cuốn.'),
+('550e8400-e29b-41d4-a716-446655440417', 6, 'Pha nước mắm chua ngọt, ăn kèm bánh cuốn và chả quế.'),
+
+-- Thêm hướng dẫn nấu Bánh bao vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440418', 1, 'Trộn bột mì với men nở, đường, muối, nước ấm, nhào thành khối bột mịn, ủ 1 tiếng cho nở.'),
+('550e8400-e29b-41d4-a716-446655440418', 2, 'Mộc nhĩ ngâm nở, băm nhỏ. Hành tím, hành lá thái nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440418', 3, 'Trộn thịt băm với mộc nhĩ, hành tím, hành lá, nêm gia vị.'),
+('550e8400-e29b-41d4-a716-446655440418', 4, 'Chia bột thành từng phần, cán mỏng, cho nhân thịt và miếng trứng vào giữa, gói lại.'),
+('550e8400-e29b-41d4-a716-446655440418', 5, 'Ủ bánh thêm 15 phút, sau đó hấp chín trong 20 phút.'),
+('550e8400-e29b-41d4-a716-446655440418', 6, 'Bánh chín, dùng nóng.'),
  
--- Insert recipe category mappings
+-- Thêm hướng dẫn nấu Bánh tiêu vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440419', 1, 'Trộn bột mì, men nở, đường, muối, sữa tươi (hoặc nước) thành khối bột mịn, ủ 1 tiếng cho nở.'),
+('550e8400-e29b-41d4-a716-446655440419', 2, 'Chia bột thành từng viên nhỏ, cán dẹt.'),
+('550e8400-e29b-41d4-a716-446655440419', 3, 'Lăn mặt bánh qua mè (vừng) cho phủ đều.'),
+('550e8400-e29b-41d4-a716-446655440419', 4, 'Đun nóng dầu ăn, chiên bánh đến khi phồng và vàng đều hai mặt.'),
+('550e8400-e29b-41d4-a716-446655440419', 5, 'Vớt bánh ra để ráo dầu, dùng nóng hoặc nguội đều ngon.'),
+
+-- Thêm hướng dẫn nấu Bánh chưng vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440420', 1, 'Ngâm gạo nếp qua đêm, vo sạch, để ráo.'),
+('550e8400-e29b-41d4-a716-446655440420', 2, 'Đậu xanh ngâm mềm, hấp chín, tán nhuyễn, trộn với muối.'),
+('550e8400-e29b-41d4-a716-446655440420', 3, 'Thịt ba chỉ cắt miếng, ướp muối, tiêu.'),
+('550e8400-e29b-41d4-a716-446655440420', 4, 'Rửa sạch lá dong, lau khô.'),
+('550e8400-e29b-41d4-a716-446655440420', 5, 'Trải lá dong, cho một lớp gạo nếp, một lớp đậu xanh, thịt, đậu xanh, rồi phủ gạo nếp lên trên.'),
+('550e8400-e29b-41d4-a716-446655440420', 6, 'Gói bánh vuông vắn, buộc chặt bằng lạt.'),
+('550e8400-e29b-41d4-a716-446655440420', 7, 'Luộc bánh trong 8-10 tiếng, vớt ra để ráo nước, ép cho bánh chắc.'),
+('550e8400-e29b-41d4-a716-446655440420', 8, 'Cắt bánh thành miếng, dùng kèm dưa hành.'),
+
+-- Thêm hướng dẫn nấu Sữa đậu nành vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440421', 1, 'Ngâm đậu nành trong nước 6-8 tiếng, đãi sạch vỏ.'),
+('550e8400-e29b-41d4-a716-446655440421', 2, 'Xay nhuyễn đậu nành với nước, lọc lấy nước cốt.'),
+('550e8400-e29b-41d4-a716-446655440421', 3, 'Đun sôi nước đậu, khuấy đều để không bị khét.'),
+('550e8400-e29b-41d4-a716-446655440421', 4, 'Thêm đường, muối và lá dứa (nếu có), nấu thêm 5 phút.'),
+('550e8400-e29b-41d4-a716-446655440421', 5, 'Lọc lại qua rây, để nguội, dùng nóng hoặc lạnh.'),
+
+-- Thêm hướng dẫn làm Nước ép táo vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440422', 1, 'Táo rửa sạch, gọt vỏ (nếu muốn), bỏ hạt, cắt miếng nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440422', 2, 'Cho táo vào máy ép lấy nước.'),
+('550e8400-e29b-41d4-a716-446655440422', 3, 'Thêm đường nếu thích, khuấy đều.'),
+('550e8400-e29b-41d4-a716-446655440422', 4, 'Rót ra ly, thêm đá và thưởng thức.'),
+
+-- Thêm hướng dẫn nấu Xôi gà vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440423', 1, 'Ngâm gạo nếp 4-6 tiếng, vo sạch, để ráo.'),
+('550e8400-e29b-41d4-a716-446655440423', 2, 'Luộc thịt gà với chút muối, vớt ra xé nhỏ.'),
+('550e8400-e29b-41d4-a716-446655440423', 3, 'Đồ xôi cho chín dẻo.'),
+('550e8400-e29b-41d4-a716-446655440423', 4, 'Phi hành khô với dầu ăn cho vàng giòn.'),
+('550e8400-e29b-41d4-a716-446655440423', 5, 'Trộn xôi với thịt gà xé, rắc hành phi lên trên, dùng nóng.'),
+
+-- Thêm hướng dẫn làm Chanh tuyết vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440424', 1, 'Chanh rửa sạch, vắt lấy nước cốt, bỏ hạt.'),
+('550e8400-e29b-41d4-a716-446655440424', 2, 'Cho nước cốt chanh, đường, 200ml nước lọc và nhiều đá viên vào máy xay sinh tố.'),
+('550e8400-e29b-41d4-a716-446655440424', 3, 'Xay nhuyễn hỗn hợp đến khi đá bông mịn như tuyết.'),
+('550e8400-e29b-41d4-a716-446655440424', 4, 'Rót ra ly, trang trí lát chanh nếu thích, dùng ngay khi lạnh.'),
+
+-- Thêm hướng dẫn làm Kem sầu riêng vào cooking_steps 
+('550e8400-e29b-41d4-a716-446655440425', 1, 'Tách lấy phần thịt sầu riêng, bỏ hạt, xay nhuyễn.'),
+('550e8400-e29b-41d4-a716-446655440425', 2, 'Trộn sầu riêng xay với sữa tươi, sữa đặc, kem tươi và đường cho hoà quyện.'),
+('550e8400-e29b-41d4-a716-446655440425', 3, 'Đổ hỗn hợp vào khuôn, để ngăn đá 6-8 tiếng cho đông lại.'),
+('550e8400-e29b-41d4-a716-446655440425', 4, 'Khi ăn lấy ra để mềm bớt, múc ra ly thưởng thức.');
+-- jump
+
+-- 9. recipe_category_mappings
 INSERT INTO recipe_category_mappings (recipe_id, recipe_category_id) VALUES 
  
 -- Phở cuốn
@@ -784,51 +1354,196 @@ INSERT INTO recipe_category_mappings (recipe_id, recipe_category_id) VALUES
 ('550e8400-e29b-41d4-a716-446655440301', 4), -- Đồ chiên
 -- xôi đậu xanh
 ('550e8400-e29b-41d4-a716-446655440302', 8), -- Xôi
-
 -- Xôi gấc
 ('550e8400-e29b-41d4-a716-446655440303', 8), -- Xôi
-
 -- Bánh tẻ
 ('550e8400-e29b-41d4-a716-446655440304', 9), -- Bánh mặn
-
 -- bánh bột lọc
 ('550e8400-e29b-41d4-a716-446655440305', 9), -- Bánh mặn
-
 -- cơm tấm 
 ('550e8400-e29b-41d4-a716-446655440306', 6), -- Cơm
-
 -- Cơm gà
 ('550e8400-e29b-41d4-a716-446655440307', 6), -- Cơm
-
 -- Bánh mì pate
 ('550e8400-e29b-41d4-a716-446655440308', 1), -- Bánh mì
-
 --  Bánh mì thịt
-('550e8400-e29b-41d4-a716-446655440309', 1); -- Bánh mì
- 
+('550e8400-e29b-41d4-a716-446655440309', 1), -- Bánh mì
+-- nem rán
+('550e8400-e29b-41d4-a716-446655440301', 10), -- Đồ cuốn 
+-- Phở cuốn
+('550e8400-e29b-41d4-a716-446655440004', 10), -- Đồ cuốn
+-- Phở bò, Phở cuốn, Bún đậu, Bún bò, Phở gà vào Bữa sáng, Bữa trưa, Bữa tối
+('550e8400-e29b-41d4-a716-446655440003', 15),
+('550e8400-e29b-41d4-a716-446655440003', 16),
+('550e8400-e29b-41d4-a716-446655440003', 17),
+('550e8400-e29b-41d4-a716-446655440004', 15),
+('550e8400-e29b-41d4-a716-446655440004', 16),
+('550e8400-e29b-41d4-a716-446655440004', 17),
+('550e8400-e29b-41d4-a716-446655440005', 15),
+('550e8400-e29b-41d4-a716-446655440005', 16),
+('550e8400-e29b-41d4-a716-446655440005', 17),
+('550e8400-e29b-41d4-a716-446655440006', 15),
+('550e8400-e29b-41d4-a716-446655440006', 16),
+('550e8400-e29b-41d4-a716-446655440006', 17),
+('550e8400-e29b-41d4-a716-446655440007', 15),
+('550e8400-e29b-41d4-a716-446655440007', 16),
+('550e8400-e29b-41d4-a716-446655440007', 17),
+-- Salad nấm kim châm, Nấm đùi gà kho xì dầu vào Ăn kiêng
+('550e8400-e29b-41d4-a716-446655440009', 19),
+('550e8400-e29b-41d4-a716-446655440010', 19),
+-- Xôi đậu xanh, Xôi gấc vào Bữa sáng, Bữa xế
+('550e8400-e29b-41d4-a716-446655440302', 15),
+('550e8400-e29b-41d4-a716-446655440302', 18),
+('550e8400-e29b-41d4-a716-446655440303', 15),
+('550e8400-e29b-41d4-a716-446655440303', 18),
+-- Bánh mì pate, Bánh mì thịt vào Bữa sáng, Bữa xế
+('550e8400-e29b-41d4-a716-446655440308', 15),
+('550e8400-e29b-41d4-a716-446655440308', 18),
+('550e8400-e29b-41d4-a716-446655440309', 15),
+('550e8400-e29b-41d4-a716-446655440309', 18),
+-- Cơm tấm, Cơm gà vào Bữa trưa, Bữa tối
+('550e8400-e29b-41d4-a716-446655440306', 16),
+('550e8400-e29b-41d4-a716-446655440306', 17),
+('550e8400-e29b-41d4-a716-446655440307', 16),
+('550e8400-e29b-41d4-a716-446655440307', 17),
+-- Nem rán, Bánh tẻ, Bánh bột lọc vào Bữa trưa, Bữa xế
+('550e8400-e29b-41d4-a716-446655440301', 16),
+('550e8400-e29b-41d4-a716-446655440301', 18),
+('550e8400-e29b-41d4-a716-446655440304', 16),
+('550e8400-e29b-41d4-a716-446655440304', 18),
+('550e8400-e29b-41d4-a716-446655440305', 16),
+('550e8400-e29b-41d4-a716-446655440305', 18),
+-- Cháo bồ câu vào Cháo (id=11), Bữa sáng (id=15), Bữa trưa (id=16), Bữa tối (id=17)
+('550e8400-e29b-41d4-a716-446655440400', 11),
+('550e8400-e29b-41d4-a716-446655440400', 15),
+('550e8400-e29b-41d4-a716-446655440400', 16),
+('550e8400-e29b-41d4-a716-446655440400', 17),
+-- Súp gà vào Súp (id=12), Bữa sáng (id=15), Bữa trưa (id=16), Bữa tối (id=17)
+('550e8400-e29b-41d4-a716-446655440401', 12),
+('550e8400-e29b-41d4-a716-446655440401', 15),
+('550e8400-e29b-41d4-a716-446655440401', 16),
+('550e8400-e29b-41d4-a716-446655440401', 17),
+-- Bánh chuối vào Bánh ngọt (id=13), Bữa sáng (id=15), Bữa xế (id=18)
+('550e8400-e29b-41d4-a716-446655440402', 13),
+('550e8400-e29b-41d4-a716-446655440402', 15),
+('550e8400-e29b-41d4-a716-446655440402', 18),
+
+-- Mapping Bánh bông lan vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440403', 13), -- Bánh ngọt
+('550e8400-e29b-41d4-a716-446655440403', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440403', 18), -- Bữa xế
+
+-- Mapping Nước ép dưa hấu vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440404', 14), -- Đồ uống
+('550e8400-e29b-41d4-a716-446655440404', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440404', 18), -- Bữa xế
+-- Mapping Nước ép cam vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440405', 14), -- Đồ uống
+('550e8400-e29b-41d4-a716-446655440405', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440405', 18), -- Bữa xế
+-- Mapping Kem xoài vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440406', 20), -- Kem
+('550e8400-e29b-41d4-a716-446655440406', 13), -- Bánh ngọt
+('550e8400-e29b-41d4-a716-446655440406', 18), -- Bữa xế
+-- Mapping Kem chuối vào các category phù hợp
+('550e8400-e29b-41d4-a716-446655440407', 20), -- Kem
+('550e8400-e29b-41d4-a716-446655440407', 13), -- Bánh ngọt
+('550e8400-e29b-41d4-a716-446655440407', 18), -- Bữa xế
+-- Mapping Kem dừa vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440408', 20), -- Kem
+('550e8400-e29b-41d4-a716-446655440408', 13), -- Bánh ngọt
+('550e8400-e29b-41d4-a716-446655440408', 18), -- Bữa xế
+
+-- Mapping Cháo gà  
+('550e8400-e29b-41d4-a716-446655440409', 11), -- Cháo
+('550e8400-e29b-41d4-a716-446655440409', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440409', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440409', 17), -- Bữa tối
+
+-- Mapping Bánh canh cua vào các category phù hợp
+('550e8400-e29b-41d4-a716-446655440410', 5), -- Bún, miến, phở
+('550e8400-e29b-41d4-a716-446655440410', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440410', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440410', 17), -- Bữa tối
+
+-- Thêm mapping Bánh đa cua vào các category phù hợp
+('550e8400-e29b-41d4-a716-446655440411', 5), -- Bún, miến, phở
+('550e8400-e29b-41d4-a716-446655440411', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440411', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440411', 17), -- Bữa tối
+
+-- Thêm mapping Bún chả vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440412', 5), -- Bún, miến, phở 
+('550e8400-e29b-41d4-a716-446655440412', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440412', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440412', 17), -- Bữa tối
+
+-- Thêm mapping Bún thịt nướng vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440413', 5), -- Bún, miến, phở 
+('550e8400-e29b-41d4-a716-446655440413', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440413', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440413', 17), -- Bữa tối
+
+-- Thêm mapping Rau muống xào tỏi vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440414', 2), -- Đồ xào
+('550e8400-e29b-41d4-a716-446655440414', 4), -- Rau củ quả
+('550e8400-e29b-41d4-a716-446655440414', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440414', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440414', 17), -- Bữa tối
+
+-- Thêm mapping Thịt kho vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440415', 2), -- Đồ xào
+('550e8400-e29b-41d4-a716-446655440415', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440415', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440415', 17), -- Bữa tối
+
+-- Thêm mapping Mướp đắng nhồi thịt vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440416', 4), -- Rau củ quả
+('550e8400-e29b-41d4-a716-446655440416', 12), -- Súp
+('550e8400-e29b-41d4-a716-446655440416', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440416', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440416', 17), -- Bữa tối
+
+-- Mapping Bánh bao vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440418', 9),  -- Bánh mặn
+('550e8400-e29b-41d4-a716-446655440418', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440418', 18), -- Bữa xế
+
+-- Mapping Bánh tiêu vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440419', 9),  -- Bánh mặn
+('550e8400-e29b-41d4-a716-446655440419', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440419', 18), -- Bữa xế
+
+-- Mapping Bánh chưng vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440420', 9),  -- Bánh mặn
+('550e8400-e29b-41d4-a716-446655440420', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440420', 16), -- Bữa trưa
+('550e8400-e29b-41d4-a716-446655440420', 17), -- Bữa tối
+
+-- Mapping Sữa đậu nành vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440421', 14), -- Đồ uống
+('550e8400-e29b-41d4-a716-446655440421', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440421', 18), -- Bữa xế
+
+-- Mapping Nước ép táo vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440422', 14), -- Đồ uống
+('550e8400-e29b-41d4-a716-446655440422', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440422', 18), -- Bữa xế
+
+-- Mapping Xôi gà vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440423', 8),  -- Xôi
+('550e8400-e29b-41d4-a716-446655440423', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440423', 18), -- Bữa xế
+
+-- Mapping Chanh tuyết vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440424', 14), -- Đồ uống
+('550e8400-e29b-41d4-a716-446655440424', 15), -- Bữa sáng
+('550e8400-e29b-41d4-a716-446655440424', 18), -- Bữa xế
+
+-- Mapping Kem sầu riêng vào các category phù hợp 
+('550e8400-e29b-41d4-a716-446655440425', 20), -- Kem
+('550e8400-e29b-41d4-a716-446655440425', 13), -- Bánh ngọt
+('550e8400-e29b-41d4-a716-446655440425', 18); -- Bữa xế
 
 
-
-INSERT INTO recipe_likes (account_id, recipe_id, liked_at)
-VALUES
-('a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', '550e8400-e29b-41d4-a716-446655440003', '2025-05-07 09:10:00'),
-('a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', '550e8400-e29b-41d4-a716-446655440005', '2025-05-08 09:15:00'),
-('b2ca8ce7-33f5-4096-88e2-d7c8c0692fa2', '550e8400-e29b-41d4-a716-446655440003', '2025-05-09 11:10:00'),
-('c3ca8ce7-33f5-4096-88e2-d7c8c0692fa3', '550e8400-e29b-41d4-a716-446655440004', '2025-05-10 13:10:00');
-
-INSERT INTO view_history (account_id, recipe_id, viewed_at)
-VALUES
-('a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', '550e8400-e29b-41d4-a716-446655440003', '2025-05-07 09:20:00'),
-('a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', '550e8400-e29b-41d4-a716-446655440004', '2025-05-08 09:25:00'),
-('b2ca8ce7-33f5-4096-88e2-d7c8c0692fa2', '550e8400-e29b-41d4-a716-446655440005', '2025-05-09 11:20:00'),
-('b2ca8ce7-33f5-4096-88e2-d7c8c0692fa2', '550e8400-e29b-41d4-a716-446655440003', '2025-05-10 11:25:00'),
-('c3ca8ce7-33f5-4096-88e2-d7c8c0692fa3', '550e8400-e29b-41d4-a716-446655440006', '2025-05-11 13:20:00');
-
-
-INSERT INTO favorite_recipes (account_id, recipe_id, saved_at)
-VALUES
-('a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', '550e8400-e29b-41d4-a716-446655440003', '2025-05-07 09:00:00'),
-('a1ca8ce7-33f5-4096-88e2-d7c8c0692fa1', '550e8400-e29b-41d4-a716-446655440004', '2025-05-08 09:05:00'),
-('b2ca8ce7-33f5-4096-88e2-d7c8c0692fa2', '550e8400-e29b-41d4-a716-446655440005', '2025-05-09 11:00:00'),
-('c3ca8ce7-33f5-4096-88e2-d7c8c0692fa3', '550e8400-e29b-41d4-a716-446655440006', '2025-05-10 13:00:00');
-
+-- jump
