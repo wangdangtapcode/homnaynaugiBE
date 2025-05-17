@@ -57,19 +57,7 @@ export class UserProfileController {
   @ApiResponse({ status: 200, description: 'Cập nhật thành công' })
   @ApiResponse({ status: 404, description: 'Không tìm thấy hồ sơ' })
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(
-    FileInterceptor('avatar', {
-      storage: diskStorage({
-        destination: './uploads/avatars',
-        filename: (req, file, callback) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
-        },
-      }),
-    }),
-  )
-  
+  @UseInterceptors(FileInterceptor('avatar'))
   async updateProfile(
     @UploadedFile() avatar: Express.Multer.File,
     @Body() updatedData: UpdateUserProfileDto,
